@@ -1,14 +1,17 @@
 from flask import Flask, Blueprint, render_template, redirect, url_for, request, g
-from flask_login import LoginManager, current_user, login_user, logout_user, login_required
-from models import *
+from flask_login import LoginManager, current_user, login_required, login_user
+from flask_sqlalchemy import SQLAlchemy
 from config import Config
 from forms import LoginForm
+from models import *
 
 app = Flask(__name__)
 app.config.from_object(Config)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+db = SQLAlchemy()
+db.init_app(app)
 
 
 @login_manager.user_loader
@@ -35,7 +38,17 @@ def get_current_user():
 def login():
     form = LoginForm()
     if request.method == "POST":
-        pass
+        username = request.form.get('username')
+        password = request.form.get('password')
+        user_type = request.form.get('user_type')
+        remember_me = request.form.get('remember_me')
+        user = User.query.filter_by(username=username).first()
+        print(user.id, user.username, user.name, user.email, user.role)
+        if user.check_password(password):
+            login_user(user, remember=remember_me)
+            print(current_user.username)
+        return render_template('student_home.html', username=username,
+                               password=password, user_type=user_type, remember_me=remember_me)
     return render_template('login.html', form=form)
 
 
@@ -50,9 +63,8 @@ def logout():
 
 @app.route('/')
 def hello_world():
-    return 'hello world'
+    return redirect(url_for('auth.login'))
 
 if __name__ == '__main__':
-    # db.create_all()
     app.register_blueprint(auth)
     app.run()
