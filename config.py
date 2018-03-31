@@ -4,3 +4,6 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     CSRF_ENABLED = True
     SECRET_KEY = 'e9fc4fca2c9fb29090742ad630e417bb5db210c9951f2420478ababd'
+    UPLOAD_PATH = '/uploads/'
+    ALLOWED_EXTENSIONS = {'pdf'}
+    MAX_CONTENT_LENGTH = 5 * 1024 * 1024
