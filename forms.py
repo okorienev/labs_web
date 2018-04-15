@@ -13,15 +13,11 @@ class LoginForm(FlaskForm):
 
 
 class ReportSendingForm(FlaskForm):
-    def __init__(self, courses):
-        self.courses = courses
-        super(ReportSendingForm, self).__init__()
-
-    course = SelectField('Select course', choices=self.courses)
     number_in_course = IntegerField('')
+    course = StringField('course shortened name', validators=[DataRequired()])
+    comment = TextAreaField()
     attachment = FileField('report', validators=[
         FileRequired(),
         FileAllowed(['pdf'], 'PDF files only!')
     ])
-    comment = TextAreaField()
 

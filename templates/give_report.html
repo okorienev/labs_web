@@ -5,9 +5,38 @@
     <title>Title</title>
 </head>
 <body>
-{# <form method=post enctype=multipart/form-data>#}
-{#      {{ form.hidden_tag() }}#}
+<div class="courses">
+    Course list:
+    {% for course in courses %}
+        <p>Course name: {{ course['name'] }} | Shortened: {{ course['shortened']}}</p>
+    {% endfor %}
 
- </form>
+
+</div>
+<div class="flash">
+    {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+</div>
+<div class="send_report_form">
+     <form method=post enctype=multipart/form-data>
+          {{ form.hidden_tag() }}
+          <p>Course name</p>
+          {{ form.course }}<br>
+          <p>Number in course</p>
+          {{ form.number_in_course }}<br>
+          {{ form.attachment }}<br>
+          <p>Comment (optional)</p>
+          {{ form.comment }}<br>
+     <p><input type="submit" value="Send report"></p>
+     </form>
+</div>
 </body>
 </html>

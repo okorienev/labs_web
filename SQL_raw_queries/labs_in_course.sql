@@ -1,0 +1,1 @@
+SELECT course.labs_amount FROM course WHERE course_shortened = --your value
