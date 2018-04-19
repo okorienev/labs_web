@@ -11,7 +11,9 @@ from sqlalchemy.sql import text
 from config import Config
 from forms import LoginForm, ReportSendingForm
 from models import *
+from utils import create_uploads_structure
 from os.path import join
+from os import getcwd
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -90,7 +92,7 @@ def give_report():
                  "(SELECT course_id, user_id "
                  "FROM group_courses "
                  "JOIN user_groups "
-                 "ON group_courses.group_id = user_groups.group_id) as g "
+                 "ON group_courses.group_id = user_groups.group_id) AS g "
                  "JOIN course ON g.course_id = course.course_id "
                  "WHERE user_id = :user_id"
                  )
@@ -100,40 +102,38 @@ def give_report():
 
         list_of_shortened = [i['shortened'] for i in courses_of_user]
         print(list_of_shortened)
-
         if request.form.get('course') not in list_of_shortened:  # user's group should have this course
             flash('You don\'t have this course')
             return redirect(request.url)
         query = text("""SELECT course.labs_amount FROM course WHERE course_shortened = :shortened""")
-        lab_max_amount = [i['labs_amount'] for i in db.engine.execute(query, shortened=request.form.get('course'))]
+        lab_max_amount = [i['labs_amount'] for i in db.engine.execute(query, shortened=request.form.get('course'))][0]
 
-        if request.form.get('number_in_course') < 1 or request.form.get('number_in_course') > lab_max_amount:
+        if int(request.form.get('number_in_course')) < 1 or \
+                        int(request.form.get('number_in_course')) > int(lab_max_amount):
             flash('lab number out of range')  # lab number should be in range between 1 and max lab number in course
             return redirect(request.url)
 
-        if 'file' not in request.files:
-            flash('file was not chosen')
-            return redirect(request.url)
-        file = request.files['file']
-
-        if file.filename == '':
-            flash('no file selected')
-            return redirect(request.url)
-
-        if file and (lambda filename: '.' in filename and filename.rsplit('.', 1)[1].lower() == 'pdf')(file.filename):
-            filename = secure_filename(file.filename)
+        file = form.attachment.data
+        if (lambda filename: '.' in filename and filename.rsplit('.', 1)[1].lower() == 'pdf')(file.filename):
+            filename = request.form.get('number_in_course') + '.pdf'
             query = text("""SELECT "group".name
                             FROM user_groups
                             JOIN "group" ON user_groups.group_id = "group".group_id
                             WHERE user_id = :user_id""")
-            group = [i.name for i in db.engine.execute(query, user_id=current_user.id)]
+            group = [i.name for i in db.engine.execute(query, user_id=current_user.id)][0]
             print(group)
-            file.save(join(app.config['UPLOAD_FOLDER'],
-                           (request.form.get('course'),
-                            group,
-                            current_user.id,
-                            filename)))
-        print(request.form.get('course'), request.form.get('number_in_course'), request.form.get('comment'))
+            # create_uploads_structure('uploads', 'DM', ['Korienev Oleksandr', 'Hladka Tetyana'])
+            print(app.config['UPLOAD_PATH'],
+                  request.form.get('course'),
+                  group,
+                  current_user.name.split()[1],
+                  filename)
+            print(getcwd())
+            file.save(join(app.config['UPLOAD_PATH'],
+                           request.form.get('course'),
+                           group,
+                           current_user.name.split()[1],
+                           filename))
     return render_template('give_report.html', user=current_user, form=form, courses=courses_of_user)
 
 
