@@ -3,161 +3,27 @@
 # TODO create some representative templates for tutor/student home pages
 # TODO test test test
 
-from werkzeug.utils import secure_filename
-from flask import Flask, Blueprint, render_template, redirect, url_for, request, g, flash, abort
-from flask_login import LoginManager, current_user, login_required, login_user
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.sql import text
+from flask import Flask, redirect, url_for
+from flask_login import LoginManager
 from config import Config
-from forms import LoginForm, ReportSendingForm
-from models import *
-from utils import create_uploads_structure
-from os.path import join
-from os import getcwd
+from models import db, User
+from views.auth.auth_main import auth
+from views.student.student_main import student
+from views.tutor.tutor_main import tutor
 
 app = Flask(__name__)
 app.config.from_object(Config)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
-db = SQLAlchemy()
+# db = SQLAlchemy()
 db.init_app(app)
+db.create_all(app=app)
 
 
 @login_manager.user_loader
 def load_user(id):
     return User.query.get(int(id))
-
-
-#
-# authentication blueprint
-#
-auth = Blueprint(
-    'auth',
-    __name__,
-    url_prefix='/auth'
-)
-
-
-@auth.before_request
-def get_current_user():
-    g.user = current_user
-
-
-@auth.route('/', methods=["GET", "POST"])
-def login():
-    form = LoginForm()
-    if request.method == "POST":
-        username = request.form.get('username')
-        password = request.form.get('password')
-        user_type = request.form.get('user_type')
-        remember_me = request.form.get('remember_me')
-        user = User.query.filter_by(username=username).first()
-        if user.check_password(password) and ((user.role == 1 and user_type == 'student') or
-                                                          user.role == 2 and user_type == 'tutor'):
-            login_user(user, remember=remember_me)
-            if user.role == 1:
-                return redirect(url_for('student.give_report'))
-            if user.role == 2:
-                return redirect(url_for('tutor.home'))
-        else:
-            return abort(403)
-    return render_template('login.html', form=form)
-
-
-@auth.route('/logout/')
-@login_required
-def logout():
-    return 'i am logout page'
-
-
-#
-# authentication blueprint end
-#
-
-#
-# student views blueprint
-#
-student = Blueprint('student',
-                    __name__,
-                    url_prefix='/student')
-
-
-@student.route('/report/', methods=['GET', 'POST'])
-@login_required
-def give_report():
-    form = ReportSendingForm()
-    query = text("SELECT course_shortened, course_name, labs_amount "
-                 "FROM "
-                 "(SELECT course_id, user_id "
-                 "FROM group_courses "
-                 "JOIN user_groups "
-                 "ON group_courses.group_id = user_groups.group_id) AS g "
-                 "JOIN course ON g.course_id = course.course_id "
-                 "WHERE user_id = :user_id"
-                 )
-    courses_of_user = [{'name': i.course_name, 'shortened': i.course_shortened}
-                       for i in db.engine.execute(query, user_id=current_user.id)]
-    if request.method == 'POST' and form.validate_on_submit():
-
-        list_of_shortened = [i['shortened'] for i in courses_of_user]
-        print(list_of_shortened)
-        if request.form.get('course') not in list_of_shortened:  # user's group should have this course
-            flash('You don\'t have this course')
-            return redirect(request.url)
-        query = text("""SELECT course.labs_amount FROM course WHERE course_shortened = :shortened""")
-        lab_max_amount = [i['labs_amount'] for i in db.engine.execute(query, shortened=request.form.get('course'))][0]
-
-        if int(request.form.get('number_in_course')) < 1 or \
-                        int(request.form.get('number_in_course')) > int(lab_max_amount):
-            flash('lab number out of range')  # lab number should be in range between 1 and max lab number in course
-            return redirect(request.url)
-
-        file = form.attachment.data
-        if (lambda filename: '.' in filename and filename.rsplit('.', 1)[1].lower() == 'pdf')(file.filename):
-            filename = request.form.get('number_in_course') + '.pdf'
-            query = text("""SELECT "group".name
-                            FROM user_groups
-                            JOIN "group" ON user_groups.group_id = "group".group_id
-                            WHERE user_id = :user_id""")
-            group = [i.name for i in db.engine.execute(query, user_id=current_user.id)][0]
-            print(group)
-            # create_uploads_structure('uploads', 'DM', ['Korienev Oleksandr', 'Hladka Tetyana'])
-            print(app.config['UPLOAD_PATH'],
-                  request.form.get('course'),
-                  group,
-                  current_user.name.split()[1],
-                  filename)
-            print(getcwd())
-            file.save(join(app.config['UPLOAD_PATH'],
-                           request.form.get('course'),
-                           group,
-                           current_user.name.split()[1],
-                           filename))
-    return render_template('give_report.html', user=current_user, form=form, courses=courses_of_user)
-
-
-#
-# student views end
-#
-
-#
-# tutor views blueprint
-#
-tutor = Blueprint('tutor',
-                  __name__,
-                  url_prefix='/tutor')
-
-
-@tutor.route('/home/')
-@login_required
-def tutor_home():
-    return render_template('tutor_home.html')
-
-
-#
-# tutor views end
-#
 
 
 @app.route('/')

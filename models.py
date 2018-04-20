@@ -1,8 +1,9 @@
-from labs_web import app
+# from labs_web import app
 from flask_sqlalchemy import SQLAlchemy
 from hashlib import sha256
 
-db = SQLAlchemy(app)
+# db = SQLAlchemy(app)
+db = SQLAlchemy()
 
 # table to link users to their roles
 roles = db.Table('user_roles',
@@ -58,44 +59,6 @@ class User(db.Model):
             return True
         else:
             return False
-    # DEPRECATED
-    # def _get_password(self):
-    #     return self._password
-    #
-    # def _set_password(self, password):
-    #     if password:
-    #         password = password.strip()
-    #         self._password = sha256(password.encode()).hexdigest()
-    # password_descriptor = property(_get_password, _set_password)
-    # password = synonym('_password', descriptor=password_descriptor)
-    #
-    # def check_password(self, password):
-    #     if self.password is None:
-    #         return False
-    #     password = password.strip()
-    #     if not password:
-    #         return False
-    #     return self.password == sha256(password.encode()).hexdigest
-    #
-    # @classmethod
-    # def authenticate(cls, query, email, password):
-    #     email = email.strip().lower()
-    #     user = query(cls).filter(cls.email == email).first()
-    #     if user is None:
-    #         return None, False
-    #     if not user.active:
-    #         return user, False
-    #     return user, user.check_password(password)
-
-
-# class UserRoleLinks(db.Model):
-#     user_id = db.Column(db.Integer(), db.ForeignKey('user.user_id'))
-#     role_id = db.Column(db.Integer(), db.ForeignKey('role.role_id'))
-#
-#
-# class UserGroupLinks(db.Model):
-#     user_id = db.Column(db.Integer(), db.ForeignKey('user.user_id'))
-#     group_id = db.Column(db.Integer(), db.ForeignKey('group.group_id'))
 
 
 class Course(db.Model):  # course model
@@ -105,11 +68,6 @@ class Course(db.Model):  # course model
     course_tutor = db.Column(db.Integer(), db.ForeignKey('user.id'))  # connecting to tutor
     labs_amount = db.Column(db.Integer(), nullable=False)   # amount of reports
     lab_max_score = db.Column(db.Integer(), nullable=False)  # max score for one lab TODO link with report score (later)
-
-
-# class CourseGroupLinks(db.Model):
-#     course = db.Column(db.Integer(), db.ForeignKey('course.course_id'))
-#     group = db.Column(db.Integer(), db.ForeignKey('group.group_id'))
 
 
 class Report(db.Model):
@@ -124,4 +82,4 @@ class Report(db.Model):
     report_tut_comment = db.Column(db.Text())  # comment of tutor
     report_hash = db.Column(db.String(32), nullable=False)   # checksum TODO util check report hashes (much later)
 
-db.create_all()
+# db.create_all()
