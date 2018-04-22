@@ -1,6 +1,5 @@
 # TODO stats for group in course
-# TODO add check for report for lab already present in base
-from flask import Blueprint, render_template, redirect, request, flash
+from flask import render_template, redirect, request, flash, Blueprint
 from flask_login import current_user, login_required
 from sqlalchemy.sql import text
 from forms import ReportSendingForm
@@ -9,9 +8,12 @@ from config import Config
 from os.path import join
 from hashlib import md5
 from datetime import datetime, timezone
+from views.student.group_stats_in_course import GroupStats
+
 student = Blueprint('student',
                     __name__,
                     url_prefix='/student')
+student.add_url_rule('/group-stats/', view_func=GroupStats.as_view('group_stats'))
 
 
 @student.route('/report/', methods=['GET', 'POST'])
@@ -31,12 +33,22 @@ def give_report():
                        for i in db.engine.execute(query, user_id=current_user.id)]
 
     if request.method == 'POST' and form.validate_on_submit():
-        list_of_shortened = [i['shortened'] for i in courses_of_user]
 
+        list_of_shortened = [i['shortened'] for i in courses_of_user]
         if request.form.get('course') not in list_of_shortened:  # user's group should have this course
             flash('You don\'t have this course')
             return redirect(request.url)
 
+        # report for lab shouldn't be already checked
+        course = Course.query.filter_by(course_shortened=request.form.get('course')).first()
+        report = Report.query.filter_by(report_student=current_user.id,
+                                        report_course=course.course_id,
+                                        report_num=request.form.get('number_in_course')).first()
+        if report:
+            if report.report_mark:
+                flash('This work was already checked, your mark is {}'.format(report.report_mark))
+                return redirect(request.url)
+        #
         query = text("""SELECT course.labs_amount FROM course WHERE course_shortened = :shortened""")
         lab_max_amount = [i['labs_amount'] for i in db.engine.execute(query, shortened=request.form.get('course'))][0]
 
@@ -52,7 +64,8 @@ def give_report():
                             FROM user_groups
                             JOIN "group" ON user_groups.group_id = "group".group_id
                             WHERE user_id = :user_id""")
-            group = [i.name for i in db.engine.execute(query, user_id=current_user.id)][0]
+            group = [i.name for i in db.engine.execute(query,
+                                                       user_id=current_user.id)][0]
             # saving file to uploads
             file.save(join(Config.UPLOAD_PATH,
                            request.form.get('course'),
@@ -80,5 +93,8 @@ def give_report():
             # adding report to database
             db.session.add(report)
             db.session.commit()
-    return render_template('give_report.html', user=current_user, form=form, courses=courses_of_user)
-
+            flash('Report successfully sent')
+    return render_template('give_report.html',
+                           user=current_user,
+                           form=form,
+                           courses=courses_of_user)
