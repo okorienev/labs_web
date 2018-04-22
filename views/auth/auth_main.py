@@ -2,9 +2,6 @@ from flask import Blueprint, request, redirect, url_for, render_template, abort,
 from models import User
 from flask_login import login_user, current_user, login_required
 from forms import LoginForm
-#
-# authentication blueprint
-#
 auth = Blueprint(
     'auth',
     __name__,
@@ -43,7 +40,3 @@ def login():
 def logout():
     login_user(current_user)
 
-
-#
-# authentication blueprint end
-#
