@@ -2,20 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css"
+          integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
     <title>Login</title>
 </head>
 <body>
-<h1>Sign In</h1>
-<form action="" method="post" name="login">
+<div class="login-form">
+    <h1>Sign In</h1>
+<form class="pure-form pure-form-stacked" action="" method="post" name="login">
     {{form.hidden_tag()}}
     <p>
-        {{form.username}}<br>
-        {{ form.password }}<br>
+        Username {{form.username}} <br>
+        Password {{ form.password }} <br>
         {{ form.user_type }} <br>
         {{ form.remember_me }} Remember me<br>
     </p>
     <p><input type="submit" value="Sign In"></p>
 </form>
-</form>
+</div>
 </body>
 </html>

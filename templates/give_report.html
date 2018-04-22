@@ -2,31 +2,51 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css"
+          integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
     <title>Title</title>
 </head>
 <body>
 <div class="courses">
-    Course list:
+    <table title="Course list" class="pure-table pure-table-bordered">
+    <thead>
+        <tr>
+            <th>Course name</th>
+            <th>Course shortened</th>
+        </tr>
+    </thead>
     {% for course in courses %}
-        <p>Course name: {{ course['name'] }} | Shortened: {{ course['shortened']}}</p>
+        <tr>
+            <th>{{ course['name'] }}</th>
+            <th>{{ course['shortened'] }}</th>
+        </tr>
     {% endfor %}
-
-
+    </table>
 </div>
+
 <div class="flash">
     {% with messages = get_flashed_messages() %}
   {% if messages %}
+      <table class="pure-table pure-table-horizontal">
+    <thead>
+        <tr>
+            <th>Error message</th>
+        </tr>
+    </thead>
+      <tbody>
     <ul class=flashes>
     {% for message in messages %}
-      <li>{{ message }}</li>
+      <th>{{ message }}</th>
     {% endfor %}
     </ul>
+      </tbody>
   {% endif %}
 {% endwith %}
 
+</table>
 </div>
 <div class="send_report_form">
-     <form method=post enctype=multipart/form-data>
+     <form class="pure-form pure-form-stacked" method=post enctype=multipart/form-data>
           {{ form.hidden_tag() }}
           <p>Course name</p>
           {{ form.course }}<br>
