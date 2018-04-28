@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css"
+          integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <table class="pure-table pure-table-horizontal">
+    <thead>
+    <tr>
+        <th>Course name</th>
+        <th>Course shortened</th>
+    </tr>
+    </thead>
+    {% for course in courses %}
+        <tr>
+            <th>{{ course['name'] }}</th>
+            <th>{{ course['shortened'] }}</th>
+        </tr>
+    {% endfor %}
+    </table>
+</div>
+
+<div class="flash">
+    {% with messages = get_flashed_messages() %}
+  {% if messages %}
+      <table class="pure-table pure-table-horizontal">
+    <thead>
+        <tr>
+            <th>Error message</th>
+        </tr>
+    </thead>
+      <tbody>
+    <ul class=flashes>
+    {% for message in messages %}
+      <th>{{ message }}</th>
+    {% endfor %}
+    </ul>
+      </tbody>
+  {% endif %}
+{% endwith %}
+
+</table>
+</div>
+
+<div>
+    <form class="pure-form pure-form-stacked" method=post>
+          {{ form.hidden_tag() }}
+        <p>Course shortened name</p>
+          {{ form.shortened }}
+     <p><input type="submit" value="Choose course"></p>
+     </form>
+</div>
+</body>
+</html>

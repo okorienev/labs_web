@@ -29,7 +29,7 @@ def login():
             if user.role == 1:
                 return redirect(url_for('student.give_report'))
             if user.role == 2:
-                return redirect(url_for('tutor.home'))
+                return redirect(url_for('tutor.tutor_home'))
         else:
             return abort(403)
     return render_template('login.html', form=form)

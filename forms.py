@@ -21,3 +21,7 @@ class ReportSendingForm(FlaskForm):
         FileAllowed(['pdf'], 'PDF files only!')
     ])
 
+
+class CourseChoosingForm(FlaskForm):
+    shortened = StringField('course shortened name', validators=[DataRequired()])
+
