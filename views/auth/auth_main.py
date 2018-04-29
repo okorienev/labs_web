@@ -27,7 +27,7 @@ def login():
                                                           user.role == 2 and user_type == 'tutor'):
             login_user(user, remember=remember_me)
             if user.role == 1:
-                return redirect(url_for('student.give_report'))
+                return redirect(url_for('student.send_report'))
             if user.role == 2:
                 return redirect(url_for('tutor.tutor_home'))
         else:
