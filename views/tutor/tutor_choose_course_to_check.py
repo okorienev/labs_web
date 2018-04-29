@@ -20,10 +20,8 @@ class ChooseCourseToCheck(View):
                 flash('You don\' have this course')
                 return redirect(request.url)
 
-            chosen_course = Course.query.filter_by(course_tutor=current_user.id,
-                                                   course_shortened=form.data.get('shortened')).first()
-            return redirect(url_for('.tutor_check_reports'),
-                            {'course_id': chosen_course.id, })
+            chosen_course = Course.query.filter_by(course_shortened=form.data.get('shortened')).first()
+            return redirect(url_for('.tutor_check_reports', course_id=chosen_course.course_id))
         return render_template('tutor_choose_course.html', courses=courses, form=form)
 
 

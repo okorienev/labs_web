@@ -1,8 +1,6 @@
-# from labs_web import app
 from flask_sqlalchemy import SQLAlchemy
 from hashlib import sha256
 
-# db = SQLAlchemy(app)
 db = SQLAlchemy()
 
 # table to link users to their roles
@@ -82,4 +80,3 @@ class Report(db.Model):
     report_tut_comment = db.Column(db.Text())  # comment of tutor
     report_hash = db.Column(db.String(32), nullable=False)   # checksum TODO util check report hashes (much later)
 
-# db.create_all()
