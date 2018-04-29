@@ -1,5 +1,5 @@
-# TODO stats for group in course
-from flask import render_template, redirect, request, flash, Blueprint
+# TODO move view to separate class
+from flask import render_template, redirect, request, flash, Blueprint, abort
 from flask_login import current_user, login_required
 from sqlalchemy.sql import text
 from forms import ReportSendingForm
@@ -14,6 +14,12 @@ student = Blueprint('student',
                     __name__,
                     url_prefix='/student')
 student.add_url_rule('/group-stats/', view_func=GroupStats.as_view('group_stats'))
+
+
+@student.before_request
+def i_am_student():
+    if current_user.role != 1:  # should be changed to query in large app with many roles but not necessary in this case
+        abort(403)
 
 
 @student.route('/report/', methods=['GET', 'POST'])
