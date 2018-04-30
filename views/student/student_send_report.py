@@ -10,59 +10,72 @@ from hashlib import md5
 from datetime import datetime, timezone
 
 
+def courses_of_user(user_id):
+    """:returns course list of given user"""
+    query = text("SELECT course_shortened, course_name, labs_amount "  # query gets courses of user with given id
+                 "FROM "
+                 "(SELECT course_id, user_id "
+                 "FROM group_courses "
+                 "JOIN user_groups "
+                 "ON group_courses.group_id = user_groups.group_id) AS g "
+                 "JOIN course ON g.course_id = course.course_id "
+                 "WHERE user_id = :user_id"
+                 )
+    return [{'name': i.course_name, 'shortened': i.course_shortened}
+            for i in db.engine.execute(query, user_id=user_id)]
+
+
+def group_of_user(user_id):
+    """:returns group of given user"""
+    query = text("""SELECT "group".name 
+                    FROM user_groups
+                    JOIN "group" ON user_groups.group_id = "group".group_id
+                    WHERE user_id = :user_id""")
+    return [i.name for i in db.engine.execute(query, user_id=user_id)][0]
+
+
+def lab_max_number(course):
+    query = text("""SELECT course.labs_amount FROM course WHERE course_shortened = :shortened""")
+    return [i['labs_amount'] for i in db.engine.execute(query, shortened=course)][0]
+
+
+def report_is_checked(course, number_in_course, user):
+    """:returns report check status"""
+    course = Course.query.filter_by(course_shortened=course).first()
+    report = Report.query.filter_by(report_student=user,
+                                    report_course=course.course_id,
+                                    report_num=number_in_course).first()
+    return report and report.report_mark
+
+
 class SendReport(View):
     decorators = [login_required]
     methods = ["GET", "POST"]
 
     def dispatch_request(self):
         form = ReportSendingForm()
-        query = text("SELECT course_shortened, course_name, labs_amount "  # query gets courses of user with given id
-                     "FROM "
-                     "(SELECT course_id, user_id "
-                     "FROM group_courses "
-                     "JOIN user_groups "
-                     "ON group_courses.group_id = user_groups.group_id) AS g "
-                     "JOIN course ON g.course_id = course.course_id "
-                     "WHERE user_id = :user_id"
-                     )
-        courses_of_user = [{'name': i.course_name, 'shortened': i.course_shortened}
-                           for i in db.engine.execute(query, user_id=current_user.id)]
+        user_courses = courses_of_user(current_user.id)
 
         if request.method == 'POST' and form.validate_on_submit():
-
-            list_of_shortened = [i['shortened'] for i in courses_of_user]
+            list_of_shortened = [i['shortened'] for i in user_courses]
             if request.form.get('course') not in list_of_shortened:  # user's group should have this course
                 flash('You don\'t have this course')
                 return redirect(request.url)
-
             # report for lab shouldn't be already checked
-            course = Course.query.filter_by(course_shortened=request.form.get('course')).first()
-            report = Report.query.filter_by(report_student=current_user.id,
-                                            report_course=course.course_id,
-                                            report_num=request.form.get('number_in_course')).first()
-            if report:
-                if report.report_mark:
-                    flash('This work was already checked, your mark is {}'.format(report.report_mark))
-                    return redirect(request.url)
-            #
-            query = text("""SELECT course.labs_amount FROM course WHERE course_shortened = :shortened""")
-            lab_max_amount = [i['labs_amount'] for i in db.engine.execute(query, shortened=request.form.get('course'))][
-                0]
+            if report_is_checked(form.data.get('course'), form.data.get('number_in_course'), current_user.id):
+                flash('This work was already checked')
+                return redirect(request.url)
 
-            if int(request.form.get('number_in_course')) < 1 or \
-               int(request.form.get('number_in_course')) > int(lab_max_amount):
+            lab_max_amount = lab_max_number(request.form.get('course'))
+            if form.data.get('number_in_course') not in range(1, int(lab_max_amount)):
                 flash('lab number out of range')  # lab number should be in range between 1 and max lab number in course
                 return redirect(request.url)
             # file uploading
             file = form.attachment.data
             if (lambda filename: '.' in filename and filename.rsplit('.', 1)[1].lower() == 'pdf')(file.filename):
                 filename = request.form.get('number_in_course') + '.pdf'  # filename is <number_in_course>.pdf
-                query = text("""SELECT "group".name 
-                                    FROM user_groups
-                                    JOIN "group" ON user_groups.group_id = "group".group_id
-                                    WHERE user_id = :user_id""")
-                group = [i.name for i in db.engine.execute(query,
-                                                           user_id=current_user.id)][0]
+
+                group = group_of_user(current_user.id)
                 # saving file to uploads
                 file.save(join(Config.UPLOAD_PATH,
                                request.form.get('course'),
@@ -95,4 +108,4 @@ class SendReport(View):
         return render_template('give_report.html',
                                user=current_user,
                                form=form,
-                               courses=courses_of_user)
+                               courses=user_courses)

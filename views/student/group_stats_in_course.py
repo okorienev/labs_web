@@ -1,20 +1,8 @@
 from flask.views import View
-from flask import request, redirect, render_template, abort
-from flask_login import current_user
-from functools import wraps
-
-
-def user_required(f):
-    @wraps(f)
-    def decorator(*args, **kwargs):
-        if not current_user.is_authenticated:
-            return abort(403)
-        return f(*args, **kwargs)
-    return decorator
+from flask import render_template
 
 
 class GroupStats(View):
-    @user_required
-    def dispatch_request(self):
+    def dispatch_request(self, *args, **kwargs):
         return render_template('group_stats.html')
 
