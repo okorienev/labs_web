@@ -27,13 +27,13 @@ class CheckReports(View):
                             FROM user_groups
                             JOIN "group" ON user_groups.group_id = "group".group_id
                             WHERE user_id = :user_id""")
-            result = [j.name for j in db.engine.execute(query, user_id=i.get('student'))][0]
-            i.update({'group': result,
+            group = [j.name for j in db.engine.execute(query, user_id=i.get('student'))][0]
+            i.update({'group': group,
                       'student': User.query.get(i.get('student')).name})
             i.update({'link': url_for('.get-report',
-                                      course=course.course_name,
-                                      group=result,
-                                      student=i.get('student').split()[0],
+                                      course=course.course_shortened,
+                                      group=group,
+                                      student=i.get('student').split()[1],  # last name
                                       number=i.get('number'))})
         return render_template('check_report.html', reports=reports)
 

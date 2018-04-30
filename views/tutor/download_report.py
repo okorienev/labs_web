@@ -11,7 +11,7 @@ class DownloadReport(View):
 
     def dispatch_request(self, *args, **kwargs):
         if Course.query.filter_by(course_shortened=kwargs.get('course')).first().course_tutor != current_user.id:
-            abort(403)
+            abort(403)  # aborts when trying to check not own course
         return send_file(join(Config.UPLOAD_PATH,
                               kwargs.get('course'),
                               kwargs.get('group'),

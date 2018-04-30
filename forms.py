@@ -25,3 +25,10 @@ class ReportSendingForm(FlaskForm):
 class CourseChoosingForm(FlaskForm):
     shortened = StringField('course shortened name', validators=[DataRequired()])
 
+
+class CheckReportForm(FlaskForm):
+    report_id = IntegerField('report id', validators=[DataRequired()])
+    report_mark = IntegerField('report mark', validators=[DataRequired()])
+    tutor_comment = TextAreaField('tutor comment')
+
+
