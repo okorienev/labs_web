@@ -1,4 +1,4 @@
-from flask import Blueprint, request, redirect, url_for, render_template, abort, g
+from flask import Blueprint, request, redirect, url_for, render_template, abort, g, flash
 from models import User
 from flask_login import login_user, current_user, login_required
 from forms import LoginForm
@@ -17,8 +17,11 @@ def get_current_user():
 @auth.route('/', methods=["GET", "POST"])
 def login():
     form = LoginForm()
-    if request.method == "POST":
+    if request.method == "POST" and form.validate_on_submit():
         user = User.query.filter_by(username=request.form.get('username')).first()
+        if not user:
+            flash("User not found")
+            return redirect(url_for('.login'))
         if user.check_password(request.form.get('password')):
             login_user(user, remember=request.form.get('remember_me'))
             if user.role == 1:

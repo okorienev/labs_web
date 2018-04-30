@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, abort
 from flask_login import login_required, current_user
-from views.tutor.tutor_choose_course_to_check import ChooseCourseToCheck
+from views.tutor.choose_course_to_check import ChooseCourseToCheck
 from views.tutor.check_reports import CheckReports
 from views.tutor.download_report import DownloadReport
 

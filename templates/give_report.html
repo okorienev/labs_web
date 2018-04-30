@@ -48,12 +48,9 @@
 <div class="send_report_form">
      <form class="pure-form pure-form-stacked" method=post enctype=multipart/form-data>
           {{ form.hidden_tag() }}
-          <p>Course name</p>
           {{ form.course }}<br>
-          <p>Number in course</p>
           {{ form.number_in_course }}<br>
           {{ form.attachment }}<br>
-          <p>Comment (optional)</p>
           {{ form.comment }}<br>
      <p><input type="submit" value="Send report"></p>
      </form>

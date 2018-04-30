@@ -7,17 +7,40 @@
     <title>Login</title>
 </head>
 <body>
+
+
+
 <div class="login-form">
     <h1>Sign In</h1>
+    <div class="flash">
+    {% with messages = get_flashed_messages() %}
+  {% if messages %}
+      <table class="pure-table pure-table-horizontal">
+    <thead>
+        <tr>
+            <th>Message</th>
+        </tr>
+    </thead>
+      <tbody>
+    <ul class=flashes>
+    {% for message in messages %}
+      <th>{{ message }}</th>
+    {% endfor %}
+    </ul>
+      </tbody>
+      </table>
+  {% endif %}
+{% endwith %}
+    </div>
 <form class="pure-form pure-form-stacked" action="" method="post" name="login">
     {{form.hidden_tag()}}
     <p>
-        Username {{form.username}} <br>
-        Password {{ form.password }} <br>
-        {{ form.remember_me }} Remember me<br>
+        {{form.username}}<br>
+        {{ form.password }}<br>
+        Remember me  {{ form.remember_me }}<br>
     </p>
     <p><input type="submit" value="Sign In"></p>
 </form>
-</div>
+
 </body>
 </html>

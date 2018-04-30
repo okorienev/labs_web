@@ -8,26 +8,6 @@
 </head>
 <body>
 
-<div class="flash">
-    {% with messages = get_flashed_messages() %}
-  {% if messages %}
-      <table class="pure-table pure-table-horizontal">
-    <thead>
-        <tr>
-            <th>Error message</th>
-        </tr>
-    </thead>
-      <tbody>
-    <ul class=flashes>
-    {% for message in messages %}
-      <th>{{ message }}</th>
-    {% endfor %}
-    </ul>
-      </tbody>
-  {% endif %}
-{% endwith %}
-</table>
-</div>
 
 <div class="reports">
     <table title="Report list" class="pure-table pure-table-bordered">
@@ -56,5 +36,35 @@
     </table>
 </div>
 
+<div class="flash">
+    {% with messages = get_flashed_messages() %}
+  {% if messages %}
+      <table class="pure-table pure-table-horizontal">
+    <thead>
+        <tr>
+            <th>Error message</th>
+        </tr>
+    </thead>
+      <tbody>
+    <ul class=flashes>
+    {% for message in messages %}
+      <th>{{ message }}</th>
+    {% endfor %}
+    </ul>
+      </tbody>
+  {% endif %}
+{% endwith %}
+</table>
+</div>
+
+<div class="form">
+    <form class="pure-form pure-form-stacked" method="post">
+        {{ form.hidden_tag() }}
+        {{ form.report_id }}<br>
+        {{ form.report_mark }}<br>
+        {{ form.tutor_comment }}<br>
+     <p><input type="submit" value="Put mark"></p>
+    </form>
+</div>
 </body>
 </html>
