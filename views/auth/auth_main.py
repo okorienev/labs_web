@@ -18,20 +18,15 @@ def get_current_user():
 def login():
     form = LoginForm()
     if request.method == "POST":
-        username = request.form.get('username')
-        password = request.form.get('password')
-        user_type = request.form.get('user_type')
-        remember_me = request.form.get('remember_me')
-        user = User.query.filter_by(username=username).first()
-        if user.check_password(password) and ((user.role == 1 and user_type == 'student') or
-                                                          user.role == 2 and user_type == 'tutor'):
-            login_user(user, remember=remember_me)
+        user = User.query.filter_by(username=request.form.get('username')).first()
+        if user.check_password(request.form.get('password')):
+            login_user(user, remember=request.form.get('remember_me'))
             if user.role == 1:
-                return redirect(url_for('student.send_report'))
+                return redirect((url_for('student.send_report')))
             if user.role == 2:
                 return redirect(url_for('tutor.tutor_home'))
         else:
-            return abort(403)
+            abort(401)
     return render_template('login.html', form=form)
 
 
