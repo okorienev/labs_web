@@ -34,4 +34,4 @@ if __name__ == '__main__':
     app.register_blueprint(auth)
     app.register_blueprint(student)
     app.register_blueprint(tutor)
-    app.run()
+    app.run(debug=True)

@@ -7,6 +7,32 @@
     <title>Title</title>
 </head>
 <body>
+    <h3>Legend:</h3>
+    <ul>
+    <li><h4>N/A - report was not sent by the student</h4></li>
+    <li><h4>N/C - report was not checked by the tutor</h4></li>
+    </ul>
+    <table title="stats" class="pure-table pure-table-bordered">
+    <thead>
+        <tr>
+            <th>Student name</th>
+            {% for count in range(0, marks[0].reports|length) %}
+            <th>{{ count + 1}}</th>
+            {% endfor %}
+        </tr>
+
+    </thead>
+    <tbody>
+    {% for mark  in marks %}
+        <tr>
+            <th>{{ mark.name }}</th>
+            {% for report in mark.reports %}
+                <th>{{report}}</th>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
 
 </body>
 </html>
