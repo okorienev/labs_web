@@ -1,1 +1,1 @@
-labs_web
+[![Maintainability](https://api.codeclimate.com/v1/badges/ec3966366e6ea426b520/maintainability)](https://codeclimate.com/github/AlexPraefectus/labs_web/maintainability) [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
