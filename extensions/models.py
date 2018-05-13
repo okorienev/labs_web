@@ -1,9 +1,8 @@
-from flask_sqlalchemy import SQLAlchemy
+from extensions.extensions import db
 from hashlib import sha256
 
-db = SQLAlchemy()
 
-# table to link users to their roles
+# table to link users to their roles, unused
 roles = db.Table('user_roles',
                  db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
                  db.Column('role_id', db.Integer, db.ForeignKey('role.role_id')))
@@ -53,10 +52,7 @@ class User(db.Model):
         return True
 
     def check_password(self, password:str):
-        if sha256(password.encode()).hexdigest() == self._password:
-            return True
-        else:
-            return False
+        return sha256(password.encode()).hexdigest() == self._password
 
 
 class Course(db.Model):  # course model

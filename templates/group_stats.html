@@ -19,6 +19,7 @@
             {% for count in range(0, marks[0].reports|length) %}
             <th>{{ count + 1}}</th>
             {% endfor %}
+            <th>Total</th>
         </tr>
 
     </thead>
@@ -29,6 +30,7 @@
             {% for report in mark.reports %}
                 <th>{{report}}</th>
             {% endfor %}
+            <th>{{ mark.sum }}</th>
         </tr>
     {% endfor %}
     </tbody>

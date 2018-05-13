@@ -1,11 +1,13 @@
+from datetime import datetime, timezone
+
 from flask import request, render_template, abort, url_for, flash, redirect
 from flask.views import View
-from models import Course, User, db
 from flask_login import login_required, current_user
-from models import Report
 from sqlalchemy.sql import text
-from forms import CheckReportForm
-from datetime import datetime, timezone
+
+from extensions.forms import CheckReportForm
+from extensions.models import Course, User, db
+from extensions.models import Report
 
 
 class CheckReports(View):

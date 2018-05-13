@@ -1,8 +1,9 @@
-from flask.views import View
 from flask import render_template, request, redirect, flash, url_for
+from flask.views import View
 from flask_login import current_user, login_required
-from models import Course
-from forms import CourseChoosingForm
+
+from extensions.forms import CourseChoosingForm
+from extensions.models import Course
 
 
 class ChooseCourseToCheck(View):

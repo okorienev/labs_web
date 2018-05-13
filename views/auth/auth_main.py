@@ -1,7 +1,9 @@
 from flask import Blueprint, request, redirect, url_for, render_template, abort, g, flash
-from models import User
 from flask_login import login_user, current_user, login_required
-from forms import LoginForm
+
+from extensions.forms import LoginForm
+from extensions.models import User
+
 auth = Blueprint(
     'auth',
     __name__,

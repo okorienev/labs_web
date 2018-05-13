@@ -1,9 +1,11 @@
+from os.path import join
+
 from flask import send_file, abort
 from flask.views import View
 from flask_login import login_required, current_user
-from models import Course
+
 from config import Config
-from os.path import join
+from extensions.models import Course
 
 
 class DownloadReport(View):

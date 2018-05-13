@@ -1,23 +1,18 @@
-# TODO clean all the rubbish, make normal project structure
-# TODO end sending report
-# TODO create some representative templates for tutor/student home pages
-# TODO test test test
-
 from flask import Flask, redirect, url_for
-from flask_login import LoginManager
 from config import Config
-from models import db, User
+from extensions.extensions import login_manager
+from flask_debugtoolbar import DebugToolbarExtension
+from extensions.models import db, User
 from views.auth.auth_main import auth
 from views.student.student_main import student
 from views.tutor.tutor_main import tutor
 
 app = Flask(__name__)
 app.config.from_object(Config)
-login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'auth.login'
 db.init_app(app)
-db.create_all(app=app)
+debug = DebugToolbarExtension(app)
 
 
 @login_manager.user_loader
