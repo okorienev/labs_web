@@ -36,4 +36,4 @@ class Login(View):
                 return Login._make_homepage_redirects(user)
             else:
                 abort(401)
-        return render_template('login.html', form=form)
+        return render_template('auth/login.html', form=form)

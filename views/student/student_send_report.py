@@ -105,7 +105,7 @@ class SendReport(View):
                 db.session.add(report)
                 db.session.commit()
                 flash('Report successfully sent')
-        return render_template('give_report.html',
+        return render_template('student/send_report.html',
                                user=current_user,
                                form=form,
                                courses=user_courses)

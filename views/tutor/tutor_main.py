@@ -24,6 +24,6 @@ def i_am_tutor():
 @tutor.route('/home/')
 @login_required
 def tutor_home():
-    return render_template('tutor_home.html')
+    return render_template('tutor/tutor_home.html')
 
 

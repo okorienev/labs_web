@@ -68,7 +68,7 @@ class GroupStats(View):
     def dispatch_request(self, *args, **kwargs):
         if not ReportsProcessor.user_has_course(current_user.id, kwargs.get('course')):
             abort(404)
-        return render_template('group_stats.html',
+        return render_template('tutor/../../templates/student/group_stats.html',
                                marks=ReportsProcessor.generate_marks(ReportsProcessor.group_of_user(current_user.id),
                                                                      kwargs.get('course')))
 

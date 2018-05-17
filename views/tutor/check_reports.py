@@ -60,5 +60,5 @@ class CheckReports(View):
                                       group=group,
                                       student=i.get('student').split()[1],  # last name
                                       number=i.get('number'))})
-        return render_template('check_report.html', reports=reports, form=form)
+        return render_template('tutor/check_report.html', reports=reports, form=form)
 

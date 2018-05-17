@@ -1,4 +1,4 @@
-from flask import Blueprint, g
+from flask import Blueprint, g, redirect, url_for
 from flask_login import login_user, current_user, login_required
 from views.auth.login import Login
 
@@ -19,4 +19,5 @@ def get_current_user():
 @login_required
 def logout():
     login_user(current_user)
+    return redirect(url_for('auth.login'))
 

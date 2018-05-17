@@ -1,4 +1,4 @@
-from flask import Blueprint, abort, redirect, url_for
+from flask import Blueprint, abort, redirect, url_for, render_template
 from flask_login import current_user
 from views.student.group_stats_in_course import GroupStats
 from views.student.student_send_report import SendReport
@@ -16,3 +16,8 @@ def i_am_student():
         return redirect(url_for('auth.login'))
     if current_user.role != 1:  # should be changed to query in large app with many roles but not necessary in this case
         abort(403)
+
+
+@student.route('/home/')
+def student_home():
+    return render_template('student/student_home.html')

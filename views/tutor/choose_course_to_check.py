@@ -23,7 +23,7 @@ class ChooseCourseToCheck(View):
 
             chosen_course = Course.query.filter_by(course_shortened=form.data.get('shortened')).first()
             return redirect(url_for('.tutor_check_reports', course_id=chosen_course.course_id, page=1))
-        return render_template('tutor_choose_course.html', courses=courses, form=form)
+        return render_template('tutor/tutor_choose_course.html', courses=courses, form=form)
 
 
 
