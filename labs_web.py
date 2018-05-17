@@ -6,6 +6,7 @@ from extensions.models import db, User
 from views.auth.auth_main import auth
 from views.student.student_main import student
 from views.tutor.tutor_main import tutor
+from views.admin.admin_main import admin
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -30,4 +31,5 @@ if __name__ == '__main__':
     app.register_blueprint(auth)
     app.register_blueprint(student)
     app.register_blueprint(tutor)
+    app.register_blueprint(admin)
     app.run(debug=True)

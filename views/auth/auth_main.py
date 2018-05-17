@@ -1,38 +1,18 @@
-from flask import Blueprint, request, redirect, url_for, render_template, abort, g, flash
+from flask import Blueprint, g
 from flask_login import login_user, current_user, login_required
+from views.auth.login import Login
 
-from extensions.forms import LoginForm
-from extensions.models import User
 
 auth = Blueprint(
     'auth',
     __name__,
-    url_prefix='/auth'
-)
+    url_prefix='/auth')
+auth.add_url_rule('/login/', view_func=Login.as_view(name='login'))
 
 
 @auth.before_request
 def get_current_user():
     g.user = current_user
-
-
-@auth.route('/', methods=["GET", "POST"])
-def login():
-    form = LoginForm()
-    if request.method == "POST" and form.validate_on_submit():
-        user = User.query.filter_by(username=request.form.get('username')).first()
-        if not user:
-            flash("User not found")
-            return redirect(url_for('.login'))
-        if user.check_password(request.form.get('password')):
-            login_user(user, remember=request.form.get('remember_me'))
-            if user.role == 1:
-                return redirect((url_for('student.send_report')))
-            if user.role == 2:
-                return redirect(url_for('tutor.tutor_home'))
-        else:
-            abort(401)
-    return render_template('login.html', form=form)
 
 
 @auth.route('/logout/')
