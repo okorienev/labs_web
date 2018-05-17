@@ -7,7 +7,7 @@ class Config(object):
     UPLOAD_PATH = '/home/alex/Dropbox/labs_web/uploads/'
     ALLOWED_EXTENSIONS = {'pdf'}
     MAX_CONTENT_LENGTH = 5 * 1024 * 1024
-    CACHE_TYPE = 'redis'
+    CACHE_TYPE = 'simple'  # stub to check caching's work
     CACHE_DEFAULT_TIMEOUT = 60 * 60
     CACHE_KEY_PREFIX = 'labs_web',
     CACHE_REDIS_HOST = 'localhost',
