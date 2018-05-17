@@ -12,7 +12,7 @@ class Login(View):
     def _make_homepage_redirects(user: User):
         """redirects depending on role"""
         if user.role == 1:
-            return redirect((url_for('student.send_report')))
+            return redirect((url_for('student.student_home')))
         if user.role == 2:
             return redirect(url_for('tutor.tutor_home'))
         if user.role == 3:
