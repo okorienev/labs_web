@@ -1,0 +1,29 @@
+{% extends 'tutor/tutor_menu.html' %}
+{% block title%}Course stats{% endblock %}
+{% block content %}
+    {% for i in group_reports%}
+    <h3>{{i['group']}}</h3>
+        <table class="pure-table">
+        <thead>
+        <tr>
+            <th>Student name</th>
+            {% for count in range(0, i['marks'][0].reports|length) %}
+            <th>{{ count + 1}}</th>
+            {% endfor %}
+            <th>Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for mark  in i['marks'] %}
+        <tr>
+            <th>{{ mark.name }}</th>
+            {% for report in mark.reports %}
+                <th>{{report}}</th>
+            {% endfor %}
+            <th>{{ mark.sum }}</th>
+        </tr>
+    {% endfor %}
+        </tbody>
+        </table>
+    {% endfor %}
+{% endblock %}
