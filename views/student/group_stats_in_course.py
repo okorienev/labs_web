@@ -1,6 +1,6 @@
 from flask import render_template, abort
 from flask.views import View
-from flask_login import current_user
+from flask_login import current_user, login_required
 from sqlalchemy.sql import text
 from extensions.extensions import cache
 from extensions.models import User, Course, Group, Report, db
@@ -65,6 +65,7 @@ class ReportsProcessor:
 
 
 class GroupStats(View):
+    decorators = [login_required]
     def dispatch_request(self, *args, **kwargs):
         if not ReportsProcessor.user_has_course(current_user.id, kwargs.get('course')):
             abort(404)

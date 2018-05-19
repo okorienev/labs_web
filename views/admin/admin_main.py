@@ -1,5 +1,5 @@
 from flask import Blueprint, abort, render_template, redirect, url_for
-from flask_login import current_user
+from flask_login import current_user, login_required
 
 
 admin = Blueprint(name='admin',
@@ -9,12 +9,11 @@ admin = Blueprint(name='admin',
 
 @admin.before_request
 def i_am_admin():
-    if not current_user.is_authenticated:
-        return redirect(url_for('auth.login'))
-    if not current_user.role == 3:
+    if current_user.role != 3:  # should be changed to query in large app with many roles but not necessary in this case
         abort(404)
 
 
 @admin.route('/home/')
+@login_required
 def admin_home():
     return render_template('admin/index.html')

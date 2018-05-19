@@ -1,5 +1,5 @@
 from flask import Blueprint, abort, redirect, url_for, render_template
-from flask_login import current_user
+from flask_login import current_user, login_required
 from views.student.group_stats_in_course import GroupStats
 from views.student.student_send_report import SendReport
 from views.student.choose_course import ChooseCourse
@@ -14,12 +14,11 @@ student.add_url_rule('/choose-course/', view_func=ChooseCourse.as_view('choose_c
 
 @student.before_request
 def i_am_student():
-    if not current_user.is_authenticated:
-        return redirect(url_for('auth.login'))
     if current_user.role != 1:  # should be changed to query in large app with many roles but not necessary in this case
         abort(403)
 
 
 @student.route('/home/')
+@login_required
 def student_home():
     return render_template('student/student_home.html')

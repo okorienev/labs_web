@@ -17,8 +17,6 @@ tutor.add_url_rule('/stats/<int:course_id>', view_func=CourseStats.as_view('tuto
 
 @tutor.before_request
 def i_am_tutor():
-    if not current_user.is_authenticated:
-        return redirect(url_for('auth.login'))
     if current_user.role != 2:  # should be changed to query in large app with many roles but not necessary in this case
         abort(403)
 
