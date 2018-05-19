@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, abort, redirect
+from flask import Blueprint, render_template, abort, redirect, url_for
 from flask_login import login_required, current_user
 from views.tutor.choose_course_to_check import ChooseCourseToCheck
 from views.tutor.check_reports import CheckReports
@@ -18,7 +18,7 @@ tutor.add_url_rule('/stats/<int:course_id>', view_func=CourseStats.as_view('tuto
 @tutor.before_request
 def i_am_tutor():
     if not current_user.is_authenticated:
-        return redirect('auth.login')
+        return redirect(url_for('auth.login'))
     if current_user.role != 2:  # should be changed to query in large app with many roles but not necessary in this case
         abort(403)
 

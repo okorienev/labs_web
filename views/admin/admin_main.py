@@ -1,4 +1,4 @@
-from flask import Blueprint, abort, render_template
+from flask import Blueprint, abort, render_template, redirect, url_for
 from flask_login import current_user
 
 
@@ -9,6 +9,8 @@ admin = Blueprint(name='admin',
 
 @admin.before_request
 def i_am_admin():
+    if not current_user.is_authenticated:
+        return redirect(url_for('auth.login'))
     if not current_user.role == 3:
         abort(404)
 
