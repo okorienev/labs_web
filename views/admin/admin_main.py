@@ -8,6 +8,7 @@ admin = Blueprint(name='admin',
 
 
 @admin.before_request
+@login_required
 def i_am_admin():
     if current_user.role != 3:  # should be changed to query in large app with many roles but not necessary in this case
         abort(404)
