@@ -66,6 +66,7 @@ class ReportsProcessor:
 
 class GroupStats(View):
     decorators = [login_required]
+
     def dispatch_request(self, *args, **kwargs):
         if not ReportsProcessor.user_has_course(current_user.id, kwargs.get('course')):
             abort(404)

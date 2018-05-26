@@ -11,7 +11,7 @@ class ChooseCourse(View):
     methods = ["GET", "POST"]
 
     @staticmethod
-    def _courses_of_user(user_id: int) -> list:
+    def courses_of_user(user_id: int) -> list:
         query = text("""SELECT course.course_id, course.course_shortened, course.course_name
                         FROM
                         (SELECT course_id, user_id
@@ -25,7 +25,7 @@ class ChooseCourse(View):
 
     def dispatch_request(self):
         form = CourseChoosingForm()
-        courses = ChooseCourse._courses_of_user(current_user.id)
+        courses = ChooseCourse.courses_of_user(current_user.id)
         if request.method == "POST" and form.validate_on_submit():
             try:
                 course_index = [i.course_shortened for i in courses].index(form.data.get('shortened'))
