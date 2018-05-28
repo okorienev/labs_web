@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 from views.tutor.choose_course_to_check import ChooseCourseToCheck
 from views.tutor.check_reports import CheckReports
 from views.tutor.download_report import DownloadReport
+from views.tutor.courses_of_tutor_ajax import CoursesOfTutorHXR
 from views.tutor.course_stats import CourseStats
 
 tutor = Blueprint('tutor',
@@ -13,6 +14,7 @@ tutor.add_url_rule('/check/<int:course_id>/<int:page>/', view_func=CheckReports.
 tutor.add_url_rule('/get-report/<course>/<group>/<student>/<int:number>/',
                    view_func=DownloadReport.as_view('get-report'))
 tutor.add_url_rule('/stats/<int:course_id>', view_func=CourseStats.as_view('tutor_course_stats'))
+tutor.add_url_rule('/courses_ajax/', view_func=CoursesOfTutorHXR.as_view('course_of_tutor'))
 
 
 @tutor.before_request
