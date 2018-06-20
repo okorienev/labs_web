@@ -2,7 +2,7 @@ from flask import flash, redirect, request, render_template, url_for
 from flask.views import View
 from extensions.extensions import db
 from flask_login import current_user, login_required
-from sqlalchemy.sql import text
+from extensions.models import User
 from extensions.forms import CourseChoosingForm
 
 
@@ -10,22 +10,9 @@ class ChooseCourse(View):
     decorators = [login_required]
     methods = ["GET", "POST"]
 
-    @staticmethod
-    def courses_of_user(user_id: int) -> list:
-        query = text("""SELECT course.course_id, course.course_shortened, course.course_name
-                        FROM
-                        (SELECT course_id, user_id
-                        FROM
-                        group_courses
-                        JOIN
-                        user_groups ON group_courses.group_id = user_groups.group_id) AS g
-                        JOIN course ON g.course_id = course.course_id
-                        WHERE user_id = :user_id""")
-        return [i for i in db.engine.execute(query, user_id=user_id)]
-
     def dispatch_request(self):
         form = CourseChoosingForm()
-        courses = ChooseCourse.courses_of_user(current_user.id)
+        courses = [i for i in User.query.get(current_user.id).group[0].courses]
         if request.method == "POST" and form.validate_on_submit():
             try:
                 course_index = [i.course_shortened for i in courses].index(form.data.get('shortened'))
