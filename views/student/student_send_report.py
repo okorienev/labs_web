@@ -10,33 +10,20 @@ from extensions.forms import ReportSendingForm
 from extensions.models import *
 
 
-def courses_of_user(user_id):
+def courses_of_user(user_id: int) -> list:
     """:returns course list of given user"""
-    query = text("SELECT course_shortened, course_name, labs_amount "  # query gets courses of user with given id
-                 "FROM "
-                 "(SELECT course_id, user_id "
-                 "FROM group_courses "
-                 "JOIN user_groups "
-                 "ON group_courses.group_id = user_groups.group_id) AS g "
-                 "JOIN course ON g.course_id = course.course_id "
-                 "WHERE user_id = :user_id"
-                 )
     return [{'name': i.course_name, 'shortened': i.course_shortened}
-            for i in db.engine.execute(query, user_id=user_id)]
+            for i in User.query.get(user_id).group[0].courses]
 
 
-def group_of_user(user_id):
+def group_of_user(user_id: int) -> Group:
     """:returns group of given user"""
-    query = text("""SELECT "group".name 
-                    FROM user_groups
-                    JOIN "group" ON user_groups.group_id = "group".group_id
-                    WHERE user_id = :user_id""")
-    return [i.name for i in db.engine.execute(query, user_id=user_id)][0]
+    return User.query.get(user_id).group[0]
 
 
-def lab_max_number(course):
-    query = text("""SELECT course.labs_amount FROM course WHERE course_shortened = :shortened""")
-    return [i['labs_amount'] for i in db.engine.execute(query, shortened=course)][0]
+def lab_max_number(course: str) -> int:
+    """:returns maximal number of work in requested course"""
+    return Course.query.filter_by(course_shortened=course).one().labs_amount
 
 
 def report_is_checked(course, number_in_course, user):
@@ -46,6 +33,30 @@ def report_is_checked(course, number_in_course, user):
                                     report_course=course.course_id,
                                     report_num=number_in_course).first()
     return report and report.report_mark
+
+
+def report_already_uploaded(user_id: int, course_shortened: str, number_in_course: int) ->bool:
+    report_course = Course.query.filter_by(course_shortened=course_shortened).one().course_id
+    report = Report.query.filter_by(report_student=user_id,
+                                    report_course=report_course,
+                                    report_num=number_in_course).first()
+    return bool(report)
+
+
+def add_report_to_database(hash_md5: str):
+    # creating new report
+    report = Report(
+        report_course=Course.query.filter_by(course_shortened=request.form.get('course')).first().course_id,
+        report_student=current_user.id,
+        report_num=request.form.get('number_in_course'),
+        report_stu_comment=request.form.get('comment'),
+        report_uploaded=datetime.now(timezone.utc),
+        report_hash=hash_md5
+    )
+    # adding report to database
+    db.session.add(report)
+    db.session.commit()
+    flash('Report successfully sent')
 
 
 class SendReport(View):
@@ -79,32 +90,24 @@ class SendReport(View):
                 # saving file to uploads
                 file.save(join(Config.UPLOAD_PATH,
                                request.form.get('course'),
-                               group,
+                               group.name,
                                current_user.name.split()[1],
                                filename))
                 # generating md5 for report
                 hash_md5 = md5()
                 with open(join(Config.UPLOAD_PATH,
                                request.form.get('course'),
-                               group,
+                               group.name,
                                current_user.name.split()[1],
                                filename), 'rb') as f:
                     for chunk in iter(lambda: f.read(4096),
                                       b''):  # read file by small chunks to avoid problems with memory
                         hash_md5.update(chunk)
-                # creating new report
-                report = Report(
-                    report_course=Course.query.filter_by(course_shortened=request.form.get('course')).first().course_id,
-                    report_student=current_user.id,
-                    report_num=request.form.get('number_in_course'),
-                    report_stu_comment=request.form.get('comment'),
-                    report_uploaded=datetime.now(timezone.utc),
-                    report_hash=hash_md5.hexdigest()
-                )
-                # adding report to database
-                db.session.add(report)
-                db.session.commit()
-                flash('Report successfully sent')
+                if not report_already_uploaded(current_user.id,
+                                               request.form.get('course'),
+                                               form.data.get('number_in_course')):
+                    add_report_to_database(hash_md5.hexdigest())
+
         return render_template('student/send_report.html',
                                user=current_user,
                                form=form,

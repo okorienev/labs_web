@@ -1,9 +1,7 @@
 from datetime import datetime, timezone
-
 from flask import request, render_template, abort, url_for, flash, redirect
 from flask.views import View
 from flask_login import login_required, current_user
-from sqlalchemy.sql import text
 from extensions.extensions import cache
 from extensions.forms import CheckReportForm
 from extensions.models import Course, User, db
@@ -38,19 +36,15 @@ class CheckReports(View):
 
     @staticmethod
     def _generate_reports_representation(reports: list, course_shortened: str) -> list:
-        for i in reports:
-            query = text("""SELECT *
-                            FROM user_groups
-                            JOIN "group" ON user_groups.group_id = "group".group_id
-                            WHERE user_id = :user_id""")
-            group = [j.name for j in db.engine.execute(query, user_id=i.get('student'))][0]
-            i.update({'group': group,
-                      'student': User.query.get(i.get('student')).name})
-            i.update({'link': url_for('.get-report',
-                                      course=course_shortened,
-                                      group=group,
-                                      student=i.get('student').split()[1],  # last name
-                                      number=i.get('number'))})
+        for report in reports:
+            group = User.query.get(report.get('student')).group[0]
+            report.update({'group': group,
+                           'student': User.query.get(report.get('student')).name})
+            report.update({'link': url_for('.get-report',
+                                           course=course_shortened,
+                                           group=group,
+                                           student=report.get('student').split()[1],  # last name
+                                           number=report.get('number'))})
         return reports
 
     def dispatch_request(self, *args, **kwargs):
