@@ -35,6 +35,30 @@ def report_is_checked(course, number_in_course, user):
     return report and report.report_mark
 
 
+def report_already_uploaded(user_id: int, course_shortened: str, number_in_course: int) ->bool:
+    report_course = Course.query.filter_by(course_shortened=course_shortened).one().course_id
+    report = Report.query.filter_by(report_student=user_id,
+                                    report_course=report_course,
+                                    report_num=number_in_course).first()
+    return bool(report)
+
+
+def add_report_to_database(hash_md5: str):
+    # creating new report
+    report = Report(
+        report_course=Course.query.filter_by(course_shortened=request.form.get('course')).first().course_id,
+        report_student=current_user.id,
+        report_num=request.form.get('number_in_course'),
+        report_stu_comment=request.form.get('comment'),
+        report_uploaded=datetime.now(timezone.utc),
+        report_hash=hash_md5
+    )
+    # adding report to database
+    db.session.add(report)
+    db.session.commit()
+    flash('Report successfully sent')
+
+
 class SendReport(View):
     decorators = [login_required]
     methods = ["GET", "POST"]
@@ -79,19 +103,11 @@ class SendReport(View):
                     for chunk in iter(lambda: f.read(4096),
                                       b''):  # read file by small chunks to avoid problems with memory
                         hash_md5.update(chunk)
-                # creating new report
-                report = Report(
-                    report_course=Course.query.filter_by(course_shortened=request.form.get('course')).first().course_id,
-                    report_student=current_user.id,
-                    report_num=request.form.get('number_in_course'),
-                    report_stu_comment=request.form.get('comment'),
-                    report_uploaded=datetime.now(timezone.utc),
-                    report_hash=hash_md5.hexdigest()
-                )
-                # adding report to database
-                db.session.add(report)
-                db.session.commit()
-                flash('Report successfully sent')
+                if not report_already_uploaded(current_user.id,
+                                               request.form.get('course'),
+                                               form.data.get('number_in_course')):
+                    add_report_to_database(hash_md5.hexdigest())
+
         return render_template('student/send_report.html',
                                user=current_user,
                                form=form,
