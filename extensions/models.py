@@ -28,6 +28,14 @@ class Role(db.Model):
 class Group(db.Model):
     group_id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(10), unique=True, nullable=False)
+    students = db.relationship('User',
+                               secondary=groups,
+                               lazy='subquery',
+                               backref='group')
+    courses = db.relationship('Course',
+                              secondary=courses,
+                              lazy='subquery',
+                              backref='groups')
 
     def __repr__(self):
         """needed for correct caching"""
@@ -42,6 +50,7 @@ class User(db.Model):
     active = db.Column(db.Boolean(), default=True)
     _password = db.Column('password', db.String(100))
     role = db.Column(db.ForeignKey('role.role_id'))
+    reports = db.relationship("Report")
 
     def get_id(self):
         return str(self.id)
@@ -65,7 +74,7 @@ class Course(db.Model):  # course model
     course_shortened = db.Column(db.String(10), nullable=False)  # shortened name (will be used in file paths)
     course_tutor = db.Column(db.Integer(), db.ForeignKey('user.id'))  # connecting to tutor
     labs_amount = db.Column(db.Integer(), nullable=False)   # amount of reports
-    lab_max_score = db.Column(db.Integer(), nullable=False)  # max score for one lab TODO link with report score (later)
+    lab_max_score = db.Column(db.Integer(), nullable=False)  # max score for one lab
 
 
 class Report(db.Model):
@@ -78,5 +87,4 @@ class Report(db.Model):
     report_checked = db.Column(db.DateTime())  # check time
     report_stu_comment = db.Column(db.Text())  # comment of student
     report_tut_comment = db.Column(db.Text())  # comment of tutor
-    report_hash = db.Column(db.String(32), nullable=False)   # checksum TODO util check report hashes (much later)
-
+    report_hash = db.Column(db.String(32), nullable=False)   # checksum

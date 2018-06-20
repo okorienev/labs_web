@@ -7,6 +7,7 @@ from views.auth.auth_main import auth
 from views.student.student_main import student
 from views.tutor.tutor_main import tutor
 from views.admin.admin_main import admin
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -15,6 +16,7 @@ login_manager.login_view = 'auth.login'
 db.init_app(app)
 debug = DebugToolbarExtension(app)
 cache.init_app(app)
+migrate = Migrate(app, db)
 
 
 @login_manager.user_loader
