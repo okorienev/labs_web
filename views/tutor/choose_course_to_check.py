@@ -17,7 +17,7 @@ class ChooseCourseToCheck(View):
         form = CourseChoosingForm()
         if request.method == "POST" and form.validate_on_submit():
             if form.data.get('shortened') not in [i['shortened'] for i in courses]:  # if course isn't present for tutor
-                flash('You don\' have this course')
+                flash('You don\'t have this course')
                 return redirect(request.url)
 
             chosen_course = Course.query.filter_by(course_shortened=form.data.get('shortened')).first()

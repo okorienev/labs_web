@@ -38,11 +38,11 @@ class CheckReports(View):
     def _generate_reports_representation(reports: list, course_shortened: str) -> list:
         for report in reports:
             group = User.query.get(report.get('student')).group[0]
-            report.update({'group': group,
+            report.update({'group': group.name,
                            'student': User.query.get(report.get('student')).name})
             report.update({'link': url_for('.get-report',
                                            course=course_shortened,
-                                           group=group,
+                                           group=group.name,
                                            student=report.get('student').split()[1],  # last name
                                            number=report.get('number'))})
         return reports
