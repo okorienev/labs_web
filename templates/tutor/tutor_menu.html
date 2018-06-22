@@ -3,12 +3,25 @@
     <div class="pure-menu pure-menu-horizontal">
     <a href=" {{ url_for('tutor.tutor_home') }}" class="pure-menu-heading pure-menu-link">Home</a>
     <ul class="pure-menu-list">
-        <li class="pure-menu-item"><a href="{{ url_for('tutor.tutor_choose_course') }}"
-                                      class="pure-menu-link">Choose course to check</a></li>
-        <li class="pure-menu-item"><a href="#"
-                                      class="pure-menu-link">Stub</a></li>
+        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+            <a href="{{ url_for('tutor.tutor_choose_course') }}" class="pure-menu-link">Course Stats</a>
+        <ul class="pure-menu-children" id="course-stats">
+        </ul>
+        </li>
+
+        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+            <a href="{{ url_for('tutor.tutor_choose_course') }}" class="pure-menu-link">Check Reports</a>
+        <ul class="pure-menu-children" id="check-reports">
+        </ul>
+        </li>
         <li class="pure-menu-item"><a href="{{ url_for('auth.logout') }}"
                                       class="pure-menu-link">Logout</a></li>
     </ul>
 </div>
+    {% block script %}
+        <script type="text/javascript" src="{{ url_for("static", filename="js/check_reports_menu.js") }}"></script>
+    <script type="text/javascript" src="{{ url_for("static", filename="js/insert_menu_items.js") }}"></script>
+        <script type="text/javascript" src="{{ url_for("static", filename="js/get_tutor_courses.js") }}"></script>
 {% endblock %}
+{% endblock %}
+

@@ -7,7 +7,7 @@
                                       class="pure-menu-link">Give report</a></li>
         <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
             <a href="{{ url_for('student.choose_course') }}" class="pure-menu-link">Stats</a>
-        <ul class="pure-menu-children" id="pure-menu-children">
+        <ul class="pure-menu-children" id="course-stats">
         </ul>
         </li>
         <li class="pure-menu-item"><a href="{{ url_for('auth.logout') }}"
@@ -15,9 +15,8 @@
     </ul>
 </div>
 {% block script %}
-    <script type="text/javascript">
-        {% include "student/js/get_user_courses_jquery.js" %}
-    </script>
+    <script type="text/javascript" src="{{ url_for("static", filename="js/insert_menu_items.js") }}"></script>
+        <script type="text/javascript" src="{{ url_for("static", filename="js/get_student_courses.js") }}"></script>
     {% endblock %}
 {% endblock %}
 
