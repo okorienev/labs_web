@@ -4,7 +4,7 @@ from extensions.models import Course
 from flask_login import login_required, current_user
 
 
-class CoursesOfTutorHXR(View):
+class CoursesOfTutorXHR(View):
     decorators = [login_required]
 
     def dispatch_request(self):
