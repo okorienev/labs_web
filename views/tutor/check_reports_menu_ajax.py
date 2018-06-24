@@ -10,7 +10,7 @@ class CheckReportsMenuAjax(View):
     def dispatch_request(self):
         return jsonify([
             {'shortened': course.course_shortened,
-             'unchecked': Report.query.filter_by(report_course=course.course_id).count(),
+             'unchecked': Report.query.filter_by(report_course=course.course_id, report_mark=None).count(),
              'url': url_for('tutor.tutor_check_reports', course_id=course.course_id, page=1)
              }
             for course in Course.query.filter_by(course_tutor=current_user.id).all()
