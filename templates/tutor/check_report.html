@@ -54,13 +54,13 @@
 <div class="form">
     <form class="pure-form pure-form-stacked" method="post">
         {{ form.hidden_tag() }}
-        {{ form.report_id }}<br>
-        {{ form.report_mark }}<br>
-        {{ form.tutor_comment }}<br>
-     <p><input type="submit" value="Put mark"></p>
+        {{ form.report_id }}
+        {{ form.report_mark }}
+        {{ form.tutor_comment }}
+        <button type="submit" class="pure-button pure-button-primary">Submit</button>
     </form>
 </div>
-
+<br>
     <div class="search">
     <form class="pure-form" method="post">
         {{ search.hidden_tag() }}

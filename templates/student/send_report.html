@@ -42,11 +42,11 @@
 <div class="send_report_form">
      <form class="pure-form pure-form-stacked" method=post enctype=multipart/form-data>
           {{ form.hidden_tag() }}
-          {{ form.course }}<br>
-          {{ form.number_in_course }}<br>
-          {{ form.attachment }}<br>
-          {{ form.comment }}<br>
-     <p><input type="submit" value="Send report"></p>
+          {{ form.course }}
+          {{ form.number_in_course }}
+          {{ form.attachment }}
+          {{ form.comment }}
+     <button type="submit" class="pure-button pure-button-primary">Submit</button>
      </form>
 </div>
 {% endblock %}
