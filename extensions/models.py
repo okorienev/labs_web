@@ -64,7 +64,7 @@ class User(db.Model):
     def is_authenticated(self):
         return True
 
-    def check_password(self, password:str):
+    def check_password(self, password: str):
         return sha256(password.encode()).hexdigest() == self._password
 
 

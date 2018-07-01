@@ -11,7 +11,7 @@ class CheckReportsMenuAjax(View):
         return jsonify([
             {'shortened': course.course_shortened,
              'unchecked': Report.query.filter_by(report_course=course.course_id).count(),
-             'url': url_for('tutor.tutor_check_reports', course_id=course.course_id, page=1)
+             'url': url_for('tutor.tutor_check_reports', course_id=course.course_id)
              }
             for course in Course.query.filter_by(course_tutor=current_user.id).all()
         ])

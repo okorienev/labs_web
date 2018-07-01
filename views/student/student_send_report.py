@@ -78,7 +78,7 @@ class SendReport(View):
                 return redirect(request.url)
 
             lab_max_amount = lab_max_number(request.form.get('course'))
-            if form.data.get('number_in_course') not in range(1, int(lab_max_amount)):
+            if form.data.get('number_in_course') not in range(1, int(lab_max_amount) + 1):
                 flash('lab number out of range')  # lab number should be in range between 1 and max lab number in course
                 return redirect(request.url)
             # file uploading

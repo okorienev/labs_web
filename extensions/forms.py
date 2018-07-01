@@ -31,3 +31,7 @@ class CheckReportForm(FlaskForm):
     tutor_comment = TextAreaField('tutor comment', render_kw={'placeholder': 'Comment (optional)'})
 
 
+class ReportSearchingForm(FlaskForm):
+    report_student = StringField(render_kw={'placeholder': 'Student'})
+    report_number = IntegerField(render_kw={'placeholder': 'Report number'})
+    report_group = StringField(render_kw={'placeholder': "Group"})
