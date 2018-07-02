@@ -6,7 +6,6 @@ from views.tutor.download_report import DownloadReport
 from views.tutor.courses_of_tutor_ajax import CoursesOfTutorXHR
 from views.tutor.course_stats import CourseStats
 from views.tutor.check_reports_menu_ajax import CheckReportsMenuAjax
-from views.tutor.search_reports import SearchReports
 
 tutor = Blueprint('tutor',
                   __name__,
@@ -18,7 +17,6 @@ tutor.add_url_rule('/get-report/<course>/<group>/<student>/<int:number>/',
 tutor.add_url_rule('/stats/<int:course_id>', view_func=CourseStats.as_view('tutor_course_stats'))
 tutor.add_url_rule('/courses_ajax/', view_func=CoursesOfTutorXHR.as_view('course_of_tutor'))
 tutor.add_url_rule('/check-reports-menu-items/', view_func=CheckReportsMenuAjax.as_view('check_reports_menu'))
-tutor.add_url_rule('/search-reports/<int:course_id>', view_func=SearchReports.as_view('tutor_search'))
 
 
 @tutor.before_request

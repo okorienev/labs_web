@@ -6,6 +6,7 @@ from extensions.extensions import cache
 from extensions.forms import CheckReportForm, ReportSearchingForm
 from extensions.models import Course, User, db
 from extensions.models import Report
+from views.tutor.search_reports import ReportsSearcher
 
 
 class CheckReports(View):
@@ -14,7 +15,7 @@ class CheckReports(View):
     methods = ["GET", "POST"]
 
     @staticmethod
-    def generate_reports(course_id: int) -> list:
+    def generate_reports_default(course_id: int) -> list:
         return [{'student': i.report_student,
                  'number': i.report_num,
                  'id': i.report_id,
@@ -24,7 +25,23 @@ class CheckReports(View):
                                        report_mark=None).limit(10)]
 
     @staticmethod
+    def generate_reports(reports: list):
+        return [{'student': i.report_student,
+                 'number': i.report_num,
+                 'id': i.report_id,
+                 'uploaded': i.report_uploaded,
+                 'comment': i.report_stu_comment} for i in reports]
+
+    @staticmethod
     def _set_report_mark(report_id: int, mark: int, comment="") -> None:
+        """
+        set mark for given report and commits result to db
+        all validations are done before with report_can_not_be_checked  
+        :param report_id: 
+        :param mark: 
+        :param comment: 
+        :return: 
+        """
         report = Report.query.get(report_id)
         report.report_mark = mark
         report.report_checked = datetime.now(timezone.utc)
@@ -34,8 +51,9 @@ class CheckReports(View):
     @staticmethod
     def report_can_not_be_checked(report_id: int, tutor_id: int, report_mark: int):
         """
-        :param report_id: 
-        :param tutor_id: 
+        :param report_mark: mark to put
+        :param report_id: identifier of report
+        :param tutor_id: identifiers of user(tutor) who is trying to check report
         :return: true if given report can be checked by the given tutor
         :return: list with errors to flash 
         """
@@ -44,8 +62,6 @@ class CheckReports(View):
         if not report:
             return "Report doesn't exist"
         course = Course.query.get(report.report_course)
-        if course.course_tutor != tutor.id:
-            return "You don't have permission to check this report"
         if report.report_mark:
             return "Report is already checked"
         if report_mark not in range(1, course.lab_max_score + 1):
@@ -68,15 +84,26 @@ class CheckReports(View):
         form = CheckReportForm()
         search = ReportSearchingForm()
         course = Course.query.get(kwargs.get('course_id'))
-        reports = CheckReports.generate_reports(course.course_id)
-        if request.method == "POST" and form.validate_on_submit():
-            report_id = form.data.get('report_id')
-            report_mark = form.data.get('report_mark')
-            error = CheckReports.report_can_not_be_checked(report_id, current_user.id, report_mark)
-            if error:
-                flash(error)
-                return redirect(request.url)
-            CheckReports._set_report_mark(report_id, report_mark, form.data.get("tutor_comment"))
-            return redirect(url_for('.tutor_check_reports', course_id=course.course_id))
+        if not course or course.course_tutor != current_user.id:
+            abort(404)
+        if request.method == "POST":
+            if form.validate_on_submit():
+                report_id = form.data.get('report_id')
+                report_mark = form.data.get('report_mark')
+                error = CheckReports.report_can_not_be_checked(report_id, current_user.id, report_mark)
+                if error:
+                    flash(error)
+                    return redirect(request.url)
+                CheckReports._set_report_mark(report_id, report_mark, form.data.get("tutor_comment"))
+                return redirect(url_for('.tutor_check_reports', course_id=course.course_id))
+            if search.validate_on_submit():
+                searcher = ReportsSearcher(course)
+                reports = CheckReports.generate_reports(searcher.search(search.data.get('report_student'),
+                                                        search.data.get('report_group'),
+                                                        search.data.get('report_number')))
+                return render_template('tutor/check_report.html', form=form, search=search,
+                                       reports=CheckReports.generate_reports_representation(reports,
+                                                                                            course.course_shortened))
+        reports = CheckReports.generate_reports_default(course.course_id)
         reports = CheckReports.generate_reports_representation(reports, course.course_shortened)
         return render_template('tutor/check_report.html', reports=reports, form=form, search=search)
