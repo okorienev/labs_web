@@ -7,12 +7,9 @@
     <title>Login</title>
 </head>
 <body>
+<h1>Sign In</h1>
 
-
-
-<div class="login-form">
-    <h1>Sign In</h1>
-    <div class="flash">
+<div class="flash">
     {% with messages = get_flashed_messages() %}
   {% if messages %}
       <table class="pure-table pure-table-horizontal">
@@ -32,6 +29,9 @@
   {% endif %}
 {% endwith %}
     </div>
+
+
+<div class="login-form">
 <form class="pure-form pure-form-stacked" action="" method="post" name="login">
     {{form.hidden_tag()}}
     <p>
@@ -39,8 +39,8 @@
         {{ form.password }}<br>
         Remember me  {{ form.remember_me }}<br>
     </p>
-    <p><input type="submit" value="Sign In"></p>
+    <button type="submit" class="pure-button pure-button-primary">Log in</button>
 </form>
-
+</div>
 </body>
 </html>
