@@ -1,6 +1,5 @@
 from flask import flash, redirect, request, render_template, url_for
 from flask.views import View
-from extensions.extensions import db
 from flask_login import current_user, login_required
 from extensions.models import User
 from extensions.forms import CourseChoosingForm

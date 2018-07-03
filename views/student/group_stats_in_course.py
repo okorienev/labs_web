@@ -1,9 +1,8 @@
 from flask import render_template, abort
 from flask.views import View
 from flask_login import current_user, login_required
-from sqlalchemy.sql import text
 from extensions.extensions import cache
-from extensions.models import User, Course, Group, Report, db
+from extensions.models import User, Course, Group, Report
 
 
 class ReportsProcessor:
@@ -18,16 +17,22 @@ class ReportsProcessor:
         return "Reports list of {name}:".format(name=self.name) + " ".join([str(i) for i in self.reports])
 
     @classmethod
-    @cache.memoize(timeout=60*60)
+    @cache.memoize(timeout=60*60*12)
     def generate_marks(cls, group: Group, course: int) -> list:
         course = Course.query.get(course)
-        students = [i for i in group.students]
         marks_lst = []
-        for i in students:
+        for i in group.students:
             reports = Report.query.filter_by(report_course=course.course_id,
                                              report_student=i.id).order_by(Report.report_num)
             marks_lst.append(cls(i, reports, course.labs_amount))
         return marks_lst
+
+    @staticmethod
+    def drop_marks_cache(*args, **kwargs):
+        course = kwargs.get('course')
+        group = kwargs.get('group')
+        if group and course:
+            cache.delete_memoized(ReportsProcessor.generate_marks, group, course)
 
     @staticmethod
     def user_has_course(user: int, course: int) -> bool:

@@ -4,10 +4,10 @@ from os.path import join
 from flask import render_template, redirect, request, flash
 from flask.views import View
 from flask_login import current_user, login_required
-from sqlalchemy.sql import text
 from config import Config
 from extensions.forms import ReportSendingForm
 from extensions.models import *
+from extensions.signals import drop_marks_cache_sig
 
 
 def courses_of_user(user_id: int) -> list:
@@ -16,40 +16,12 @@ def courses_of_user(user_id: int) -> list:
             for i in User.query.get(user_id).group[0].courses]
 
 
-def group_of_user(user_id: int) -> Group:
-    """:returns group of given user"""
-    return User.query.get(user_id).group[0]
-
-
-def lab_max_number(course: str) -> int:
-    """:returns maximal number of work in requested course"""
-    return Course.query.filter_by(course_shortened=course).one().labs_amount
-
-
-def report_is_checked(course, number_in_course, user):
-    """:returns report check status"""
-    course = Course.query.filter_by(course_shortened=course).first()
-    report = Report.query.filter_by(report_student=user,
-                                    report_course=course.course_id,
-                                    report_num=number_in_course).first()
-    return report and report.report_mark
-
-
-def report_already_uploaded(user_id: int, course_shortened: str, number_in_course: int) ->bool:
-    report_course = Course.query.filter_by(course_shortened=course_shortened).one().course_id
-    report = Report.query.filter_by(report_student=user_id,
-                                    report_course=report_course,
-                                    report_num=number_in_course).first()
-    return bool(report)
-
-
-def add_report_to_database(hash_md5: str):
+def add_report_to_database(course_id: int, student_id: int, report_num, hash_md5: str):
     # creating new report
     report = Report(
-        report_course=Course.query.filter_by(course_shortened=request.form.get('course')).first().course_id,
-        report_student=current_user.id,
-        report_num=request.form.get('number_in_course'),
-        report_stu_comment=request.form.get('comment'),
+        report_course=course_id,
+        report_student=student_id,
+        report_num=report_num,
         report_uploaded=datetime.now(timezone.utc),
         report_hash=hash_md5
     )
@@ -68,45 +40,49 @@ class SendReport(View):
         user_courses = courses_of_user(current_user.id)
 
         if request.method == 'POST' and form.validate_on_submit():
-            list_of_shortened = [i['shortened'] for i in user_courses]
-            if request.form.get('course') not in list_of_shortened:  # user's group should have this course
+            course = Course.query.filter_by(course_shortened=form.data.get('course')).first()
+            group = current_user.group[0]
+            report_number = form.data.get('number_in_course')
+            if not course or course.course_id not in [course.course_id for course in group.courses]:
                 flash('You don\'t have this course')
                 return redirect(request.url)
-            # report for lab shouldn't be already checked
-            if report_is_checked(form.data.get('course'), form.data.get('number_in_course'), current_user.id):
+            report = Report.query.filter_by(report_course=course.course_id,
+                                            report_student=current_user.id,
+                                            report_num=report_number).first()
+            if report and report.report_mark:
                 flash('This work was already checked')
                 return redirect(request.url)
-
-            lab_max_amount = lab_max_number(request.form.get('course'))
-            if form.data.get('number_in_course') not in range(1, int(lab_max_amount) + 1):
+            if report_number not in range(1, int(course.labs_amount) + 1):
                 flash('lab number out of range')  # lab number should be in range between 1 and max lab number in course
                 return redirect(request.url)
             # file uploading
             file = form.attachment.data
             if (lambda filename: '.' in filename and filename.rsplit('.', 1)[1].lower() == 'pdf')(file.filename):
-                filename = request.form.get('number_in_course') + '.pdf'  # filename is <number_in_course>.pdf
-
-                group = group_of_user(current_user.id)
+                filename = str(report_number) + '.pdf'  # filename is <number_in_course>.pdf
                 # saving file to uploads
                 file.save(join(Config.UPLOAD_PATH,
-                               request.form.get('course'),
+                               course.course_shortened,
                                group.name,
                                current_user.name.split()[1],
                                filename))
                 # generating md5 for report
                 hash_md5 = md5()
                 with open(join(Config.UPLOAD_PATH,
-                               request.form.get('course'),
+                               course.course_shortened,
                                group.name,
                                current_user.name.split()[1],
                                filename), 'rb') as f:
                     for chunk in iter(lambda: f.read(4096),
                                       b''):  # read file by small chunks to avoid problems with memory
                         hash_md5.update(chunk)
-                if not report_already_uploaded(current_user.id,
-                                               request.form.get('course'),
-                                               form.data.get('number_in_course')):
-                    add_report_to_database(hash_md5.hexdigest())
+                if not report:
+                    add_report_to_database(course.course_id, current_user.id, report_number,
+                                           hash_md5.hexdigest())
+                else:
+                    report.report_hash = hash_md5.hexdigest()
+                    report.report_uploaded = datetime.now()
+                    db.session.commit()
+                drop_marks_cache_sig.send(group=group, course_id=course.course_id)
 
         return render_template('student/send_report.html',
                                user=current_user,
