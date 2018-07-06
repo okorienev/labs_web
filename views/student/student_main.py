@@ -4,7 +4,8 @@ from views.student.group_stats_in_course import GroupStats, ReportsProcessor
 from views.student.student_send_report import SendReport
 from views.student.choose_course import ChooseCourse
 from views.student.courses_of_user_ajax import CoursesOfUserXHR
-from extensions.signals import drop_marks_cache_sig
+from extensions.signals import report_sent
+from views.tutor.check_reports_menu_ajax import drop_unchecked
 
 student = Blueprint('student',
                     __name__,
@@ -13,7 +14,8 @@ student.add_url_rule('/group-stats/<int:course>', view_func=GroupStats.as_view('
 student.add_url_rule('/send-report/', view_func=SendReport.as_view('send_report'))
 student.add_url_rule('/choose-course/', view_func=ChooseCourse.as_view('choose_course'))
 student.add_url_rule('/ajax/my-courses/', view_func=CoursesOfUserXHR.as_view('my_courses_xhr'))
-drop_marks_cache_sig.connect(ReportsProcessor.drop_marks_cache)
+report_sent.connect(ReportsProcessor.drop_marks_cache)
+report_sent.connect(drop_unchecked)
 
 
 @student.before_request

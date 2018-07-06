@@ -13,7 +13,7 @@ class LoginForm(FlaskForm):
 class ReportSendingForm(FlaskForm):
     number_in_course = IntegerField('', render_kw={'placeholder': 'Lab number'})
     course = StringField('course shortened name', validators=[DataRequired()], render_kw={'placeholder': 'Course'})
-    comment = TextAreaField(render_kw={'placeholder': 'Comment(optional)'})
+    # comment = TextAreaField(render_kw={'placeholder': 'Comment(optional)'})
     attachment = FileField('report', validators=[
         FileRequired(),
         FileAllowed(['pdf'], 'PDF files only!')

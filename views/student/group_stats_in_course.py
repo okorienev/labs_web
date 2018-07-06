@@ -29,10 +29,12 @@ class ReportsProcessor:
 
     @staticmethod
     def drop_marks_cache(*args, **kwargs):
-        course = kwargs.get('course')
-        group = kwargs.get('group')
-        if group and course:
-            cache.delete_memoized(ReportsProcessor.generate_marks, group, course)
+        report_id = kwargs.get('id')
+        if report_id:
+            report = Report.query.get(report_id)
+            course = Course.query.get(report.report_course).course_id
+            group = User.query.get(report.report_student).group[0]
+            cache.delete_memoized(ReportsProcessor.generate_marks, ReportsProcessor, group, course)
 
     @staticmethod
     def user_has_course(user: int, course: int) -> bool:

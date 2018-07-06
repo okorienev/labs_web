@@ -7,7 +7,7 @@ from flask_login import current_user, login_required
 from config import Config
 from extensions.forms import ReportSendingForm
 from extensions.models import *
-from extensions.signals import drop_marks_cache_sig
+from extensions.signals import report_sent
 
 
 def courses_of_user(user_id: int) -> list:
@@ -22,6 +22,7 @@ def add_report_to_database(course_id: int, student_id: int, report_num, hash_md5
         report_course=course_id,
         report_student=student_id,
         report_num=report_num,
+        report_stu_comment="",
         report_uploaded=datetime.now(timezone.utc),
         report_hash=hash_md5
     )
@@ -82,7 +83,7 @@ class SendReport(View):
                     report.report_hash = hash_md5.hexdigest()
                     report.report_uploaded = datetime.now()
                     db.session.commit()
-                drop_marks_cache_sig.send(group=group, course_id=course.course_id)
+                report_sent.send(id=report.report_id)
 
         return render_template('student/send_report.html',
                                user=current_user,

@@ -55,7 +55,5 @@ class ReportsSearcher:
     def _search_by_group_and_number(self, group: Group, number: int):
         reports = []
         for student in group.students:
-            print(student)
-            print(self._search_by_student_and_number(student.name, number))
             reports.extend(self._search_by_student_and_number(student.name, number))
         return reports

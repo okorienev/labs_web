@@ -10,7 +10,7 @@
             <th>Student group</th>
             <th>Number in course</th>
             <th>Upload date</th>
-            <th>Student comment</th>
+{#            <th>Student comment</th>#}
             <th>Report</th>
         </tr>
     </thead>
@@ -22,7 +22,7 @@
             <th> {{ report['group'] }}</th>
             <th> {{ report['number'] }}</th>
             <th> {{ report['uploaded'] }}</th>
-            <th width="150px"> {{ report['comment'] }}</th>
+{#            <th width="150px"> {{ report['comment'] }}</th>#}
             <th> <a href="{{ report['link'] }}">Report</a></th>
         </tr>
     {% endfor %}

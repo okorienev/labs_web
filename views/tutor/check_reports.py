@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 from flask import request, render_template, abort, url_for, flash, redirect
 from flask.views import View
 from flask_login import login_required, current_user
-from extensions.extensions import cache
+from extensions.signals import report_checked
 from extensions.forms import CheckReportForm, ReportSearchingForm
 from extensions.models import Course, User, db
 from extensions.models import Report
@@ -95,6 +95,7 @@ class CheckReports(View):
                     flash(error)
                     return redirect(request.url)
                 CheckReports._set_report_mark(report_id, report_mark, form.data.get("tutor_comment"))
+                report_checked.send(id=report_id)
                 return redirect(url_for('.tutor_check_reports', course_id=course.course_id))
             if search.validate_on_submit():
                 searcher = ReportsSearcher(course)
