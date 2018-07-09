@@ -1,4 +1,4 @@
-from extensions.models import Report, User, Group, Course
+from labs_web.extensions import Report, User, Group, Course
 
 
 class ReportsSearcher:

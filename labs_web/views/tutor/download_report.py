@@ -4,8 +4,8 @@ from flask import send_file, abort
 from flask.views import View
 from flask_login import login_required, current_user
 
-from config import Config
-from extensions.models import Course
+from labs_web.config import Config
+from labs_web.extensions import Course
 
 
 class DownloadReport(View):

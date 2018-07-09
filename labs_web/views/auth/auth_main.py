@@ -1,6 +1,6 @@
 from flask import Blueprint, g, redirect, url_for
 from flask_login import login_user, current_user, login_required, logout_user
-from views.auth.login import Login
+from . import Login
 
 
 auth = Blueprint(

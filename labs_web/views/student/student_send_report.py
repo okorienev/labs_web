@@ -4,10 +4,13 @@ from os.path import join
 from flask import render_template, redirect, request, flash
 from flask.views import View
 from flask_login import current_user, login_required
-from config import Config
-from extensions.forms import ReportSendingForm
-from extensions.models import *
-from extensions.signals import report_sent
+from labs_web.config import Config
+from labs_web.extensions import (ReportSendingForm,
+                                 report_sent,
+                                 User,
+                                 Report,
+                                 db,
+                                 Course)
 
 
 def courses_of_user(user_id: int) -> list:

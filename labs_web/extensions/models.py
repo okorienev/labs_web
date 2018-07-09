@@ -1,4 +1,4 @@
-from extensions.extensions import db
+from labs_web.extensions import db
 from hashlib import sha256
 
 

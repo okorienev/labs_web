@@ -1,8 +1,7 @@
 from flask import request, redirect, url_for, render_template, abort
 from flask_login import login_user
 from flask.views import View
-from extensions.forms import LoginForm
-from extensions.models import User
+from labs_web.extensions import LoginForm, User
 
 
 class Login(View):

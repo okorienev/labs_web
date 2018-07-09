@@ -1,14 +1,14 @@
 from flask import Blueprint, render_template, abort
 from flask_login import login_required, current_user
-from views.tutor.choose_course_to_check import ChooseCourseToCheck
-from views.tutor.check_reports import CheckReports
-from views.tutor.download_report import DownloadReport
-from views.tutor.courses_of_tutor_ajax import CoursesOfTutorXHR
-from views.tutor.course_stats import CourseStats
-from views.tutor.check_reports_menu_ajax import CheckReportsMenuAjax
-from extensions.signals import report_checked
-from views.student.group_stats_in_course import ReportsProcessor
-from views.tutor.check_reports_menu_ajax import drop_unchecked
+from . import (ChooseCourseToCheck,
+               CheckReports,
+               DownloadReport,
+               CoursesOfTutorXHR,
+               CourseStats,
+               CheckReportsMenuAjax)
+from labs_web.extensions import report_checked
+from labs_web.views.student.group_stats_in_course import ReportsProcessor
+from .check_reports_menu_ajax import drop_unchecked
 
 
 tutor = Blueprint('tutor',

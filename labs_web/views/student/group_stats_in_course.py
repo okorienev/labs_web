@@ -1,8 +1,7 @@
 from flask import render_template, abort
 from flask.views import View
 from flask_login import current_user, login_required
-from extensions.extensions import cache
-from extensions.models import User, Course, Group, Report
+from labs_web.extensions import cache, User, Course, Group, Report
 
 
 class ReportsProcessor:

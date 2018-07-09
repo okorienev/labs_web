@@ -1,11 +1,12 @@
 from flask import Blueprint, abort, render_template
 from flask_login import current_user, login_required
-from views.student.group_stats_in_course import GroupStats, ReportsProcessor
-from views.student.student_send_report import SendReport
-from views.student.choose_course import ChooseCourse
-from views.student.courses_of_user_ajax import CoursesOfUserXHR
-from extensions.signals import report_sent
-from views.tutor.check_reports_menu_ajax import drop_unchecked
+from . import (SendReport,
+               ChooseCourse,
+               GroupStats,
+               ReportsProcessor,
+               CoursesOfUserXHR)  # importing views
+from labs_web.extensions import report_sent
+from labs_web.views.tutor.check_reports_menu_ajax import drop_unchecked
 
 student = Blueprint('student',
                     __name__,

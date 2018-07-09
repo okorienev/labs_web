@@ -1,9 +1,8 @@
 from flask.views import View
 from flask import render_template, abort
 from flask_login import login_required, current_user
-from extensions.models import Course
-from extensions.extensions import db
-from views.student.group_stats_in_course import ReportsProcessor as rp
+from labs_web.extensions import Course
+from labs_web.views.student.group_stats_in_course import ReportsProcessor as rp
 
 
 class CourseStats(View):

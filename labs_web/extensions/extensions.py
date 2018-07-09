@@ -3,7 +3,7 @@ from flask_login import LoginManager
 from flask_caching import Cache
 from flask_mail import Mail
 from celery import Celery
-from config import Config
+from labs_web.config import Config
 
 db = SQLAlchemy()
 login_manager = LoginManager()

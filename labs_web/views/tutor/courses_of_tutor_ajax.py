@@ -1,6 +1,6 @@
 from flask.views import View
 from flask import jsonify, url_for
-from extensions.models import Course
+from labs_web.extensions import Course
 from flask_login import login_required, current_user
 
 

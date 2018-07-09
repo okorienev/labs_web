@@ -2,12 +2,12 @@ from datetime import datetime, timezone
 from flask import request, render_template, abort, url_for, flash, redirect
 from flask.views import View
 from flask_login import login_required, current_user
-from extensions.signals import report_checked
-from extensions.forms import CheckReportForm, ReportSearchingForm
-from extensions.models import Course, User, db, Report
-from extensions.extensions import celery, mail
+from labs_web.extensions.signals import report_checked
+from labs_web.extensions.forms import CheckReportForm, ReportSearchingForm
+from labs_web.extensions.models import Course, User, db, Report
+from labs_web.extensions.extensions import celery, mail
 from flask_mail import Message
-from views.tutor.search_reports import ReportsSearcher
+from .search_reports import ReportsSearcher
 
 
 

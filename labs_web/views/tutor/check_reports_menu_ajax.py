@@ -1,8 +1,7 @@
 from flask import url_for, jsonify
 from flask.views import View
-from extensions.extensions import cache
 from flask_login import login_required, current_user
-from extensions.models import Course, Report
+from labs_web.extensions import Course, Report, cache
 
 
 @cache.memoize(60*60)
