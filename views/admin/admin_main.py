@@ -17,4 +17,4 @@ def i_am_admin():
 @admin.route('/home/')
 @login_required
 def admin_home():
-    return render_template('admin/index.html')
+    return render_template('admin/admin_home.html')

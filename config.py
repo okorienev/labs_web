@@ -7,11 +7,19 @@ class Config(object):
     UPLOAD_PATH = '/home/alex/Dropbox/labs_web/uploads/'
     ALLOWED_EXTENSIONS = {'pdf'}
     MAX_CONTENT_LENGTH = 5 * 1024 * 1024
-    CACHE_TYPE = 'simple'  # stub to check caching's work
+    CACHE_TYPE = 'redis'
     CACHE_DEFAULT_TIMEOUT = 60 * 60
-    CACHE_KEY_PREFIX = 'labs_web',
-    CACHE_REDIS_HOST = 'localhost',
-    CACHE_REDIS_PORT = '6379',
-    CACHE_REDIS_URL = 'redis://localhost:6379',
-    DEBUG_TB_ENABLED = False
+    CACHE_KEY_PREFIX = 'labs_web'
+    CACHE_REDIS_HOST = 'localhost'
+    CACHE_REDIS_PORT = '6379'
+    CACHE_REDIS_URL = 'redis://localhost:6379'
+    DEBUG_TB_ENABLED = True
+    CELERY_BROKER_URL = 'redis://localhost:6379/0'
+    CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_PORT = 465
+    MAIL_USE_SSL = True
+    MAIL_USERNAME = ''
+    MAIL_PASSWORD = ''
+
 

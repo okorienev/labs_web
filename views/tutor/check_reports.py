@@ -4,9 +4,31 @@ from flask.views import View
 from flask_login import login_required, current_user
 from extensions.signals import report_checked
 from extensions.forms import CheckReportForm, ReportSearchingForm
-from extensions.models import Course, User, db
-from extensions.models import Report
+from extensions.models import Course, User, db, Report
+from extensions.extensions import celery, mail
+from flask_mail import Message
 from views.tutor.search_reports import ReportsSearcher
+
+
+
+@celery.task
+def send_mail_report_checked(msg: Message):
+    """
+    background task to notify students when their reports were checked by the tutor
+    """
+    mail.send(msg)
+
+
+def make_message(report: Report, student: User, course: Course):
+    msg = Message()
+    msg.sender = 'labs.web.notifications'
+    msg.recipients = [student.email]
+    msg.subject = "Report checked"
+    msg.html = render_template('mail/report-checked.html',
+                               report=report,
+                               student=student,
+                               course=course)
+    return msg
 
 
 class CheckReports(View):
@@ -33,35 +55,31 @@ class CheckReports(View):
                  'comment': i.report_stu_comment} for i in reports]
 
     @staticmethod
-    def _set_report_mark(report_id: int, mark: int, comment="") -> None:
+    def _set_report_mark(report: Report, mark: int, comment="") -> None:
         """
         set mark for given report and commits result to db
         all validations are done before with report_can_not_be_checked  
-        :param report_id: 
-        :param mark: 
-        :param comment: 
+        :param report: Report object 
+        :param mark: report mark
+        :param comment: tutor comment
         :return: 
         """
-        report = Report.query.get(report_id)
         report.report_mark = mark
         report.report_checked = datetime.now(timezone.utc)
         report.report_tut_comment = comment
         db.session.commit()
 
     @staticmethod
-    def report_can_not_be_checked(report_id: int, tutor_id: int, report_mark: int):
+    def report_can_not_be_checked(report: Report, course: Course, report_mark: int):
         """
+        :param course: Course object 
+        :param report: Report object
         :param report_mark: mark to put
-        :param report_id: identifier of report
-        :param tutor_id: identifiers of user(tutor) who is trying to check report
-        :return: true if given report can be checked by the given tutor
-        :return: list with errors to flash 
+        :return: None if given report can be checked by the given tutor
+        :return: Error string if any error occurred during validating form data
         """
-        tutor = User.query.get(tutor_id)
-        report = Report.query.get(report_id)
         if not report:
             return "Report doesn't exist"
-        course = Course.query.get(report.report_course)
         if report.report_mark:
             return "Report is already checked"
         if report_mark not in range(1, course.lab_max_score + 1):
@@ -88,14 +106,16 @@ class CheckReports(View):
             abort(404)
         if request.method == "POST":
             if form.validate_on_submit():
-                report_id = form.data.get('report_id')
+                report = Report.query.get(form.data.get('report_id'))
                 report_mark = form.data.get('report_mark')
-                error = CheckReports.report_can_not_be_checked(report_id, current_user.id, report_mark)
+                error = CheckReports.report_can_not_be_checked(report, course, report_mark)
                 if error:
                     flash(error)
                     return redirect(request.url)
-                CheckReports._set_report_mark(report_id, report_mark, form.data.get("tutor_comment"))
-                report_checked.send(id=report_id)
+                CheckReports._set_report_mark(report, report_mark, form.data.get("tutor_comment"))
+                report_checked.send(id=report.report_id)
+                student = User.query.get(report.report_student)  # student info needed for email
+                send_mail_report_checked.delay(make_message(report, student, course))
                 return redirect(url_for('.tutor_check_reports', course_id=course.course_id))
             if search.validate_on_submit():
                 searcher = ReportsSearcher(course)

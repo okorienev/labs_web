@@ -1,6 +1,6 @@
 from flask import Flask, redirect, url_for
 from config import Config
-from extensions.extensions import login_manager, cache
+from extensions.extensions import login_manager, cache, mail, celery
 from flask_debugtoolbar import DebugToolbarExtension
 from extensions.models import db, User
 from views.auth.auth_main import auth
@@ -17,6 +17,9 @@ db.init_app(app)
 debug = DebugToolbarExtension(app)
 cache.init_app(app)
 migrate = Migrate(app, db)
+# celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
+# celery.conf.update(app.config)
+mail.init_app(app)
 
 
 @login_manager.user_loader

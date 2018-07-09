@@ -1,11 +1,14 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from celery import Celery
 from flask_caching import Cache
-from flask_script import Manager
+from flask_mail import Mail
+from celery import Celery
+from config import Config
 
 db = SQLAlchemy()
 login_manager = LoginManager()
-celery = Celery()
 cache = Cache()
-manager = Manager()
+mail = Mail()
+celery = Celery(broker=Config.CELERY_BROKER_URL)
+celery.config_from_object(Config)
+

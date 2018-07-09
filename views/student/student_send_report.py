@@ -79,10 +79,14 @@ class SendReport(View):
                 if not report:
                     add_report_to_database(course.course_id, current_user.id, report_number,
                                            hash_md5.hexdigest())
+                    report = Report.query.filter_by(report_course=course.course_id,
+                                                    report_num=report_number,
+                                                    report_student=current_user.id).first()
                 else:
                     report.report_hash = hash_md5.hexdigest()
                     report.report_uploaded = datetime.now()
                     db.session.commit()
+
                 report_sent.send(id=report.report_id)
 
         return render_template('student/send_report.html',
