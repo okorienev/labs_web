@@ -21,5 +21,6 @@ class Config(object):
     MAIL_USE_SSL = True
     MAIL_USERNAME = ''
     MAIL_PASSWORD = ''
+    CELERY_IMPORTS = ('labs_web.views.tutor.check_reports',)
 
 

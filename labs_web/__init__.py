@@ -5,6 +5,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from .extensions import db, User
 from flask_migrate import Migrate
 
+
 app = Flask(__name__)
 app.config.from_object(Config)
 login_manager.init_app(app)

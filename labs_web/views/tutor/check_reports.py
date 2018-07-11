@@ -2,33 +2,38 @@ from datetime import datetime, timezone
 from flask import request, render_template, abort, url_for, flash, redirect
 from flask.views import View
 from flask_login import login_required, current_user
-from labs_web.extensions.signals import report_checked
-from labs_web.extensions.forms import CheckReportForm, ReportSearchingForm
-from labs_web.extensions.models import Course, User, db, Report
-from labs_web.extensions.extensions import celery, mail
-from flask_mail import Message
+from labs_web.extensions import (celery,
+                                 mail,
+                                 report_checked,
+                                 CheckReportForm,
+                                 ReportSearchingForm,
+                                 Course,
+                                 User,
+                                 db,
+                                 Report)
 from .search_reports import ReportsSearcher
-
+from labs_web import app
+from flask_mail import Message
 
 
 @celery.task
-def send_mail_report_checked(msg: Message):
+def send_mail_report_checked(report_id):
     """
     background task to notify students when their reports were checked by the tutor
     """
-    mail.send(msg)
-
-
-def make_message(report: Report, student: User, course: Course):
-    msg = Message()
-    msg.sender = 'labs.web.notifications'
-    msg.recipients = [student.email]
-    msg.subject = "Report checked"
-    msg.html = render_template('mail/report-checked.html',
-                               report=report,
-                               student=student,
-                               course=course)
-    return msg
+    with app.app_context():
+        report = Report.query.get(report_id)
+        student = User.query.get(report.report_student)
+        course = Course.query.get(report.report_course)
+        msg = Message()
+        msg.sender = 'labs.web.notifications'
+        msg.recipients = [student.email]
+        msg.subject = "Report checked"
+        msg.html = render_template('mail/report-checked.html',
+                                   report=report,
+                                   student=student,
+                                   course=course)
+        mail.send(msg)
 
 
 class CheckReports(View):
@@ -114,8 +119,7 @@ class CheckReports(View):
                     return redirect(request.url)
                 CheckReports._set_report_mark(report, report_mark, form.data.get("tutor_comment"))
                 report_checked.send(id=report.report_id)
-                student = User.query.get(report.report_student)  # student info needed for email
-                send_mail_report_checked.delay(make_message(report, student, course))
+                send_mail_report_checked.delay(report.report_id)
                 return redirect(url_for('.tutor_check_reports', course_id=course.course_id))
             if search.validate_on_submit():
                 searcher = ReportsSearcher(course)
