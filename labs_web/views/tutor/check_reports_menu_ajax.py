@@ -1,7 +1,8 @@
 from flask import url_for, jsonify
 from flask.views import View
 from flask_login import login_required, current_user
-from labs_web.extensions import Course, Report, cache
+from labs_web.extensions import Course, Report, cache, celery
+from labs_web import app
 
 
 @cache.memoize(60*60)
@@ -10,9 +11,11 @@ def count_unchecked(course_id):
                                   report_mark=None).count()
 
 
-def drop_unchecked(*args, **kwargs):
-    if kwargs.get('course_id'):
-        cache.delete_memoized(count_unchecked, kwargs.get('course_id'))
+@celery.task
+def drop_unchecked(report_id: int):
+    with app.app_context():
+        report = Report.query.get(report_id)
+        cache.delete_memoized(count_unchecked, report.report_course)
 
 
 class CheckReportsMenuAjax(View):

@@ -118,7 +118,7 @@ class CheckReports(View):
                     flash(error)
                     return redirect(request.url)
                 CheckReports._set_report_mark(report, report_mark, form.data.get("tutor_comment"))
-                report_checked.send(id=report.report_id)
+                report_checked.send(report_id=report.report_id)
                 send_mail_report_checked.delay(report.report_id)
                 return redirect(url_for('.tutor_check_reports', course_id=course.course_id))
             if search.validate_on_submit():

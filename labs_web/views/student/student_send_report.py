@@ -90,7 +90,7 @@ class SendReport(View):
                     report.report_uploaded = datetime.now()
                     db.session.commit()
 
-                report_sent.send(id=report.report_id)
+                report_sent.send(report_id=report.report_id)
 
         return render_template('student/send_report.html',
                                user=current_user,

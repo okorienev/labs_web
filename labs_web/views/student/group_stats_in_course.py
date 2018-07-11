@@ -1,7 +1,8 @@
 from flask import render_template, abort
 from flask.views import View
 from flask_login import current_user, login_required
-from labs_web.extensions import cache, User, Course, Group, Report
+from labs_web.extensions import celery, cache, User, Course, Group, Report
+from labs_web import app
 
 
 class ReportsProcessor:
@@ -27,13 +28,13 @@ class ReportsProcessor:
         return marks_lst
 
     @staticmethod
-    def drop_marks_cache(*args, **kwargs):
-        report_id = kwargs.get('id')
-        if report_id:
+    @celery.task
+    def drop_marks_cache(report_id):
+        with app.app_context():
             report = Report.query.get(report_id)
-            course = Course.query.get(report.report_course).course_id
+            course = Course.query.get(report.report_course)
             group = User.query.get(report.report_student).group[0]
-            cache.delete_memoized(ReportsProcessor.generate_marks, ReportsProcessor, group, course)
+            cache.delete_memoized(ReportsProcessor.generate_marks, ReportsProcessor, group, course.course_id)
 
     @staticmethod
     def user_has_course(user: int, course: int) -> bool:
