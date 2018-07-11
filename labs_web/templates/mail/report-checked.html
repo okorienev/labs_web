@@ -1,0 +1,7 @@
+<p>Dear {{ student.name }}</p>
+<p>Your report in course {{ course.course_name }} (number in course: {{ report.report_num }} ) was checked by course tutor </p>
+<p>Your mark is {{ report.report_mark }}</p>
+{% if report.report_tut_comment %}
+<p>Comment from tutor: {{ report.report_tut_comment }}</p>
+{% endif %}
+<p>The email was sent automatically, please don't reply to it</p>

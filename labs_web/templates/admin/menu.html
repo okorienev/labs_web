@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block menu %}
+    <div class="pure-menu pure-menu-horizontal">
+    <a href="{{ url_for('admin.admin_home')}}" class="pure-menu-heading pure-menu-link">Home</a>
+    <ul class="pure-menu-list">
+        <li class="pure-menu-item"><a href="#" class="pure-menu-link">Sports</a></li>
+        <li class="pure-menu-item"><a href="#" class="pure-menu-link">Finance</a></li>
+    </ul>
+</div>
+
+{% endblock %}
