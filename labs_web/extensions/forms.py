@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import PasswordField, StringField, BooleanField, FileField, TextAreaField, IntegerField
-from wtforms.validators import DataRequired, Optional
+from wtforms.validators import DataRequired, Optional, Email
 from flask_wtf.file import FileRequired, FileAllowed
 
 
@@ -35,3 +35,7 @@ class ReportSearchingForm(FlaskForm):
     report_student = StringField(validators=[Optional()], render_kw={'placeholder': 'Student'})
     report_number = IntegerField(validators=[Optional()], render_kw={'placeholder': 'Report number'})
     report_group = StringField(validators=[Optional()], render_kw={'placeholder': "Group"})
+
+
+class ForgotPasswordForm(FlaskForm):
+    email = StringField('email', validators=[Email(), DataRequired()], render_kw={'placeholder': 'Email'})

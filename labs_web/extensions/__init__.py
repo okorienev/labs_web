@@ -14,4 +14,5 @@ from .forms import (ReportSearchingForm,
                     CourseChoosingForm,
                     CheckReportForm,
                     ReportSendingForm,
-                    LoginForm)  # Flask WTForms
+                    LoginForm,
+                    ForgotPasswordForm)  # Flask WTForms

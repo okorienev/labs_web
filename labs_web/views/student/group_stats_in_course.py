@@ -28,7 +28,7 @@ class ReportsProcessor:
         return marks_lst
 
     @staticmethod
-    @celery.task
+    @celery.task(ignore_result=True)
     def drop_marks_cache(report_id):
         with app.app_context():
             report = Report.query.get(report_id)

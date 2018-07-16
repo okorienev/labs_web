@@ -16,7 +16,7 @@ from labs_web import app
 from flask_mail import Message
 
 
-@celery.task
+@celery.task(ignore_result=True)
 def send_mail_report_checked(report_id):
     """
     background task to notify students when their reports were checked by the tutor

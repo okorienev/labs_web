@@ -6,10 +6,10 @@
           integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
     <title>Login</title>
 </head>
-<body>
-<h1>Sign In</h1>
+<body style="background-color: lightcyan;">
+<h1 align="center">Sign In</h1>
 
-<div class="flash">
+<div class="flash" align="center">
     {% with messages = get_flashed_messages() %}
   {% if messages %}
       <table class="pure-table pure-table-horizontal">
@@ -31,7 +31,7 @@
     </div>
 
 
-<div class="login-form">
+<div class="login-form" align="center">
 <form class="pure-form pure-form-stacked" action="" method="post" name="login">
     {{form.hidden_tag()}}
     <p>
@@ -40,6 +40,7 @@
         Remember me  {{ form.remember_me }}<br>
     </p>
     <button type="submit" class="pure-button pure-button-primary">Log in</button>
+    <a href="{{ url_for("user.forgot-password") }}">Forgot password?</a>
 </form>
 </div>
 </body>
