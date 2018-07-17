@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import PasswordField, StringField, BooleanField, FileField, TextAreaField, IntegerField
-from wtforms.validators import DataRequired, Optional, Email
+from wtforms.validators import DataRequired, Optional, Email, EqualTo, Length
 from flask_wtf.file import FileRequired, FileAllowed
 
 
@@ -39,3 +39,11 @@ class ReportSearchingForm(FlaskForm):
 
 class ForgotPasswordForm(FlaskForm):
     email = StringField('email', validators=[Email(), DataRequired()], render_kw={'placeholder': 'Email'})
+
+
+class RestorePasswordForm(FlaskForm):
+    password = PasswordField('password', validators=[DataRequired()], render_kw={'placeholder': 'New password'})
+    repeat = PasswordField('repeat', validators=[DataRequired(),
+                                                 Length(6, message='minimal length is 6'),
+                                                 EqualTo('password', message='passwords should match')],
+                           render_kw={'placeholder': 'Repeat password'})

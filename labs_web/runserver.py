@@ -8,8 +8,8 @@ from labs_web.views import (student,
 
 if __name__ == '__main__':  # registers blueprints and runs server
     app.register_blueprint(auth)
+    app.register_blueprint(user)
     app.register_blueprint(student)
     app.register_blueprint(tutor)
     app.register_blueprint(admin)
-    app.register_blueprint(user)
     app.run(debug=True)

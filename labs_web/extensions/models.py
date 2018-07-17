@@ -64,8 +64,16 @@ class User(db.Model):
     def is_authenticated(self):
         return True
 
-    def check_password(self, password: str):
+    def check_password(self, password: str) ->bool:
         return sha256(password.encode()).hexdigest() == self._password
+
+    def set_password(self, password: str) ->None:
+        """
+        doesn't commit changes to database, needs db.session.commit() after calling
+        :param password: password string 
+        :return: None
+        """
+        self._password = sha256(password.encode()).hexdigest()
 
 
 class Course(db.Model):  # course model
