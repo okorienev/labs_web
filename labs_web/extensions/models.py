@@ -75,6 +75,9 @@ class User(db.Model):
         """
         self._password = sha256(password.encode()).hexdigest()
 
+    def __repr__(self):
+        return self.name
+
 
 class Course(db.Model):  # course model
     course_id = db.Column(db.Integer(), primary_key=True)  # identifier
@@ -83,6 +86,9 @@ class Course(db.Model):  # course model
     course_tutor = db.Column(db.Integer(), db.ForeignKey('user.id'))  # connecting to tutor
     labs_amount = db.Column(db.Integer(), nullable=False)   # amount of reports
     lab_max_score = db.Column(db.Integer(), nullable=False)  # max score for one lab
+
+    def __repr__(self):
+        return '{} - {}'.format(self.course_name, self.course_shortened)
 
 
 class Report(db.Model):

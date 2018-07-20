@@ -1,6 +1,6 @@
 from flask import Flask, redirect, url_for
 from .config import Config
-from .extensions import login_manager, cache, mail, celery
+from .extensions import login_manager, cache, mail, celery, admin
 from flask_debugtoolbar import DebugToolbarExtension
 from .extensions import db, User
 from flask_migrate import Migrate
@@ -15,6 +15,7 @@ debug = DebugToolbarExtension(app)
 cache.init_app(app)
 migrate = Migrate(app, db)
 mail.init_app(app)
+admin.init_app(app)
 
 
 @login_manager.user_loader

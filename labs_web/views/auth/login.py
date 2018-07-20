@@ -15,7 +15,7 @@ class Login(View):
         if user.role == 2:
             return redirect(url_for('tutor.tutor_home'))
         if user.role == 3:
-            return redirect(url_for('admin.admin_home'))
+            return redirect(url_for('admin.index'))
 
     @staticmethod
     def _user_can_be_logged_in(user: User, password: str):
