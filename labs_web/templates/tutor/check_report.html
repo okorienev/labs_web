@@ -18,7 +18,7 @@
     {% for report in reports %}
         <tr>
             <th> {{ report['id'] }}</th>
-            <th> {{ report['student'] }}</th>
+            <th> {{ report['student'].name }}</th>
             <th> {{ report['group'] }}</th>
             <th> {{ report['number'] }}</th>
             <th> {{ report['uploaded'] }}</th>
