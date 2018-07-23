@@ -1,47 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css"
-          integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
-    <title>Login</title>
-</head>
-<body style="background-color: lightcyan;">
+{% extends 'base.html' %}
+{% block title %}Sign in{% endblock %}
+{% block content %}
 <h1 align="center">Sign In</h1>
-
-<div class="flash" align="center">
-    {% with messages = get_flashed_messages() %}
-  {% if messages %}
-      <table class="pure-table pure-table-horizontal">
-    <thead>
-        <tr>
-            <th>Message</th>
-        </tr>
-    </thead>
-      <tbody>
-    <ul class=flashes>
-    {% for message in messages %}
-      <th>{{ message }}</th>
-    {% endfor %}
-    </ul>
-      </tbody>
-      </table>
-  {% endif %}
-{% endwith %}
+<div class="container">
+    <div class="row">
+        <div class="col"></div>
+        <div class="col-4">
+            <form method="post" name="login">
+                {{form.hidden_tag()}}
+                <div class="form-group">{{form.username}}</div>
+                <div class="form-group">{{ form.password }}</div>
+                <div class="form-check">
+                    {{ form.remember_me }}
+                    <label class="form-check-label" for="remember_me">Remember me</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Log in</button>
+                <a href="{{ url_for("user.forgot-password") }}" class="badge badge-primary" role="button">
+                    <h6>Forgot password?</h6>
+                </a>
+            </form>
+        </div>
+        <div class="col"></div>
     </div>
-
-
-<div class="login-form" align="center">
-<form class="pure-form pure-form-stacked" action="" method="post" name="login">
-    {{form.hidden_tag()}}
-    <p>
-        {{form.username}}<br>
-        {{ form.password }}<br>
-        Remember me  {{ form.remember_me }}<br>
-    </p>
-    <button type="submit" class="pure-button pure-button-primary">Log in</button>
-    <a href="{{ url_for("user.forgot-password") }}">Forgot password?</a>
-</form>
 </div>
-</body>
-</html>
+{% endblock %}

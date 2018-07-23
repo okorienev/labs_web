@@ -2,8 +2,8 @@
 {% block title%}Give report{% endblock %}
 {% block content %}
 <div class="courses">
-    <table title="Course list" class="pure-table pure-table-bordered">
-    <thead>
+    <table title="Course list" class="table table-bordered">
+    <thead class="thead-light">
         <tr>
             <th>Course name</th>
             <th>Course shortened</th>
@@ -17,36 +17,13 @@
     {% endfor %}
     </table>
 </div>
-
-<div class="flash">
-    {% with messages = get_flashed_messages() %}
-  {% if messages %}
-      <table class="pure-table pure-table-horizontal">
-    <thead>
-        <tr>
-            <th>Message</th>
-        </tr>
-    </thead>
-      <tbody>
-    <ul class=flashes>
-    {% for message in messages %}
-      <th>{{ message }}</th>
-    {% endfor %}
-    </ul>
-      </tbody>
-  {% endif %}
-{% endwith %}
-
-</table>
-</div>
 <div class="send_report_form">
-     <form class="pure-form pure-form-stacked" method=post enctype=multipart/form-data>
-          {{ form.hidden_tag() }}
-          {{ form.course }}
-          {{ form.number_in_course }}
-          {{ form.attachment }}
-{#          {{ form.comment }}#}
-     <button type="submit" class="pure-button pure-button-primary">Submit</button>
-     </form>
+                <form method=post enctype=multipart/form-data>
+                    <div class="form-group">{{ form.hidden_tag() }}</div>
+                    <div class="form-group">{{ form.course }}</div>
+                    <div class="form-group">{{ form.number_in_course }}</div>
+                    <div class="form-group">{{ form.attachment }}</div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
 </div>
 {% endblock %}

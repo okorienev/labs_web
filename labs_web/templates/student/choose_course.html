@@ -1,29 +1,9 @@
 {% extends 'student/student_menu.html' %}
 {% block title %}Choose course{% endblock %}
 {% block  content %}
-<div class="flash">
-    {% with messages = get_flashed_messages() %}
-  {% if messages %}
-      <table class="pure-table pure-table-horizontal">
-    <thead>
-        <tr>
-            <th>Error message</th>
-        </tr>
-    </thead>
-      <tbody>
-    {% for message in messages %}
-      <tr><th>{{ message }}</th></tr>
-    {% endfor %}
-      </tbody>
-  {% endif %}
-{% endwith %}
-
-</table>
-</div>
-
     <div class="courses">
-    <table title="Course list" class="pure-table pure-table-bordered">
-    <thead>
+    <table title="Course list" class="table table-bordered">
+    <thead class="thead-light">
         <tr>
             <th>Course name</th>
             <th>Course shortened</th>
@@ -38,11 +18,11 @@
     </table>
 </div>
 
-<div class="form">
+<div class="form-inline">
     <form class="pure-form pure-form-stacked" method=post>
           {{ form.hidden_tag() }}
           {{ form.shortened }}
-        <button type="submit" class="pure-button pure-button-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
      </form>
 </div>
-{% endblock %} #}
+{% endblock %}
