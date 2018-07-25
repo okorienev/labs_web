@@ -2,7 +2,7 @@
 {% block title %}Choose course{% endblock %}
 {% block content %}
 <div>
-    <table class="pure-table pure-table-horizontal">
+    <table class="table table-bordered">
     <thead>
     <tr>
         <th>Course name</th>
@@ -18,31 +18,11 @@
     </table>
 </div>
 
-<div class="flash">
-    {% with messages = get_flashed_messages() %}
-  {% if messages %}
-      <table class="pure-table pure-table-horizontal">
-    <thead>
-        <tr>
-            <th>Error message</th>
-        </tr>
-    </thead>
-      <tbody>
-    {% for message in messages %}
-        <tr><th>{{ message }}</th></tr>
-    {% endfor %}
-      </tbody>
-  {% endif %}
-{% endwith %}
-
-</table>
-</div>
-
 <div>
-    <form class="pure-form pure-form-stacked" method=post>
+    <form method=post>
           {{ form.hidden_tag() }}
-          {{ form.shortened }}
-    <button type="submit" class="pure-button pure-button-primary">Submit</button>
+        <div class="form-group">{{ form.shortened }}</div>
+    <button type="submit" class="btn btn-primary">Submit</button>
      </form>
 </div>
 {% endblock %}

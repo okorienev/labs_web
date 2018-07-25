@@ -2,7 +2,9 @@
 {% block title %}Group stats{% endblock %}
 {% block content %}
 <body>
-    <table title="stats" class="table table-sm">
+<div class="card">
+    <div class="card-body">
+    <table title="stats" class="table table-sm table-bordered table-responsive-md">
     <thead class="thead-light">
         <tr>
             <th>Student name</th>
@@ -25,6 +27,8 @@
     {% endfor %}
     </tbody>
     </table>
+</div>
+</div>
     <div class="alert alert-info" role="alert">
         <h3>Legend:</h3>
             <ul>
