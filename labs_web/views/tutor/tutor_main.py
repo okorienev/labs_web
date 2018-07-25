@@ -23,7 +23,7 @@ tutor = Blueprint('tutor',
                   url_prefix='/tutor')
 tutor.add_url_rule('/choose-course/', view_func=ChooseCourseToCheck.as_view('tutor_choose_course'))
 tutor.add_url_rule('/check/<int:course_id>', view_func=CheckReports.as_view('tutor_check_reports'))
-tutor.add_url_rule('/get-report/<course>/<group>/<student>/<int:number>/',
+tutor.add_url_rule('/get-report/<course>/<group>/<int:student>/<int:number>/',
                    view_func=DownloadReport.as_view('get-report'))
 tutor.add_url_rule('/stats/<int:course_id>', view_func=CourseStats.as_view('tutor_course_stats'))
 tutor.add_url_rule('/courses_ajax/', view_func=CoursesOfTutorXHR.as_view('course_of_tutor'))

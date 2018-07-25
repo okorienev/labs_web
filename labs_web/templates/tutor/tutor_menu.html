@@ -1,27 +1,84 @@
 {% extends 'base.html' %}
-{% block menu %}
-    <div class="pure-menu pure-menu-horizontal">
-    <a href=" {{ url_for('tutor.tutor_home') }}" class="pure-menu-heading pure-menu-link">Home</a>
-    <ul class="pure-menu-list">
-        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
-            <a href="{{ url_for('tutor.tutor_choose_course') }}" class="pure-menu-link">Course Stats</a>
-        <ul class="pure-menu-children" id="course-stats">
-        </ul>
-        </li>
+{#{% block menu %}#}
+{#    <div class="pure-menu pure-menu-horizontal">#}
+{#    <a href=" {{ url_for('tutor.tutor_home') }}" class="pure-menu-heading pure-menu-link">Home</a>#}
+{#    <ul class="pure-menu-list">#}
+{#        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">#}
+{#            <a href="{{ url_for('tutor.tutor_choose_course') }}" class="pure-menu-link">Course Stats</a>#}
+{#        <ul class="pure-menu-children" id="course-stats">#}
+{#        </ul>#}
+{#        </li>#}
+{##}
+{#        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">#}
+{#            <a href="{{ url_for('tutor.tutor_choose_course') }}" class="pure-menu-link">Check Reports</a>#}
+{#        <ul class="pure-menu-children" id="dropdown-children">#}
+{#        </ul>#}
+{#        </li>#}
+{#        <li class="pure-menu-item"><a href="{{ url_for('auth.logout') }}"#}
+{#                                      class="pure-menu-link">Logout</a></li>#}
+{#    </ul>#}
+{#</div>#}
+{#{% endblock %}#}
+{% block navbar %}
+<nav class="navbar navbar-expand-lg navbar-light">
+  <a class="navbar-brand" href="#">Labs web</a>
+  <button class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
+          aria-expanded="false"
+          aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+          <a class="nav-link" href="{{ url_for("tutor.tutor_home") }}">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item dropdown active">
+        <a class="nav-link dropdown-toggle"
+           href="#"
+           id="navbarDropdownMenuLink"
+           data-toggle="dropdown"
+           aria-haspopup="true"
+           aria-expanded="false">
+          Course stats
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" id="dropdown-children">
 
-        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
-            <a href="{{ url_for('tutor.tutor_choose_course') }}" class="pure-menu-link">Check Reports</a>
-        <ul class="pure-menu-children" id="check-reports">
-        </ul>
-        </li>
-        <li class="pure-menu-item"><a href="{{ url_for('auth.logout') }}"
-                                      class="pure-menu-link">Logout</a></li>
+        </div>
+      </li>
+        <li class="nav-item dropdown active">
+        <a class="nav-link dropdown-toggle"
+           href="#"
+           id="navbarDropdownMenuLink"
+           data-toggle="dropdown"
+           aria-haspopup="true"
+           aria-expanded="false">
+          Check Reports
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" id="check-reports">
+            <a href="{{ url_for('tutor.tutor_choose_course') }}" class="dropdown-item">Manual choice</a>
+        </div>
+      </li>
+      <li class="nav-item active">
+          <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
+      </li>
+      <li class="nav-item active">
+          <a class="nav-link" href="https://github.com/AlexPraefectus/labs_web">Project source</a>
+      </li>
+      <li class="nav-item active">
+          <a class="nav-link" href="mailto:alexkorienev@gmail.com">Contact author</a>
+      </li>
     </ul>
-</div>
-    {% block script %}
+  </div>
+</nav>
+{% endblock %}
+{% block script %}
         <script type="text/javascript" src="{{ url_for("static", filename="js/check_reports_menu.js") }}"></script>
     <script type="text/javascript" src="{{ url_for("static", filename="js/insert_menu_items.js") }}"></script>
         <script type="text/javascript" src="{{ url_for("static", filename="js/get_tutor_courses.js") }}"></script>
-{% endblock %}
+
 {% endblock %}
 

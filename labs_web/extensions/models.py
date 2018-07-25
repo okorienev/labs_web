@@ -64,8 +64,19 @@ class User(db.Model):
     def is_authenticated(self):
         return True
 
-    def check_password(self, password: str):
+    def check_password(self, password: str) ->bool:
         return sha256(password.encode()).hexdigest() == self._password
+
+    def set_password(self, password: str) ->None:
+        """
+        doesn't commit changes to database, needs db.session.commit() after calling
+        :param password: password string 
+        :return: None
+        """
+        self._password = sha256(password.encode()).hexdigest()
+
+    def __repr__(self):
+        return self.name
 
 
 class Course(db.Model):  # course model
@@ -75,6 +86,9 @@ class Course(db.Model):  # course model
     course_tutor = db.Column(db.Integer(), db.ForeignKey('user.id'))  # connecting to tutor
     labs_amount = db.Column(db.Integer(), nullable=False)   # amount of reports
     lab_max_score = db.Column(db.Integer(), nullable=False)  # max score for one lab
+
+    def __repr__(self):
+        return '{} - {}'.format(self.course_name, self.course_shortened)
 
 
 class Report(db.Model):

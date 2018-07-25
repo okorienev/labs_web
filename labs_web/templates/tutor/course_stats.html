@@ -2,28 +2,39 @@
 {% block title%}Course stats{% endblock %}
 {% block content %}
     {% for i in group_reports%}
-    <h3>{{i['group']}}</h3>
-        <table class="pure-table">
-        <thead>
-        <tr>
-            <th>Student name</th>
-            {% for count in range(0, i['marks'][0].reports|length) %}
-            <th>{{ count + 1}}</th>
-            {% endfor %}
-            <th>Total</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for mark  in i['marks'] %}
-        <tr>
-            <th>{{ mark.name }}</th>
-            {% for report in mark.reports %}
-                <th>{{report}}</th>
-            {% endfor %}
-            <th>{{ mark.sum }}</th>
-        </tr>
+        <div class="card">
+           <div class="card-body">
+               <h3 class="card-title">{{i['group']}}</h3>
+                <table class="table table-sm table-striped table-bordered table-responsive-md">
+                    <thead>
+                    <tr>
+                        <th>Student name</th>
+                        {% for count in range(0, i['marks'][0].reports|length) %}
+                        <th>{{ count + 1}}</th>
+                        {% endfor %}
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                    <tbody>
+                        {% for mark  in i['marks'] %}
+                        <tr>
+                            <th>{{ mark.name }}</th>
+                            {% for report in mark.reports %}
+                                <th>{{report}}</th>
+                                {% endfor %}
+                                <th>{{ mark.sum }}</th>
+                        </tr>
+                            {% endfor %}
+                    </tbody>
+                </table>
+           </div>
+        </div>
     {% endfor %}
-        </tbody>
-        </table>
-    {% endfor %}
+    <div class="alert alert-info" role="alert">
+        <h3>Legend:</h3>
+            <ul>
+                <li><h4>N/A - report was not sent by the student</h4></li>
+                <li><h4>N/C - report was not checked by the tutor</h4></li>
+            </ul>
+    </div>
 {% endblock %}

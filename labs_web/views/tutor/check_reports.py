@@ -16,7 +16,7 @@ from labs_web import app
 from flask_mail import Message
 
 
-@celery.task
+@celery.task(ignore_result=True)
 def send_mail_report_checked(report_id):
     """
     background task to notify students when their reports were checked by the tutor
@@ -95,11 +95,11 @@ class CheckReports(View):
         for report in reports:
             group = User.query.get(report.get('student')).group[0]
             report.update({'group': group.name,
-                           'student': User.query.get(report.get('student')).name})
+                           'student': User.query.get(report.get('student'))})
             report.update({'link': url_for('.get-report',
                                            course=course_shortened,
                                            group=group.name,
-                                           student=report.get('student').split()[1],  # last name
+                                           student=str(report.get('student').id),
                                            number=report.get('number'))})
         return reports
 

@@ -2,6 +2,7 @@ from .extensions import (celery,
                          cache,
                          db,
                          mail,
+                         admin,
                          login_manager)  # extension which need to be initialized in app
 from .models import (User,
                      Group,
@@ -14,4 +15,6 @@ from .forms import (ReportSearchingForm,
                     CourseChoosingForm,
                     CheckReportForm,
                     ReportSendingForm,
-                    LoginForm)  # Flask WTForms
+                    LoginForm,
+                    ForgotPasswordForm,
+                    RestorePasswordForm)  # Flask WTForms

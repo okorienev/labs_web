@@ -2,13 +2,10 @@
 {% block title %}Group stats{% endblock %}
 {% block content %}
 <body>
-    <h3>Legend:</h3>
-    <ul>
-    <li><h4>N/A - report was not sent by the student</h4></li>
-    <li><h4>N/C - report was not checked by the tutor</h4></li>
-    </ul>
-    <table title="stats" class="pure-table pure-table-bordered">
-    <thead>
+<div class="card">
+    <div class="card-body">
+    <table title="stats" class="table table-sm table-bordered table-responsive-md">
+    <thead class="thead-light">
         <tr>
             <th>Student name</th>
             {% for count in range(0, marks[0].reports|length) %}
@@ -30,4 +27,13 @@
     {% endfor %}
     </tbody>
     </table>
+</div>
+</div>
+    <div class="alert alert-info" role="alert">
+        <h3>Legend:</h3>
+            <ul>
+                <li><h4>N/A - report was not sent by the student</h4></li>
+                <li><h4>N/C - report was not checked by the tutor</h4></li>
+            </ul>
+    </div>
 {% endblock %}

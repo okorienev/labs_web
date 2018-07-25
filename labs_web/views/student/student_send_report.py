@@ -1,6 +1,5 @@
 from datetime import datetime, timezone
 from hashlib import md5
-from os.path import join
 from flask import render_template, redirect, request, flash
 from flask.views import View
 from flask_login import current_user, login_required
@@ -11,6 +10,8 @@ from labs_web.extensions import (ReportSendingForm,
                                  Report,
                                  db,
                                  Course)
+import os.path as p
+import os
 
 
 def courses_of_user(user_id: int) -> list:
@@ -33,6 +34,23 @@ def add_report_to_database(course_id: int, student_id: int, report_num, hash_md5
     db.session.add(report)
     db.session.commit()
     flash('Report successfully sent')
+
+
+def create_user_folder_structure(course: Course, student: User) -> None:
+    """
+    creates proper folder structure when first report is uploaded by the student
+    structure should be <course_shortened>/<group_name>/<student_id>/<lab_number>.pdf
+    :return: None
+    """
+    course_folder = p.join(Config.UPLOAD_PATH, course.course_shortened)
+    if not p.exists(course_folder) or not p.isdir(course_folder):
+        os.mkdir(course_folder)
+    group_folder = p.join(course_folder, student.group[0].name)
+    if not p.exists(group_folder) or not p.isdir(group_folder):
+        os.mkdir(group_folder)
+    student_folder = p.join(group_folder, str(student.id))
+    if not p.exists(student_folder) or not p.isdir(student_folder):
+        os.mkdir(student_folder)
 
 
 class SendReport(View):
@@ -64,34 +82,38 @@ class SendReport(View):
             if (lambda filename: '.' in filename and filename.rsplit('.', 1)[1].lower() == 'pdf')(file.filename):
                 filename = str(report_number) + '.pdf'  # filename is <number_in_course>.pdf
                 # saving file to uploads
-                file.save(join(Config.UPLOAD_PATH,
-                               course.course_shortened,
-                               group.name,
-                               current_user.name.split()[1],
-                               filename))
+                filepath = p.join(Config.UPLOAD_PATH,
+                                  course.course_shortened,
+                                  group.name,
+                                  str(current_user.id),
+                                  filename)
+                try:
+                    file.save(filepath)
+                except FileNotFoundError:
+                    create_user_folder_structure(course, current_user)
+                    file.save(filepath)
                 # generating md5 for report
                 hash_md5 = md5()
-                with open(join(Config.UPLOAD_PATH,
-                               course.course_shortened,
-                               group.name,
-                               current_user.name.split()[1],
-                               filename), 'rb') as f:
-                    for chunk in iter(lambda: f.read(4096),
-                                      b''):  # read file by small chunks to avoid problems with memory
-                        hash_md5.update(chunk)
+                try:
+                    with open(filepath, 'rb') as f:
+                        for chunk in iter(lambda: f.read(4096), b''):  # read file by small chunks
+                            hash_md5.update(chunk)
+                except FileNotFoundError:
+                    flash('some error occurred while saving your file, please retry')
+                    return redirect(request.url)
+
                 if not report:
                     add_report_to_database(course.course_id, current_user.id, report_number,
                                            hash_md5.hexdigest())
-                    report = Report.query.filter_by(report_course=course.course_id,
-                                                    report_num=report_number,
-                                                    report_student=current_user.id).first()
                 else:
                     report.report_hash = hash_md5.hexdigest()
                     report.report_uploaded = datetime.now()
                     db.session.commit()
-
+                    flash('Report was successfully updated')
+                report = Report.query.filter_by(report_course=course.course_id,
+                                                report_num=report_number,
+                                                report_student=current_user.id).first()
                 report_sent.send(report_id=report.report_id)
-
         return render_template('student/send_report.html',
                                user=current_user,
                                form=form,

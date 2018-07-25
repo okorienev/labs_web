@@ -11,7 +11,7 @@ def count_unchecked(course_id):
                                   report_mark=None).count()
 
 
-@celery.task
+@celery.task(ignore_result=True)
 def drop_unchecked(report_id: int):
     with app.app_context():
         report = Report.query.get(report_id)
