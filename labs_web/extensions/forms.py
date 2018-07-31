@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import PasswordField, StringField, BooleanField, FileField, TextAreaField, IntegerField
+from wtforms import PasswordField, StringField, BooleanField, FileField, TextAreaField, IntegerField, SelectField
 from wtforms.validators import DataRequired, Optional, Email, EqualTo, Length
 from flask_wtf.file import FileRequired, FileAllowed
 
@@ -15,8 +15,10 @@ class LoginForm(FlaskForm):
 class ReportSendingForm(FlaskForm):
     number_in_course = IntegerField('', render_kw={'placeholder': 'Lab number',
                                                    'class': 'form-control'})
-    course = StringField('course shortened name', validators=[DataRequired()], render_kw={'placeholder': 'Course',
-                                                                                          'class': 'form-control'})
+    course = SelectField(choices=[], validators=[DataRequired()], coerce=int, render_kw={'placeholder': 'Course',
+                                                                                         'class': 'form-control'})
+    # course = StringField('course shortened name', validators=[DataRequired()], render_kw={'placeholder': 'Course',
+    #                                                                                       'class': 'form-control'})
     # comment = TextAreaField(render_kw={'placeholder': 'Comment(optional)'})
     attachment = FileField('report', validators=[
         FileRequired(),
