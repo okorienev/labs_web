@@ -1,24 +1,4 @@
 {% extends 'base.html' %}
-{#{% block menu %}#}
-{#    <div class="pure-menu pure-menu-horizontal">#}
-{#    <a href=" {{ url_for('tutor.tutor_home') }}" class="pure-menu-heading pure-menu-link">Home</a>#}
-{#    <ul class="pure-menu-list">#}
-{#        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">#}
-{#            <a href="{{ url_for('tutor.tutor_choose_course') }}" class="pure-menu-link">Course Stats</a>#}
-{#        <ul class="pure-menu-children" id="course-stats">#}
-{#        </ul>#}
-{#        </li>#}
-{##}
-{#        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">#}
-{#            <a href="{{ url_for('tutor.tutor_choose_course') }}" class="pure-menu-link">Check Reports</a>#}
-{#        <ul class="pure-menu-children" id="dropdown-children">#}
-{#        </ul>#}
-{#        </li>#}
-{#        <li class="pure-menu-item"><a href="{{ url_for('auth.logout') }}"#}
-{#                                      class="pure-menu-link">Logout</a></li>#}
-{#    </ul>#}
-{#</div>#}
-{#{% endblock %}#}
 {% block navbar %}
 <nav class="navbar navbar-expand-lg navbar-light">
   <a class="navbar-brand" href="#">Labs web</a>
@@ -64,12 +44,6 @@
       </li>
       <li class="nav-item active">
           <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
-      </li>
-      <li class="nav-item active">
-          <a class="nav-link" href="https://github.com/AlexPraefectus/labs_web">Project source</a>
-      </li>
-      <li class="nav-item active">
-          <a class="nav-link" href="mailto:alexkorienev@gmail.com">Contact author</a>
       </li>
     </ul>
   </div>
