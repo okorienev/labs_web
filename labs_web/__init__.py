@@ -23,6 +23,11 @@ def load_user(id):
     return User.query.get(int(id))
 
 
+@app.before_first_request
+def create_db():
+    db.create_all()
+
+
 @app.route('/')
 def hello_world():
     return redirect(url_for('auth.login'))

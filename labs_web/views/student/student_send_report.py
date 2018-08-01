@@ -16,8 +16,7 @@ import os
 
 def courses_of_user(user_id: int) -> list:
     """:returns course list of given user"""
-    return [{'name': i.course_name, 'shortened': i.course_shortened}
-            for i in User.query.get(user_id).group[0].courses]
+    return User.query.get(user_id).group[0].courses
 
 
 def add_report_to_database(course_id: int, student_id: int, report_num, hash_md5: str):
@@ -60,14 +59,15 @@ class SendReport(View):
     def dispatch_request(self):
         form = ReportSendingForm()
         user_courses = courses_of_user(current_user.id)
+        form.course.choices = [(course.course_id, course.course_shortened) for course in user_courses]
 
         if request.method == 'POST' and form.validate_on_submit():
-            course = Course.query.filter_by(course_shortened=form.data.get('course')).first()
+            course = Course.query.get(int(form.data.get('course')))
             group = current_user.group[0]
             report_number = form.data.get('number_in_course')
-            if not course or course.course_id not in [course.course_id for course in group.courses]:
-                flash('You don\'t have this course')
-                return redirect(request.url)
+            # if not course or course.course_id not in [course.course_id for course in group.courses]:
+            #     flash('You don\'t have this course')
+            #     return redirect(request.url)
             report = Report.query.filter_by(report_course=course.course_id,
                                             report_student=current_user.id,
                                             report_num=report_number).first()

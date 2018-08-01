@@ -11,8 +11,8 @@
     </thead>
     {% for course in courses %}
         <tr>
-            <th>{{ course['name'] }}</th>
-            <th>{{ course['shortened'] }}</th>
+            <th>{{ course.course_name }}</th>
+            <th>{{ course.course_shortened }}</th>
         </tr>
     {% endfor %}
     </table>
