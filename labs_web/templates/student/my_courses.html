@@ -36,7 +36,9 @@
                 </tr>
             </tbody>
         </table>
-        <p class="card-text"><a href="{{ url_for('student.course_docs', course_id=repr.course.course_id) }}" class="btn btn-primary">Course documents</a></p>
+        <p class="card-text"><a
+                href="{{ url_for('student.course_docs', course_id=repr.course.course_id) }}"
+                class="btn btn-primary">Course documents</a></p>
     </div>
 </div>
 {% endfor %}

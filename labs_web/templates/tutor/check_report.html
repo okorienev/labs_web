@@ -24,7 +24,7 @@
                     <th> {{ report['group'] }}</th>
                     <th> {{ report['number'] }}</th>
                     <th> {{ report['uploaded'].strftime("%d %b %Y: %H:%M") }}</th>
-                    <th> <a href="{{ report['link'] }}">Report</a></th>
+                    <th> <a href="{{ report['link'] }}" target="_blank">Report</a></th>
                 </tr>
             {% endfor %}
             </tbody>
