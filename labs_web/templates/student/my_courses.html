@@ -1,8 +1,43 @@
 {% extends 'student/student_menu.html' %}
 {% block title %}My courses{% endblock %}
 {% block content %}
-
-{% endblock %}
-{% block script %}
-<script type="text/javascript" src="{{ url_for("static", filename="js/course_hidden_text.js") }}"></script>
+{% for repr in reprs %}
+    <div class="card">
+    <div class="card-header">
+        <button
+                class="btn btn-primary"
+                data-toggle="collapse"
+                data-target="#hide-me-{{ repr.course.course_id }}">
+                {{ repr.course.course_name }}
+        </button>
+    </div>
+    <div class="card-body collapse" id="hide-me-{{ repr.course.course_id }}">
+        <p class="card-text">Shortened: {{ repr.course.course_shortened }}</p>
+        <p class="card-text">Tutor: {{ repr.tutor.name }}</p>
+        <p class="card-text">Labs amount: {{ repr.course.labs_amount }}</p>
+        <p class="card-text">My results:</p>
+        <table class="table table-sm table-bordered table-responsive-sm">
+            <thead>
+            <tr>
+                <th>Student Name</th>
+                {% for count in range(0, repr.results.reports|length) %}
+                <th>{{ count + 1}}</th>
+                {% endfor %}
+                <th>Total</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>{{ repr.results.name }}</th>
+                    {% for report in repr.results.reports %}
+                    <th>{{report}}</th>
+                    {% endfor %}
+                    <th>{{ repr.results.sum }}</th>
+                </tr>
+            </tbody>
+        </table>
+        <p class="card-text"><a href="{{ url_for('student.course_docs', course_id=repr.course.course_id) }}" class="btn btn-primary">Course documents</a></p>
+    </div>
+</div>
+{% endfor %}
 {% endblock %}

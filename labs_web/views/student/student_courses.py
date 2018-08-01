@@ -1,32 +1,28 @@
 from flask.views import View
 from flask_login import login_required, current_user
-from flask import abort, render_template
+from flask import render_template
 from . import ReportsProcessor
 from labs_web.extensions import Course, User, Report
 
 
-def render_course_info(student: User, course: Course) -> str:
+class _Representation:
     """
-    :param student:
-    :param course: course to render
-    :return: course info rendered into html (bootstrap 4) of given course with results of given student
+    objects store data for template rendering
     """
-    results = ReportsProcessor(student,
-                               course.labs_amount,
-                               Report.query.filter_by(report_student=student.id))
-    return render_template('student/course_representation.html',
-                           course=course,
-                           tutor=User.query.get(course.course_tutor),
-                           results=results)
+    def __init__(self, student: User, course: Course):
+        self.course = course
+        self.results = ReportsProcessor(student,
+                                        Report.query.filter_by(report_student=student.id,
+                                                               report_course=course.course_id).all(),
+                                        course.labs_amount)
+        self.tutor = User.query.get(course.course_tutor)
 
 
 class StudentCourses(View):
     decorators = [login_required]
 
     def dispatch_request(self, *args, **kwargs):
-        group = kwargs.get('group')
-        if group is not current_user.group[0]:
-            abort(404)
+        group = current_user.group[0]
         return render_template('student/my_courses.html',
                                group=group,
-                               reprs=[render_course_info(current_user, course) for course in group.courses])
+                               reprs=[_Representation(current_user, course) for course in group.courses])
