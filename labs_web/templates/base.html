@@ -44,13 +44,21 @@
             </div>
         </div>
         <div class="col">{% block right_bar %}{% endblock %}
+        {% if current_user.is_authenticated %}
             <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Stub text on the right side</h5>
-                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod gravida nisl, vel semper turpis dapibus eu. Pellentesque efficitur nulla et feugiat aliquam. Nulla venenatis nec ipsum sed aliquam. Fusce diam est, scelerisque vitae ante et, commodo condimentum orci. Nullam rutrum quam quis arcu iaculis fermentum. Cras ac odio sed ante imperdiet aliquet. Phasellus lacinia nisi rhoncus ornare ultricies. Donec pulvinar vehicula sapien in ullamcorper.</p>
-                    <p class="card-text">Nam vitae eros auctor, laoreet lacus eu, mollis leo. In metus lectus, placerat at magna eu, posuere dictum arcu. Nam lacinia ligula ac interdum placerat. Phasellus sollicitudin tellus nibh, vel placerat ante tristique placerat.</p>
+                <div class="card-header">
+                    <button
+                    class="btn btn-primary"
+                    data-toggle="collapse"
+                    data-target="#last-events">
+                    Last events:
+                    </button>
+                </div>
+                <div class="card-body collapse" id="last-events">
+
                 </div>
             </div>
+        {% endif %}
         </div>
     </div>
     <div class="row">
