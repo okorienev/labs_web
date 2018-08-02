@@ -9,6 +9,8 @@ from . import (ChooseCourseToCheck,
 from labs_web.extensions import report_checked
 from labs_web.views.student.group_stats_in_course import ReportsProcessor
 from .check_reports_menu_ajax import drop_unchecked
+from ..student.student_event_collector import drop_checked_reports_cache
+from .check_reports import send_mail_report_checked
 
 
 def report_checked_callback(*args, **kwargs):
@@ -16,6 +18,8 @@ def report_checked_callback(*args, **kwargs):
     if report_id:
         ReportsProcessor.drop_marks_cache.delay(report_id)
         drop_unchecked.delay(report_id)
+        drop_checked_reports_cache.delay(report_id)
+        send_mail_report_checked.delay(report_id)
 
 
 tutor = Blueprint('tutor',
