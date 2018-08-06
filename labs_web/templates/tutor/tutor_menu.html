@@ -29,7 +29,7 @@
 
         </div>
       </li>
-        <li class="nav-item dropdown active">
+      <li class="nav-item dropdown active">
         <a class="nav-link dropdown-toggle"
            href="#"
            id="navbarDropdownMenuLink"
@@ -41,6 +41,9 @@
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" id="check-reports">
             <a href="{{ url_for('tutor.tutor_choose_course') }}" class="dropdown-item">Manual choice</a>
         </div>
+      </li>
+      <li class="nav-item active">
+          <a class="nav-link" href="{{ url_for('tutor.add_course') }}">Add course</a>
       </li>
       <li class="nav-item active">
           <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>

@@ -26,5 +26,8 @@ class Config(object):
                       'labs_web.views.tutor.check_reports_menu_ajax',
                       'labs_web.views.student.group_stats_in_course',
                       'labs_web.views.student.student_event_collector')
+    ADMIN_USERNAME = 'admin'
+    ADMIN_PASSWORD = 'password'
+    ADMIN_EMAIL = 'admin@domain.com'
 
 
