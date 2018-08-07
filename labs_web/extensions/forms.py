@@ -73,16 +73,30 @@ class RestorePasswordForm(FlaskForm):
 
 
 class AddCourseForm(FlaskForm):
-    course_name = StringField('course name', validators=[DataRequired(), Length(max=50)],
-                              render_kw={'placeholder': 'Course Name', 'class': 'form-control'})
-    course_shortened = StringField('course shortened', validators=[DataRequired(), Length(max=5)],
+    course_name = StringField('course name',
+                              validators=[DataRequired(),
+                                          Length(min=10, max=50,
+                                                 message="Course name should be between 10 and 50 characters")],
+                              render_kw={'placeholder': 'Course Name',
+                                         'class': 'form-control'})
+    course_shortened = StringField('course shortened',
+                                   validators=[DataRequired(),
+                                               Length(min=1, max=5,
+                                                      message="Short name should be between 1 and 5 characters")],
                                    render_kw={'placeholder': 'Course Shortened', 'class': 'form-control'})
-    lab_max_score = IntegerField('max score', validators=[DataRequired(), NumberRange(min=1, max=100)],
+    lab_max_score = IntegerField('max score', validators=[DataRequired(),
+                                                          NumberRange(min=1, max=100,
+                                                                      message="Max score should be between 1 & 100")],
                                  render_kw={'placeholder': 'Max score in lab', 'class': 'form-control'})
     labs_amount = IntegerField('labs amount', validators=[DataRequired(),
                                                           NumberRange(min=1,
                                                                       max=15,
-                                                                      message='should be between 1 and 15')],
+                                                                      message='Labs amount should be between 1 & 15')],
                                render_kw={'placeholder': 'Labs amount', 'class': 'form-control'})
-    groups = SelectMultipleField('groups', choices=[], validators=[DataRequired()],
+    groups = SelectMultipleField('groups', coerce=int, choices=[], validators=[DataRequired()],
                                  render_kw={'placeholder': 'Groups', 'class': 'form-control form-control-lg'})
+    attachment = FileField('course docs', validators=[
+        FileRequired(),
+        FileAllowed(['zip', 'rar', 'tar'], 'zip/rar/tar files only!')
+    ],
+                           render_kw={'class': 'form-control-file'})

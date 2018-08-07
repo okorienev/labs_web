@@ -28,17 +28,18 @@ services:
     command: celery worker -l info -A labs_web.celery
     volumes:
       - '.:/labs_web'
-  db:
-    image: postgres
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: alex
-      POSTGRES_USER: alex
-      POSTGRES_DB: labs_by_web_db
-    ports:
-      - 5432:5432
+
+#  db:
+#    image: postgres
+#    restart: always
+#    environment:
+#      POSTGRES_PASSWORD: alex
+#      POSTGRES_USER: alex
+#      POSTGRES_DB: labs_by_web_db
+#    ports:
+#      - 5432:5432
 
 volumes:
   redis:
-  postgres:
+#  postgres:
 

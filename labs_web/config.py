@@ -6,6 +6,7 @@ class Config(object):
     CSRF_ENABLED = True
     SECRET_KEY = 'e9fc4fca2c9fb29090742ad630e417bb5db210c9951f2420478ababd'
     UPLOAD_PATH = '/home/alex/Dropbox/labs_web/labs_web/uploads/'
+    DOCS_FOLDER = 'course_docs'
     ALLOWED_EXTENSIONS = {'pdf'}
     MAX_CONTENT_LENGTH = 5 * 1024 * 1024
     CACHE_TYPE = 'redis'

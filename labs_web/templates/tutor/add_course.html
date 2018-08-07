@@ -3,15 +3,14 @@
 {% block content %}
     <div class="card">
         <div class="card-body">
-            <form class="form" method="post">
+            <form class="form" method="post" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
                 <div class="form-group">{{ form.course_name }}</div>
                 <div class="form-group">{{ form.course_shortened }}</div>
                 <div class="form-group">{{ form.labs_amount }}</div>
                 <div class="form-group">{{ form.lab_max_score }}</div>
-                <div class="form-group id=groups" aria-labelledby="groupsHelpBox">
-                    {{ form.groups }}
-                    <small id="groupsHelpBox" class="form-text text-muted">Hold Shift or Ctrl to choose multiple</small>
-                </div>
+                <div class="form-group">{{ form.groups }}</div>
+                <div class="form-group">{{ form.attachment }}</div>
                 <button type="submit" class="btn btn-primary" id="search">Submit</button>
             </form>
         </div>
