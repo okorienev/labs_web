@@ -87,7 +87,7 @@ class AddCourseForm(FlaskForm):
     lab_max_score = IntegerField('max score', validators=[DataRequired(),
                                                           NumberRange(min=1, max=100,
                                                                       message="Max score should be between 1 & 100")],
-                                 render_kw={'placeholder': 'Max score in lab', 'class': 'form-control'})
+                                 render_kw={'placeholder': 'Max score for each lab', 'class': 'form-control'})
     labs_amount = IntegerField('labs amount', validators=[DataRequired(),
                                                           NumberRange(min=1,
                                                                       max=15,

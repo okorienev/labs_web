@@ -31,7 +31,7 @@ class AddCourse(View):
                 file.save(path)
             except FileNotFoundError:
                 flash("some error occurred during saving course docs, please retry")
-            flash("create course {} successfully".format(course.course_shortened))
+            flash("created course {} successfully".format(course.course_shortened))
             db.session.commit()
         for field, messages in form.errors.items():
             for message in messages:

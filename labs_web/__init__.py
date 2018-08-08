@@ -40,9 +40,9 @@ def create_db_and_roles():
         admin_role = Role(role_name='admin')
         db.session.add(admin_role)
         db.session.commit()
-        assert Role.query.filter(Role.role_name == 'student').first().id == 1
-        assert Role.query.filter(Role.role_name == 'tutor').first().id == 2
-        assert Role.query.filter(Role.role_name == 'admin').first().id == 3
+        assert Role.query.filter(Role.role_name == 'student').first().role_id == 1
+        assert Role.query.filter(Role.role_name == 'tutor').first().role_id == 2
+        assert Role.query.filter(Role.role_name == 'admin').first().role_id == 3
     admin_usr = User.query.filter(User.username == Config.ADMIN_USERNAME).first()
     if not admin_usr:
         admin_usr = User(username=Config.ADMIN_USERNAME,

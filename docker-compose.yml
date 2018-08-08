@@ -29,17 +29,26 @@ services:
     volumes:
       - '.:/labs_web'
 
-#  db:
-#    image: postgres
-#    restart: always
-#    environment:
-#      POSTGRES_PASSWORD: alex
-#      POSTGRES_USER: alex
-#      POSTGRES_DB: labs_by_web_db
-#    ports:
-#      - 5432:5432
+  data:
+    restart: always
+    image: postgres:latest
+    volumes:
+      - /var/lib/postgresql
+    command: "true"
+
+  postgres:
+    restart: always
+    image: postgres:latest
+    volumes_from:
+      - data
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: alex
+      POSTGRES_USER: alex
+      POSTGRES_DB: labs_by_web_db
 
 volumes:
   redis:
-#  postgres:
+  postgres:
 
