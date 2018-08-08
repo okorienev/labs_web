@@ -5,10 +5,13 @@ from . import (ChooseCourseToCheck,
                DownloadReport,
                CoursesOfTutorXHR,
                CourseStats,
-               CheckReportsMenuAjax)
+               CheckReportsMenuAjax,
+               AddCourse)
 from labs_web.extensions import report_checked
 from labs_web.views.student.group_stats_in_course import ReportsProcessor
 from .check_reports_menu_ajax import drop_unchecked
+from ..student.student_event_collector import drop_checked_reports_cache
+from .check_reports import send_mail_report_checked
 
 
 def report_checked_callback(*args, **kwargs):
@@ -16,6 +19,8 @@ def report_checked_callback(*args, **kwargs):
     if report_id:
         ReportsProcessor.drop_marks_cache.delay(report_id)
         drop_unchecked.delay(report_id)
+        drop_checked_reports_cache.delay(report_id)
+        send_mail_report_checked.delay(report_id)
 
 
 tutor = Blueprint('tutor',
@@ -28,6 +33,7 @@ tutor.add_url_rule('/get-report/<course>/<group>/<int:student>/<int:number>/',
 tutor.add_url_rule('/stats/<int:course_id>', view_func=CourseStats.as_view('tutor_course_stats'))
 tutor.add_url_rule('/courses_ajax/', view_func=CoursesOfTutorXHR.as_view('course_of_tutor'))
 tutor.add_url_rule('/check-reports-menu-items/', view_func=CheckReportsMenuAjax.as_view('check_reports_menu'))
+tutor.add_url_rule('/add-course/', view_func=AddCourse.as_view('add_course'))
 report_checked.connect(report_checked_callback)
 
 

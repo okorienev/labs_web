@@ -5,4 +5,5 @@ from .course_stats import CourseStats
 from .courses_of_tutor_ajax import CoursesOfTutorXHR
 from .download_report import DownloadReport
 from .search_reports import ReportsSearcher
+from .add_course import AddCourse
 from .tutor_main import tutor
