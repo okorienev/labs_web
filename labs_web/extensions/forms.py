@@ -51,8 +51,10 @@ class ReportSearchingForm(FlaskForm):
                                                                      'class': 'form-control'})
     report_number = IntegerField(validators=[Optional()], render_kw={'placeholder': 'Report number',
                                                                      'class': 'form-control'})
-    report_group = StringField(validators=[Optional()], render_kw={'placeholder': "Group",
-                                                                   'class': 'form-control'})
+    report_group = SelectField(validators=[Optional()],
+                               choices=[],
+                               coerce=int,
+                               render_kw={'placeholder': "Group", 'class': 'form-control'})
 
 
 class ForgotPasswordForm(FlaskForm):

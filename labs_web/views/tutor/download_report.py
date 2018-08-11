@@ -3,7 +3,7 @@ from os.path import join
 from flask import send_file, abort, flash, redirect, url_for, current_app
 from flask.views import View
 from flask_login import login_required, current_user
-from labs_web.extensions import Course
+from labs_web.extensions import Course, Report
 
 
 class DownloadReport(View):

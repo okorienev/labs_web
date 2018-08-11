@@ -107,6 +107,7 @@ class CheckReports(View):
         form = CheckReportForm()
         search = ReportSearchingForm()
         course = Course.query.get(kwargs.get('course_id'))
+        search.report_group.choices = [(i.group_id, i.name) for i in course.groups]
         if not course or course.course_tutor != current_user.id:
             abort(404)
         if request.method == "POST":
@@ -128,6 +129,6 @@ class CheckReports(View):
                 return render_template('tutor/check_report.html', form=form, search=search,
                                        reports=CheckReports.generate_reports_representation(reports,
                                                                                             course.course_shortened))
-        reports = CheckReports.generate_reports_default(course.course_id)
-        reports = CheckReports.generate_reports_representation(reports, course.course_shortened)
+        reports = CheckReports.generate_reports_representation(CheckReports.generate_reports_default(course.course_id),
+                                                               course.course_shortened)
         return render_template('tutor/check_report.html', reports=reports, form=form, search=search)
