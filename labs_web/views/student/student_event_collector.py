@@ -14,7 +14,8 @@ def checked_reports(user_id: int, reports_amount: int = 5) -> Iterator:
     return [{'category': 'report-checked',
              'report_num': report.report_num,
              'course': Course.query.get(report.report_course).course_shortened,
-             'mark': report.report_mark} for report in checked]
+             'mark': report.report_mark,
+             'checked': report.report_checked} for report in checked]
 
 
 @celery.task(ignore_result=True)
