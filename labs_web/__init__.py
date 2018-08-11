@@ -1,5 +1,5 @@
 from flask import Flask, redirect, url_for
-from .config import Config
+from .config import Config, NonDockerConfig
 from .extensions import login_manager, cache, mail, celery, admin, Role, User
 from flask_debugtoolbar import DebugToolbarExtension
 from .extensions import db, User
@@ -7,7 +7,7 @@ from flask_migrate import Migrate
 
 
 app = Flask(__name__)
-app.config.from_object(Config)
+app.config.from_object(NonDockerConfig)
 login_manager.init_app(app)
 login_manager.login_view = 'auth.login'
 db.init_app(app)

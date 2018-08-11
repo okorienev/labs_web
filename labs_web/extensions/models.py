@@ -78,6 +78,10 @@ class User(db.Model):
     def __repr__(self):
         return self.name
 
+    @property
+    def password(self):
+        return self._password
+
 
 class Course(db.Model):  # course model
     course_id = db.Column(db.Integer(), primary_key=True)  # identifier
