@@ -1,9 +1,8 @@
 from datetime import datetime, timezone
 from hashlib import md5
-from flask import render_template, redirect, request, flash
+from flask import render_template, redirect, request, flash, current_app
 from flask.views import View
 from flask_login import current_user, login_required
-from labs_web.config import Config
 from labs_web.extensions import (ReportSendingForm,
                                  report_sent,
                                  User,
@@ -41,7 +40,7 @@ def create_user_folder_structure(course: Course, student: User) -> None:
     structure should be <course_shortened>/<group_name>/<student_id>/<lab_number>.pdf
     :return: None
     """
-    course_folder = p.join(Config.UPLOAD_PATH, course.course_shortened)
+    course_folder = p.join(current_app.config.get("UPLOAD_PATH"), course.course_shortened)
     if not p.exists(course_folder) or not p.isdir(course_folder):
         os.mkdir(course_folder)
     group_folder = p.join(course_folder, student.group[0].name)
@@ -82,7 +81,7 @@ class SendReport(View):
             if (lambda filename: '.' in filename and filename.rsplit('.', 1)[1].lower() == 'pdf')(file.filename):
                 filename = str(report_number) + '.pdf'  # filename is <number_in_course>.pdf
                 # saving file to uploads
-                filepath = p.join(Config.UPLOAD_PATH,
+                filepath = p.join(current_app.config.get("UPLOAD_PATH"),
                                   course.course_shortened,
                                   group.name,
                                   str(current_user.id),
