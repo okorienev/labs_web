@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for
+from flask import Flask, redirect, url_for, current_app
 from .config import Config, NonDockerConfig
 from .extensions import login_manager, cache, mail, celery, admin, Role, User
 from flask_debugtoolbar import DebugToolbarExtension
@@ -43,18 +43,18 @@ def create_db_and_roles():
         assert Role.query.filter(Role.role_name == 'student').first().role_id == 1
         assert Role.query.filter(Role.role_name == 'tutor').first().role_id == 2
         assert Role.query.filter(Role.role_name == 'admin').first().role_id == 3
-    admin_usr = User.query.filter(User.username == Config.ADMIN_USERNAME).first()
+    admin_usr = User.query.filter(User.username == current_app.config.get("ADMIN_USERNAME")).first()
     if not admin_usr:
-        admin_usr = User(username=Config.ADMIN_USERNAME,
-                         email=Config.ADMIN_EMAIL,
+        admin_usr = User(username=current_app.config.get("ADMIN_USERNAME"),
+                         email=current_app.config.get("ADMIN_EMAIL"),
                          name='ADMIN',
                          active=True,
                          role=3)
-        admin_usr.set_password(Config.ADMIN_PASSWORD)
+        admin_usr.set_password(current_app.config.get("ADMIN_PASSWORD"))
         db.session.add(admin_usr)
         db.session.commit()
-    if not admin_usr.check_password(Config.ADMIN_PASSWORD):
-        admin_usr.set_password(Config.ADMIN_PASSWORD)
+    if not admin_usr.check_password(current_app.config.get("ADMIN_PASSWORD")):
+        admin_usr.set_password(current_app.config.get("ADMIN_PASSWORD"))
         db.session.commit()
 
 
