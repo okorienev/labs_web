@@ -16,11 +16,11 @@
           integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.css">
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
+          integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
 </head>
-<body style="background-color: lightcyan">
-<div class="container-fluid">
+<body style="background-color: lightcyan;">
+<div class="container-fluid" style="margin-bottom: 60px">
     <div class="row bg-primary">
         <div class="col">{% block navbar %}{% endblock %}</div>
     </div>
@@ -64,6 +64,22 @@
 
     </div>
 </div>
+<footer class="bg-info" style="position: fixed; bottom: 0; width: 100%; height: 50px">
+
+        <div class="container-fluid">
+            <div class="row">
+            <div class="col">
+                <a href="https://github.com/AlexPraefectus/labs_web">
+                    <i style="color: black" class="fab fa-github fa-w-16 fa-3x"></i></a>
+            </div>
+            <div class="col" align="center">
+                <p>Licensed under BSD 3-clause license</p>
+            </div>
+            <div class="col">
+
+            </div>
+        </div></div>
+</footer>
 {% block script %}{% endblock %}
 </body>
 </html>
