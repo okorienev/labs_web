@@ -7,7 +7,9 @@ from . import (SendReport,
                CoursesOfUserXHR,
                StudentCourses,
                GetCourseDocs,
-               StudentEventCollector)  # importing views
+               StudentEventCollector,
+               MyReports,
+               DownloadReport)  # importing views
 from labs_web.extensions import report_sent
 from labs_web.views.tutor.check_reports_menu_ajax import drop_unchecked
 
@@ -29,6 +31,8 @@ student.add_url_rule('/ajax/my-courses/', view_func=CoursesOfUserXHR.as_view('my
 student.add_url_rule('/my-courses/', view_func=StudentCourses.as_view('my_courses'))
 student.add_url_rule('/course-docs/<int:course_id>', view_func=GetCourseDocs.as_view('course_docs'))
 student.add_url_rule('/collect-events/', view_func=StudentEventCollector.as_view('collect_events'))
+student.add_url_rule('/my-reports/', view_func=MyReports.as_view('my_reports'))
+student.add_url_rule('/download-report/<int:report_id>/', view_func=DownloadReport.as_view('download-report'))
 report_sent.connect(report_sent_callback)
 
 

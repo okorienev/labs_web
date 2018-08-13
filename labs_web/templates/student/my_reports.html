@@ -1,0 +1,52 @@
+{% extends 'student/student_menu.html' %}
+{% block title %}My Reports{% endblock %}
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <button
+                    class="btn btn-primary"
+                    data-toggle="collapse"
+                    data-target="#hide-me-unchecked">
+                    Unchecked Reports
+            </button>
+        </div>
+        <div class="card-body collapse" id="hide-me-unchecked">
+            {% for report in unchecked %}
+                <div class="card">
+                    <div class="card-body" style="padding: 10px;">
+                        Report №{{ report.report_num }} ({{ report.report_course }}) Sent:
+                        {{ report.report_uploaded.strftime('%d-%m-%Y')}}
+                        <a href="{{ url_for('.download-report', report_id=report.report_id) }}">
+                            <button style="float: right" class="btn btn-primary">Download PDF</button>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <button
+                    class="btn btn-primary"
+                    data-toggle="collapse"
+                    data-target="#hide-me-checked">
+                    Checked Reports
+            </button>
+        </div>
+        <div class="card-body collapse" id="hide-me-checked">
+            {% for report in checked %}
+                <div class="card">
+                    <div class="card-body" style="padding: 10px;">
+                        Report №{{ report.report_num }} ({{ report.report_course }})
+                        Sent: {{ report.report_uploaded.strftime('%d-%m-%Y')}}
+                        Checked: {{ report.report_checked.strftime('%d-%m-%Y') }}
+                        Score: {{ report.report_mark }}
+                        <a href="{{ url_for('.download-report', report_id=report.report_id) }}">
+                            <button style="float: right" class="btn btn-primary">Download PDF</button>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
