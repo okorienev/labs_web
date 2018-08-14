@@ -20,6 +20,7 @@ from flask_mail import Message
 def send_mail_report_checked(report_id):
     """
     background task to notify students when their reports were checked by the tutor
+    works inside app context, makes all needed queries itself
     """
     with app.app_context():
         report = Report.query.get(report_id)
@@ -36,28 +37,41 @@ def send_mail_report_checked(report_id):
         mail.send(msg)
 
 
+class ReportRepr:
+    """
+    Class to query & store information about reports
+    """
+    def __init__(self, report: Report, course_shortened):
+        """
+        :param report: Report instance
+        :param course_shortened: needed to generate download url without extra query
+        """
+        self.id = report.report_id
+        self.uploaded = report.report_uploaded
+        self.student = User.query.get(report.report_student)
+        self.group = self.student.group[0].name
+        self.number = report.report_num
+        self.link = url_for('.get-report',
+                            course=course_shortened,
+                            group=self.group,
+                            student=report.report_student,
+                            number=report.report_num)
+
+    @classmethod
+    def from_list(cls, reports: list, course_shortened: str) -> list:
+        """
+        :param reports: list of reports
+        :param course_shortened: shortened name of course
+        :return: list of ReportRepr instances to insert into template
+        !initializing each ReportRepr makes 2 queries (loading user & his group) 
+        """
+        return [cls(report, course_shortened) for report in reports]
+
+
 class CheckReports(View):
     """View to check reports in course, commonly accessed via flask.redirect() from ChooseCourseToCheck view"""
     decorators = [login_required]
     methods = ["GET", "POST"]
-
-    @staticmethod
-    def generate_reports_default(course_id: int) -> list:
-        return [{'student': i.report_student,
-                 'number': i.report_num,
-                 'id': i.report_id,
-                 'uploaded': i.report_uploaded,
-                 'comment': i.report_stu_comment} for i in
-                Report.query.filter_by(report_course=course_id,
-                                       report_mark=None).limit(10)]
-
-    @staticmethod
-    def generate_reports(reports: list):
-        return [{'student': i.report_student,
-                 'number': i.report_num,
-                 'id': i.report_id,
-                 'uploaded': i.report_uploaded,
-                 'comment': i.report_stu_comment} for i in reports]
 
     @staticmethod
     def _set_report_mark(report: Report, mark: int, comment="") -> None:
@@ -90,23 +104,11 @@ class CheckReports(View):
         if report_mark not in range(1, course.lab_max_score + 1):
             return "Report mark should be between 1 and {} inclusive".format(course.lab_max_score)
 
-    @staticmethod
-    def generate_reports_representation(reports: list, course_shortened: str) -> list:
-        for report in reports:
-            group = User.query.get(report.get('student')).group[0]
-            report.update({'group': group.name,
-                           'student': User.query.get(report.get('student'))})
-            report.update({'link': url_for('.get-report',
-                                           course=course_shortened,
-                                           group=group.name,
-                                           student=str(report.get('student').id),
-                                           number=report.get('number'))})
-        return reports
-
     def dispatch_request(self, *args, **kwargs):
         form = CheckReportForm()
         search = ReportSearchingForm()
         course = Course.query.get(kwargs.get('course_id'))
+        search.report_group.choices = [(i.group_id, i.name) for i in course.groups]
         if not course or course.course_tutor != current_user.id:
             abort(404)
         if request.method == "POST":
@@ -122,12 +124,23 @@ class CheckReports(View):
                 return redirect(url_for('.tutor_check_reports', course_id=course.course_id))
             if search.validate_on_submit():
                 searcher = ReportsSearcher(course)
-                reports = CheckReports.generate_reports(searcher.search(search.data.get('report_student'),
-                                                        search.data.get('report_group'),
-                                                        search.data.get('report_number')))
+                reports = ReportRepr.from_list(searcher.search(search.data.get('report_student'),
+                                                               search.data.get('report_group'),
+                                                               search.data.get('report_number')),
+                                               course_shortened=course.course_shortened)
                 return render_template('tutor/check_report.html', form=form, search=search,
-                                       reports=CheckReports.generate_reports_representation(reports,
-                                                                                            course.course_shortened))
-        reports = CheckReports.generate_reports_default(course.course_id)
-        reports = CheckReports.generate_reports_representation(reports, course.course_shortened)
-        return render_template('tutor/check_report.html', reports=reports, form=form, search=search)
+                                       reports=reports)
+        try:
+            page = int(request.args.get('page'))
+        except ValueError:
+            page = 1
+        default_pagination = Report.query.filter(Report.report_mark.is_(None),
+                                                 Report.report_course == course.course_id).\
+            paginate(page=page if page else 1, per_page=10)
+        return render_template('tutor/check_report.html',
+                               reports=ReportRepr.from_list(default_pagination.items, course.course_shortened),
+                               current=default_pagination.page,
+                               next=default_pagination.next_num,
+                               prev=default_pagination.prev_num,
+                               pages=default_pagination.pages,
+                               form=form, search=search, course_id=course.course_id)

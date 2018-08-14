@@ -19,17 +19,36 @@
             <tbody id="reports-tbody">
             {% for report in reports %}
                 <tr>
-                    <th> {{ report['id'] }}</th>
-                    <th> {{ report['student'].name }}</th>
-                    <th> {{ report['group'] }}</th>
-                    <th> {{ report['number'] }}</th>
-                    <th> {{ report['uploaded'].strftime("%d %b %Y: %H:%M") }}</th>
-                    <th> <a href="{{ report['link'] }}" target="_blank">Report</a></th>
+                    <th> {{ report.id }}</th>
+                    <th> {{ report.student }}</th>
+                    <th> {{ report.group }}</th>
+                    <th> {{ report.number }}</th>
+                    <th> {{ report.uploaded.strftime("%d %b %Y: %H:%M") }}</th>
+                    <th> <a href="{{ report.link }}" target="_blank">Download</a></th>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
-</div>
+        <p align="center">
+            <a {% if prev %}
+                     href="{{ url_for('tutor.tutor_check_reports', course_id=course_id) + '?page=' + prev|string }}"
+               {% endif %}>
+               <button class="btn btn-primary"
+                   {% if not prev %}disabled{% endif %}
+                   style="float: left">Prev Page
+               </button>
+            </a>
+            <span>You are at page {{ current }} of {{ pages }} now</span>
+            <a {% if next %}
+                     href="{{ url_for('tutor.tutor_check_reports', course_id=course_id) + '?page=' + next|string }}"
+               {% endif %}>
+               <button class="btn btn-primary"
+                   {% if not next %}disabled{% endif %}
+                   style="float: right">Next Page
+               </button>
+            </a>
+        </p>
+    </div>
 </div>
 </div>
 <br>
@@ -56,6 +75,7 @@
                     {{ search.report_number }}
                     {{ search.report_student }}
                     <button type="submit" class="btn btn-primary" id="search">Search</button>
+                    <small class="text text-muted">Pagination is not available for search results, they'll be returned all at once</small>
                 </form>
             </div>
         </div>

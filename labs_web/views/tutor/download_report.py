@@ -1,11 +1,9 @@
 from os.path import join
 
-from flask import send_file, abort, flash, redirect, url_for
+from flask import send_file, abort, flash, redirect, url_for, current_app
 from flask.views import View
 from flask_login import login_required, current_user
-
-from labs_web.config import Config
-from labs_web.extensions import Course
+from labs_web.extensions import Course, Report
 
 
 class DownloadReport(View):
@@ -15,7 +13,7 @@ class DownloadReport(View):
         if Course.query.filter_by(course_shortened=kwargs.get('course')).first().course_tutor != current_user.id:
             abort(404)  # aborts when trying to check not own course
         try:
-            return send_file(join(Config.UPLOAD_PATH,
+            return send_file(join(current_app.config.get('UPLOAD_PATH'),
                                   kwargs.get('course'),
                                   kwargs.get('group'),
                                   str(kwargs.get('student')),
