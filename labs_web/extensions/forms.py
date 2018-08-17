@@ -102,3 +102,14 @@ class AddCourseForm(FlaskForm):
         FileAllowed(['zip', 'rar', 'tar'], 'zip/rar/tar files only!')
     ],
                            render_kw={'class': 'form-control-file'})
+
+
+class SearchArchiveForm(FlaskForm):
+    report_group = StringField(validators=[DataRequired()], render_kw={'placeholder': 'Group',
+                                                                       'class': 'form-control'})
+    report_student = StringField(validators=[DataRequired()], render_kw={'placeholder': 'Student',
+                                                                         'class': 'form-control'})
+    report_number = IntegerField(validators=[DataRequired()], render_kw={'placeholder': 'Report number',
+                                                                         'class': 'form-control'})
+    report_course = SelectField(validators=[DataRequired()], coerce=int, render_kw={'placeholder': 'Course',
+                                                                                    'class': 'form-control'})
