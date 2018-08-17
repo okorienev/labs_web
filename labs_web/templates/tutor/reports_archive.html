@@ -1,0 +1,37 @@
+{% extends 'tutor/tutor_menu.html' %}
+{%  block title %}Report archive{% endblock %}
+{% block content %}
+    {% if reports %}
+        <div class="card">
+            <div class="alert alert-info"><h5>Reports found: {{ reports|length }}</h5></div>
+            <div class="card-body">
+                {% for report in reports %}
+                    <div class="card">
+                        <div class="card-body">
+                            Student: {{ report.student }}<br>
+                            Course: {{ report.course }}<br>
+                            Number: {{ report.number }}<br>
+                            Uploaded: {{ report.uploaded.strftime('%d-%m-%Y %H:%M') }}<br>
+                            Checked: &nbsp;{{ report.checked.strftime('%d-%m-%Y %H:%M') }}<br>
+                            Mark: {{ report.mark }}<br>
+                            <a href="{{ report.link }}"><button class="btn btn-primary">Download Report</button></a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+    <div class="card">
+        <div class="card-body">
+            <form class="form" method="post">
+                {{ form.hidden_tag() }}
+                <div class="form-group">{{ form.report_course }}</div>
+                <div class="form-group">{{ form.report_number }}</div>
+                <div class="form-group">{{ form.report_group }}</div>
+                <div class="form-group">{{ form.report_student }}</div>
+                <button type="submit" class="btn btn-primary" id="search">Search</button>
+                <small class="text text-muted">Warning! All fields are required, searches only among checked reports</small>
+                </form>
+        </div>
+    </div>
+{% endblock %}

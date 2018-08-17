@@ -134,6 +134,8 @@ class CheckReports(View):
             page = int(request.args.get('page'))
         except ValueError:
             page = 1
+        except TypeError:
+            page = 1
         default_pagination = Report.query.filter(Report.report_mark.is_(None),
                                                  Report.report_course == course.course_id).\
             paginate(page=page if page else 1, per_page=10)

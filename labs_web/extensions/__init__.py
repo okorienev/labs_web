@@ -18,4 +18,5 @@ from .forms import (ReportSearchingForm,
                     LoginForm,
                     ForgotPasswordForm,
                     RestorePasswordForm,
-                    AddCourseForm)  # Flask WTForms
+                    AddCourseForm,
+                    SearchArchiveForm)  # Flask WTForms
