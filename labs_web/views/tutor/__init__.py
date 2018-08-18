@@ -7,4 +7,5 @@ from .download_report import DownloadReport
 from .search_reports import ReportsSearcher
 from .add_course import AddCourse
 from .reports_archive import ReportsArchive
+from .make_announcement import MakeAnnouncement
 from .tutor_main import tutor

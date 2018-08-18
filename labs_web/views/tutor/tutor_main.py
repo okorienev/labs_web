@@ -7,7 +7,8 @@ from . import (ChooseCourseToCheck,
                CourseStats,
                CheckReportsMenuAjax,
                AddCourse,
-               ReportsArchive)
+               ReportsArchive,
+               MakeAnnouncement)
 from labs_web.extensions import report_checked
 from labs_web.views.student.group_stats_in_course import ReportsProcessor
 from .check_reports_menu_ajax import drop_unchecked
@@ -36,6 +37,7 @@ tutor.add_url_rule('/courses_ajax/', view_func=CoursesOfTutorXHR.as_view('course
 tutor.add_url_rule('/check-reports-menu-items/', view_func=CheckReportsMenuAjax.as_view('check_reports_menu'))
 tutor.add_url_rule('/add-course/', view_func=AddCourse.as_view('add_course'))
 tutor.add_url_rule('/reports-archive/', view_func=ReportsArchive.as_view('archive'))
+tutor.add_url_rule('/make-announcement/', view_func=MakeAnnouncement.as_view('make_announcement'))
 report_checked.connect(report_checked_callback)
 
 
