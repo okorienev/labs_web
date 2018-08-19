@@ -1,6 +1,6 @@
 from labs_web.extensions import db
 from hashlib import sha256
-
+# TODO add ORM relation object ot each Foreign key for Flask-Admin to display relations correctly
 
 # table to link users to their roles, unused
 roles = db.Table('user_roles',

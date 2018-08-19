@@ -9,6 +9,7 @@ from wtforms import (PasswordField,
                      SelectMultipleField)
 from wtforms.validators import DataRequired, Optional, Email, EqualTo, Length, NumberRange
 from flask_wtf.file import FileRequired, FileAllowed
+from flask_ckeditor import CKEditorField
 
 
 class LoginForm(FlaskForm):
@@ -113,3 +114,14 @@ class SearchArchiveForm(FlaskForm):
                                                                          'class': 'form-control'})
     report_course = SelectField(validators=[DataRequired()], coerce=int, render_kw={'placeholder': 'Course',
                                                                                     'class': 'form-control'})
+
+
+class MakeAnnouncementForm(FlaskForm):
+    title = StringField(validators=[DataRequired(message='Title cannot be empty'),
+                                    Length(min=5, max=40, message="Title should be between 5 and 40 characters")],
+                        render_kw={'placeholder': 'Announcement Title',
+                                   'class': 'form-control'})
+    body = CKEditorField(validators=[DataRequired(message='Body cannot be empty')])
+    groups = SelectMultipleField(choices=[],
+                                 validators=[DataRequired(message='Choose at least one group to notify')],
+                                 render_kw={'class': 'form-control'})

@@ -1,29 +1,19 @@
 {% extends 'tutor/tutor_menu.html' %}
 {% block title %}Make Announcement{% endblock %}
 {% block additional_dependencied %}
-    <script src="https://cdn.ckeditor.com/4.10.0/standard/ckeditor.js"></script>
 {% endblock %}
 {% block content %}
 <div class="card">
-    <div class="card-body">
-        <form method="post" class="form">
-            <div class="form-group">
-                <input type="text" placeholder="Enter announcement title" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="groups">Groups to notify</label>
-                <select class="form-control" id="groups"></select>
-            </div>
-            <textarea name="editor" id="editor">
-                Your text here
-            </textarea>
+    <div class="card-body" align="center">
+        <form method="post">
+            {{ form.hidden_tag() }}
+            <div class="form-group">{{ form.title }}</div>
+            <div class="form-group">{{ form.groups }}</div>
+            <div class="form-group">{{ form.body }}</div>
+            <button type="submit" class="btn btn-primary">Make Announcement</button>
         </form>
+        {{ ckeditor.load(pkg_type="basic-all") }}
     </div>
 </div>
 
-<script>
-    $(document).ready(function () {
-        CKEDITOR.replace( 'editor' );
-    })
-</script>
 {% endblock %}
