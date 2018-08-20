@@ -15,7 +15,7 @@ class AdminView(ModelView):
 
 class UserView(AdminView):
     column_exclude_list = ['_password']
-    column_list = ['name', 'username', 'email', 'role', 'active']
+    column_list = ['name', 'username', 'email', 'active', 'role_obj']
 
 
 class ReportView(AdminView):
