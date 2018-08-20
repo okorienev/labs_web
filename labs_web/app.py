@@ -1,13 +1,13 @@
 from flask import Flask, redirect, url_for, current_app, render_template
 from .config import Config, NonDockerConfig
-from .extensions import login_manager, cache, mail, celery, ckeditor, admin, Role, User
+from .extensions import login_manager, cache, mail, celery, ckeditor, admin, Role, User, mongo
 from flask_debugtoolbar import DebugToolbarExtension
 from .extensions import db, User
 from flask_migrate import Migrate
 from flask_login import current_user
 
 app = Flask(__name__)
-app.config.from_object(Config)
+app.config.from_object(NonDockerConfig)
 login_manager.init_app(app)
 login_manager.login_view = 'auth.login'
 db.init_app(app)

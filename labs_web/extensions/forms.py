@@ -121,7 +121,9 @@ class MakeAnnouncementForm(FlaskForm):
                                     Length(min=5, max=40, message="Title should be between 5 and 40 characters")],
                         render_kw={'placeholder': 'Announcement Title',
                                    'class': 'form-control'})
-    body = CKEditorField(validators=[DataRequired(message='Body cannot be empty')])
+    body = CKEditorField(validators=[DataRequired(message='Body cannot be empty'),
+                                     Length(max=10000, message='Body should be between less than 10000 characters')])
     groups = SelectMultipleField(choices=[],
+                                 coerce=int,
                                  validators=[DataRequired(message='Choose at least one group to notify')],
                                  render_kw={'class': 'form-control'})
