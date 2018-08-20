@@ -7,4 +7,6 @@ from .get_course_docs import GetCourseDocs
 from .student_event_collector import StudentEventCollector
 from .student_my_reports import MyReports
 from .download_report import DownloadReport
+from .announcement import Announcement
+from .get_announcements_ajax import GetAnnouncementsAJAX
 from .student_main import student
