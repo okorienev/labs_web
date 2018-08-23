@@ -30,9 +30,9 @@ Poor tested on uploaded & sending files"""
     MAIL_PASSWORD = ""
     MAIL_SUPPRESS_SEND = True
     CELERY_IMPORTS = ('labs_web.views.tutor.check_reports',
-                      'labs_web.views.tutor.check_reports_menu_ajax',
+                      'labs_web.views.tutor.ajax.check_reports_menu_ajax',
                       'labs_web.views.student.group_stats_in_course',
-                      'labs_web.views.student.student_event_collector')
+                      'labs_web.views.student.ajax.student_event_collector')
     ADMIN_USERNAME = 'admin'
     ADMIN_PASSWORD = 'password'
     ADMIN_EMAIL = 'admin@domain.com'
@@ -41,7 +41,7 @@ Poor tested on uploaded & sending files"""
 class NonDockerConfig(Config):
     """created to test on local machine with all infrastructure already installed
     to change check:
-    labs_web/__init__.py (config importing) 
+    labs_web/app.py (config importing) 
     and labs_web/extensions.extensions.py (celery instance creation)"""
     UPLOAD_PATH = '/home/alex/Dropbox/labs_web/labs_web/uploads/'
     DOCS_FOLDER = 'course_docs'
