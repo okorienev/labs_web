@@ -1,5 +1,10 @@
 from flask import Blueprint, render_template, abort
 from flask_login import login_required, current_user
+
+from labs_web.extensions import report_checked
+from labs_web.views.student.ajax.student_event_collector import drop_checked_reports_cache
+from labs_web.views.student.group_stats_in_course import ReportsProcessor
+from labs_web.views.tutor.ajax.check_reports_menu_ajax import drop_unchecked
 from . import (ChooseCourseToCheck,
                CheckReports,
                DownloadReport,
@@ -9,10 +14,6 @@ from . import (ChooseCourseToCheck,
                AddCourse,
                ReportsArchive,
                MakeAnnouncement)
-from labs_web.extensions import report_checked
-from labs_web.views.student.group_stats_in_course import ReportsProcessor
-from .check_reports_menu_ajax import drop_unchecked
-from ..student.student_event_collector import drop_checked_reports_cache
 from .check_reports import send_mail_report_checked
 
 

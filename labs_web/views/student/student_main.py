@@ -1,5 +1,7 @@
 from flask import Blueprint, abort, render_template
 from flask_login import current_user, login_required
+from labs_web.extensions import report_sent
+from labs_web.views.tutor.ajax.check_reports_menu_ajax import drop_unchecked
 from . import (SendReport,
                ChooseCourse,
                GroupStats,
@@ -12,8 +14,6 @@ from . import (SendReport,
                DownloadReport,
                Announcement,
                GetAnnouncementsAJAX)  # importing views
-from labs_web.extensions import report_sent
-from labs_web.views.tutor.check_reports_menu_ajax import drop_unchecked
 
 
 def report_sent_callback(*args, **kwargs):
