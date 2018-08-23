@@ -12,5 +12,5 @@ class GetAnnouncementsAJAX(View):
                                                 {"_id": 1, "title": 1, "tutor": 1, "date": 1})]
         return jsonify([{'title': i['title'],
                          'link': url_for('student.announcement', announcement_id=str(i['_id'])),
-                         'tutor': i['tutor'],
+                         'tutor': i['tutor']['name'],
                          'date': i['date']} for i in result])

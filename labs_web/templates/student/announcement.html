@@ -4,7 +4,7 @@
     <div class="card" style="min-height: 300px; margin-top: 50px;">
         <div class="card-body">
             <h2 align="center" class="card-title">{{ announcement.title }}</h2>
-            <h6 class="card-subtitle" align="left">Author: {{ announcement.tutor }}</h6>
+            <h6 class="card-subtitle" align="left">Author: {{ announcement.tutor['name'] }}</h6>
             <h6 class="card-subtitle" align="right">Date: {{ announcement.date.strftime('%d-%m-%Y - %H:%M') }}</h6>
             {{ announcement.body|safe }}
         </div>

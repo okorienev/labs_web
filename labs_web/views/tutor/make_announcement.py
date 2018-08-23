@@ -17,7 +17,10 @@ class MakeAnnouncement(View):
                                             Course.query.filter(Course.course_tutor == current_user.id).all()])
         if request.method == "POST" and form.validate_on_submit():
             Announcements.insert_one({
-                'tutor': current_user.name,
+                'tutor': {
+                    'name': current_user.name,
+                    'id': current_user.id
+                },
                 'title': form.data.get('title'),
                 'body': form.data.get('body'),
                 'groups': form.data.get('groups'),
