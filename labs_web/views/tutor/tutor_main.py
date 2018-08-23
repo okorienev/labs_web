@@ -13,7 +13,9 @@ from . import (ChooseCourseToCheck,
                CheckReportsMenuAjax,
                AddCourse,
                ReportsArchive,
-               MakeAnnouncement)
+               MakeAnnouncement,
+               TutorAnnouncement,
+               GetTutorAnnouncements)
 from .check_reports import send_mail_report_checked
 
 
@@ -39,6 +41,8 @@ tutor.add_url_rule('/check-reports-menu-items/', view_func=CheckReportsMenuAjax.
 tutor.add_url_rule('/add-course/', view_func=AddCourse.as_view('add_course'))
 tutor.add_url_rule('/reports-archive/', view_func=ReportsArchive.as_view('archive'))
 tutor.add_url_rule('/make-announcement/', view_func=MakeAnnouncement.as_view('make_announcement'))
+tutor.add_url_rule('/announcement/<announcement_id>/', view_func=TutorAnnouncement.as_view('announcement'))
+tutor.add_url_rule('/get-announcements/', view_func=GetTutorAnnouncements.as_view('get_announcements'))
 report_checked.connect(report_checked_callback)
 
 

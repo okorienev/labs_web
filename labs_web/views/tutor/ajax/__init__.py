@@ -1,2 +1,3 @@
 from .check_reports_menu_ajax import CheckReportsMenuAjax
 from .courses_of_tutor_ajax import CoursesOfTutorXHR
+from .get_tutor_announcements import GetTutorAnnouncements

@@ -28,7 +28,23 @@
         <div class="col">{% block navbar %}{% endblock %}</div>
     </div>
     <div class="row">
-        <div class="col">{% block left_bar %}{% endblock %}
+        <div class="col">
+            {% block left_bar %}
+                {% if current_user.is_authenticated %}
+                        <div class="card">
+                            <div class="card-header">
+                                <button
+                                    class="btn btn-primary"
+                                    data-toggle="collapse"
+                                    data-target="#announcements">
+                                    Announcements
+                                </button>
+                            </div>
+                            <div class="card-body collapse" id="announcements" style="padding-left: 5px; padding-right: 5px">
+                            </div>
+                        </div>
+                {% endif %}
+            {% endblock %}
         </div>
         <div class="col-lg-7">
             <div class="flash">

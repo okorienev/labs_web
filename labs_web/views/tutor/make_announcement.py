@@ -5,6 +5,16 @@ from labs_web.extensions import Course, MakeAnnouncementForm, Announcements
 import datetime
 
 
+def group_form_choices() -> set:
+    """
+    func to get set of group choices for MakeAnnouncementForm. Moved into separate func to avoid code duplication
+    uses current_user proxy from flask_login
+    """
+    return set().union(*[{(group.group_id, group.name) for group in course.groups}
+                         for course in
+                         Course.query.filter(Course.course_tutor == current_user.id).all()])
+
+
 class MakeAnnouncement(View):
     decorators = [login_required]
     methods = ["GET", "POST"]
@@ -12,9 +22,7 @@ class MakeAnnouncement(View):
     def dispatch_request(self):
         # forming set of unique options
         form = MakeAnnouncementForm()
-        form.groups.choices = set().union(*[{(group.group_id, group.name) for group in course.groups}
-                                            for course in
-                                            Course.query.filter(Course.course_tutor == current_user.id).all()])
+        form.groups.choices = group_form_choices()
         if request.method == "POST" and form.validate_on_submit():
             Announcements.insert_one({
                 'tutor': {
