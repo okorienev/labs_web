@@ -33,9 +33,8 @@ class ReportSendingForm(FlaskForm):
 
 
 class CourseChoosingForm(FlaskForm):
-    shortened = StringField('course shortened name', validators=[DataRequired()],
-                            render_kw={'placeholder': 'Course shortened',
-                                       'class': 'form-control'})
+    course = SelectField('course', choices=[], coerce=int, validators=[DataRequired()],
+                         render_kw={'class': 'form-control'})
 
 
 class CheckReportForm(FlaskForm):
@@ -127,3 +126,4 @@ class MakeAnnouncementForm(FlaskForm):
                                  coerce=int,
                                  validators=[DataRequired(message='Choose at least one group to notify')],
                                  render_kw={'class': 'form-control'})
+# TODO refactor all form fields to have error messages for each validator

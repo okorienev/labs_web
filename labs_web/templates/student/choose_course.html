@@ -21,8 +21,16 @@
 <div class="form-inline">
     <form class="pure-form pure-form-stacked" method=post>
           {{ form.hidden_tag() }}
-          {{ form.shortened }}
+          {{ form.course }}
         <button type="submit" class="btn btn-primary">Submit</button>
      </form>
 </div>
+{% endblock %}
+{% block script %}
+    {{ super() }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#course').select2()
+        })
+    </script>
 {% endblock %}
