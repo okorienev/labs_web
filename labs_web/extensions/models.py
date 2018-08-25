@@ -1,7 +1,6 @@
 from labs_web.extensions import db
 from hashlib import sha256
 
-
 # table to link users to their roles, unused
 roles = db.Table('user_roles',
                  db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
@@ -22,6 +21,9 @@ courses = db.Table('group_courses',
 class Role(db.Model):
     role_id = db.Column(db.Integer(), primary_key=True)
     role_name = db.Column(db.String(10))
+
+    def __repr__(self):
+        return self.role_name
 
 
 # student groups
@@ -51,6 +53,8 @@ class User(db.Model):
     _password = db.Column('password', db.String(100))
     role = db.Column(db.ForeignKey('role.role_id'))
     reports = db.relationship("Report")
+    role_obj = db.relationship("Role")
+    courses = db.relationship("Course")
 
     def get_id(self):
         return str(self.id)
@@ -90,6 +94,7 @@ class Course(db.Model):  # course model
     course_tutor = db.Column(db.Integer(), db.ForeignKey('user.id'))  # connecting to tutor
     labs_amount = db.Column(db.Integer(), nullable=False)   # amount of reports
     lab_max_score = db.Column(db.Integer(), nullable=False)  # max score for one lab
+    course_tutor_obj = db.relationship("User")
 
     def __repr__(self):
         return '{} - {}'.format(self.course_name, self.course_shortened)
@@ -106,3 +111,9 @@ class Report(db.Model):
     report_stu_comment = db.Column(db.Text())  # comment of student
     report_tut_comment = db.Column(db.Text())  # comment of tutor
     report_hash = db.Column(db.String(32), nullable=False)   # checksum
+    student_obj = db.relationship("User")
+
+    def __repr__(self):
+        return "Report id:{} course {} №{}".format(self.report_id,
+                                         self.report_course,
+                                         self.report_num,)

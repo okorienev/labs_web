@@ -48,6 +48,21 @@ services:
       POSTGRES_USER: alex
       POSTGRES_DB: labs_by_web_db
 
+  mongodb:
+        image: mongo:latest
+        container_name: "mongodb"
+        environment:
+          - MONGO_DATA_DIR=/data/db
+          - MONGO_LOG_DIR=/dev/null
+          - MONGODB_USER="user"
+          - MONGODB_PASS="pass"
+        volumes:
+          - ./data/db:/data/db
+        ports:
+            - 27017:27017
+        command: mongod --smallfiles --logpath=/dev/null # --quiet
+
+
 volumes:
   redis:
   postgres:

@@ -9,6 +9,7 @@ from wtforms import (PasswordField,
                      SelectMultipleField)
 from wtforms.validators import DataRequired, Optional, Email, EqualTo, Length, NumberRange
 from flask_wtf.file import FileRequired, FileAllowed
+from flask_ckeditor import CKEditorField
 
 
 class LoginForm(FlaskForm):
@@ -32,9 +33,8 @@ class ReportSendingForm(FlaskForm):
 
 
 class CourseChoosingForm(FlaskForm):
-    shortened = StringField('course shortened name', validators=[DataRequired()],
-                            render_kw={'placeholder': 'Course shortened',
-                                       'class': 'form-control'})
+    course = SelectField('course', choices=[], coerce=int, validators=[DataRequired()],
+                         render_kw={'class': 'form-control'})
 
 
 class CheckReportForm(FlaskForm):
@@ -113,3 +113,17 @@ class SearchArchiveForm(FlaskForm):
                                                                          'class': 'form-control'})
     report_course = SelectField(validators=[DataRequired()], coerce=int, render_kw={'placeholder': 'Course',
                                                                                     'class': 'form-control'})
+
+
+class MakeAnnouncementForm(FlaskForm):
+    title = StringField(validators=[DataRequired(message='Title cannot be empty'),
+                                    Length(min=5, max=40, message="Title should be between 5 and 40 characters")],
+                        render_kw={'placeholder': 'Announcement Title',
+                                   'class': 'form-control'})
+    body = CKEditorField(validators=[DataRequired(message='Body cannot be empty'),
+                                     Length(max=10000, message='Body should be between less than 10000 characters')])
+    groups = SelectMultipleField(choices=[],
+                                 coerce=int,
+                                 validators=[DataRequired(message='Choose at least one group to notify')],
+                                 render_kw={'class': 'form-control'})
+# TODO refactor all form fields to have error messages for each validator

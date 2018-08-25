@@ -11,8 +11,8 @@
     </thead>
     {% for course in courses %}
         <tr>
-            <th>{{ course['name'] }}</th>
-            <th>{{ course['shortened'] }}</th>
+            <th>{{ course.course_name }}</th>
+            <th>{{ course.course_shortened }}</th>
         </tr>
     {% endfor %}
     </table>
@@ -21,8 +21,18 @@
 <div>
     <form method=post>
           {{ form.hidden_tag() }}
-        <div class="form-group">{{ form.shortened }}</div>
+        <div class="form-group">{{ form.course }}</div>
     <button type="submit" class="btn btn-primary">Submit</button>
      </form>
 </div>
+{% endblock %}
+{% block script %}
+    {{ super() }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#course').select2({
+                width: "100%",
+            })
+        })
+    </script>
 {% endblock %}

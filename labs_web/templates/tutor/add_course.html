@@ -9,10 +9,23 @@
                 <div class="form-group">{{ form.course_shortened }}</div>
                 <div class="form-group">{{ form.labs_amount }}</div>
                 <div class="form-group">{{ form.lab_max_score }}</div>
-                <div class="form-group">{{ form.groups }}</div>
+                <div class="form-group">
+                    <label for="groups">Choose Groups:</label>
+                    {{ form.groups }}
+                </div>
                 <div class="form-group">{{ form.attachment }}</div>
                 <button type="submit" class="btn btn-primary" id="search">Submit</button>
             </form>
         </div>
     </div>
+{% endblock %}
+{% block script %}
+    {{ super() }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#groups').select2({
+                width: "100%",
+            })
+        })
+    </script>
 {% endblock %}

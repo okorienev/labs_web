@@ -1,5 +1,10 @@
 from flask import Blueprint, render_template, abort
 from flask_login import login_required, current_user
+
+from labs_web.extensions import report_checked, announcement_made, get_announcement_by_oid
+from labs_web.views.student.ajax import drop_checked_reports_cache, drop_announcements_of_group
+from labs_web.views.student.group_stats_in_course import ReportsProcessor
+from .ajax import drop_unchecked, drop_tutor_announcements
 from . import (ChooseCourseToCheck,
                CheckReports,
                DownloadReport,
@@ -7,11 +12,10 @@ from . import (ChooseCourseToCheck,
                CourseStats,
                CheckReportsMenuAjax,
                AddCourse,
-               ReportsArchive)
-from labs_web.extensions import report_checked
-from labs_web.views.student.group_stats_in_course import ReportsProcessor
-from .check_reports_menu_ajax import drop_unchecked
-from ..student.student_event_collector import drop_checked_reports_cache
+               ReportsArchive,
+               MakeAnnouncement,
+               TutorAnnouncement,
+               GetTutorAnnouncements)
 from .check_reports import send_mail_report_checked
 
 
@@ -22,6 +26,14 @@ def report_checked_callback(*args, **kwargs):
         drop_unchecked.delay(report_id)
         drop_checked_reports_cache.delay(report_id)
         send_mail_report_checked.delay(report_id)
+
+
+def announcement_cache_callback(*args, **kwargs):
+    announcement = get_announcement_by_oid(kwargs.get('id'))
+    if announcement:
+        for i in announcement['groups']:
+            drop_announcements_of_group.delay(i)
+        drop_tutor_announcements.delay(announcement['tutor']['id'])
 
 
 tutor = Blueprint('tutor',
@@ -36,7 +48,11 @@ tutor.add_url_rule('/courses_ajax/', view_func=CoursesOfTutorXHR.as_view('course
 tutor.add_url_rule('/check-reports-menu-items/', view_func=CheckReportsMenuAjax.as_view('check_reports_menu'))
 tutor.add_url_rule('/add-course/', view_func=AddCourse.as_view('add_course'))
 tutor.add_url_rule('/reports-archive/', view_func=ReportsArchive.as_view('archive'))
+tutor.add_url_rule('/make-announcement/', view_func=MakeAnnouncement.as_view('make_announcement'))
+tutor.add_url_rule('/announcement/<announcement_id>/', view_func=TutorAnnouncement.as_view('announcement'))
+tutor.add_url_rule('/get-announcements/', view_func=GetTutorAnnouncements.as_view('get_announcements'))
 report_checked.connect(report_checked_callback)
+announcement_made.connect(announcement_cache_callback)
 
 
 @tutor.before_request

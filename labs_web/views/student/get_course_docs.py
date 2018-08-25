@@ -18,7 +18,9 @@ class GetCourseDocs(View):
             try:
                 doc_archive = [i for i in filter(lambda filename: course.course_shortened in filename,
                                                  os.listdir(docs_directory))][0]
-                return send_file(p.join(docs_directory, doc_archive))
+                return send_file(p.join(docs_directory, doc_archive),
+                                 as_attachment=True,
+                                 attachment_filename=course.course_shortened + '.zip')
             except IndexError:
                 flash('Docs not found. Please contact course tutor and/or web service administration')
                 return redirect(url_for('student.student_home'))

@@ -1,5 +1,7 @@
 from flask import Blueprint, abort, render_template
 from flask_login import current_user, login_required
+from labs_web.extensions import report_sent
+from labs_web.views.tutor.ajax.check_reports_menu_ajax import drop_unchecked
 from . import (SendReport,
                ChooseCourse,
                GroupStats,
@@ -9,9 +11,9 @@ from . import (SendReport,
                GetCourseDocs,
                StudentEventCollector,
                MyReports,
-               DownloadReport)  # importing views
-from labs_web.extensions import report_sent
-from labs_web.views.tutor.check_reports_menu_ajax import drop_unchecked
+               DownloadReport,
+               Announcement,
+               GetAnnouncementsAJAX)  # importing views
 
 
 def report_sent_callback(*args, **kwargs):
@@ -33,6 +35,8 @@ student.add_url_rule('/course-docs/<int:course_id>', view_func=GetCourseDocs.as_
 student.add_url_rule('/collect-events/', view_func=StudentEventCollector.as_view('collect_events'))
 student.add_url_rule('/my-reports/', view_func=MyReports.as_view('my_reports'))
 student.add_url_rule('/download-report/<int:report_id>/', view_func=DownloadReport.as_view('download-report'))
+student.add_url_rule('/announcement/<announcement_id>/', view_func=Announcement.as_view('announcement'))
+student.add_url_rule('/get-announcements-ajax/', view_func=GetAnnouncementsAJAX.as_view('get_announcements'))
 report_sent.connect(report_sent_callback)
 
 

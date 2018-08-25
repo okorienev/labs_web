@@ -1,6 +1,6 @@
 from flask import Flask, redirect, url_for, current_app, render_template
 from .config import Config, NonDockerConfig
-from .extensions import login_manager, cache, mail, celery, admin, Role, User
+from .extensions import login_manager, cache, mail, celery, ckeditor, admin, Role, User, mongo
 from flask_debugtoolbar import DebugToolbarExtension
 from .extensions import db, User
 from flask_migrate import Migrate
@@ -16,6 +16,7 @@ cache.init_app(app)
 migrate = Migrate(app, db)
 mail.init_app(app)
 admin.init_app(app)
+ckeditor.init_app(app)
 
 
 @login_manager.user_loader

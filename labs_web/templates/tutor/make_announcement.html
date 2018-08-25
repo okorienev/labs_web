@@ -1,0 +1,32 @@
+{% extends 'tutor/tutor_menu.html' %}
+{% block title %}Make Announcement{% endblock %}
+{% block additional_dependencied %}
+{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-body" align="center">
+        <form method="post">
+            {{ form.hidden_tag() }}
+            <div class="form-group">{{ form.title }}</div>
+            <div class="form-group">
+                <label>Choose groups:</label>
+                {{ form.groups }}
+            </div>
+            <div class="form-group">{{ form.body }}</div>
+            <button type="submit" class="btn btn-primary" style="width: 25%">Save</button>
+        </form>
+        {{ ckeditor.load(pkg_type="standard") }}
+    </div>
+</div>
+
+{% endblock %}
+{% block script %}
+    {{ super() }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#groups').select2({
+                width: "100%",
+            })
+        })
+    </script>
+{% endblock %}
