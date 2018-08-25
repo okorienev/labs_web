@@ -1,22 +1,26 @@
 from .extensions import mongo
 from bson.objectid import ObjectId, InvalidId
+from typing import Optional
 
 mongo_db = mongo.labs_web
 Announcements = mongo_db.Announcements
 Tickets = mongo_db.Tickets
 
 
-def get_announcement_by_oid(oid: str):
+def mongo_oid(oid: str) -> Optional[ObjectId]:
+    try:
+        return ObjectId(oid)
+    except InvalidId:
+        return None
+    except TypeError:
+        return None
+
+
+def get_announcement_by_oid(oid: str) -> Optional[dict]:
     """
     function to safely query objects from Announcements collection 
     :param oid: String or bytes. read http://api.mongodb.com/python/current/api/bson/objectid.html
     :return: first announcement 
     :return: None if exception was thrown or announcement was not found
     """
-    try:
-        obj_id = ObjectId(oid)
-    except TypeError:  # raised when has not acceptable type
-        return None
-    except InvalidId:  # raised when length is not 12 bytes(24 hexdigits)
-        return None
-    return Announcements.find_one({'_id': obj_id})
+    return Announcements.find_one({'_id': mongo_oid(oid)})

@@ -32,7 +32,9 @@ Poor tested on uploaded & sending files"""
     CELERY_IMPORTS = ('labs_web.views.tutor.check_reports',
                       'labs_web.views.tutor.ajax.check_reports_menu_ajax',
                       'labs_web.views.student.group_stats_in_course',
-                      'labs_web.views.student.ajax.student_event_collector')
+                      'labs_web.views.student.ajax.student_event_collector',
+                      'labs_web.views.student.ajax.get_announcements_ajax',
+                      'labs_web.views.tutor.ajax.get_tutor_announcements',)
     ADMIN_USERNAME = 'admin'
     ADMIN_PASSWORD = 'password'
     ADMIN_EMAIL = 'admin@domain.com'

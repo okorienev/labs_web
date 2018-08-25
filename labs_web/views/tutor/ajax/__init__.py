@@ -1,3 +1,3 @@
-from .check_reports_menu_ajax import CheckReportsMenuAjax
+from .check_reports_menu_ajax import CheckReportsMenuAjax, drop_unchecked
 from .courses_of_tutor_ajax import CoursesOfTutorXHR
-from .get_tutor_announcements import GetTutorAnnouncements
+from .get_tutor_announcements import GetTutorAnnouncements, drop_tutor_announcements

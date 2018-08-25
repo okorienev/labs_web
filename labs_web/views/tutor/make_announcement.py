@@ -1,7 +1,7 @@
 from flask.views import View
 from flask_login import login_required, current_user
 from flask import render_template, request, flash
-from labs_web.extensions import Course, MakeAnnouncementForm, Announcements
+from labs_web.extensions import Course, MakeAnnouncementForm, Announcements, announcement_made
 import datetime
 
 
@@ -24,7 +24,7 @@ class MakeAnnouncement(View):
         form = MakeAnnouncementForm()
         form.groups.choices = group_form_choices()
         if request.method == "POST" and form.validate_on_submit():
-            Announcements.insert_one({
+            announcement = Announcements.insert_one({
                 'tutor': {
                     'name': current_user.name,
                     'id': current_user.id
@@ -34,7 +34,8 @@ class MakeAnnouncement(View):
                 'groups': form.data.get('groups'),
                 'date': datetime.datetime.utcnow()
             })
+            announcement_made.send(id=announcement.inserted_id)
             flash('Announcement successfully made')
-        for field, message in form.errors:
+        for field, message in form.errors.items():
             flash(message)
         return render_template('tutor/make_announcement.html', form=form)

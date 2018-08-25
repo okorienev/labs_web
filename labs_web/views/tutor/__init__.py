@@ -1,6 +1,7 @@
 from .ajax import (CheckReportsMenuAjax,
                    CoursesOfTutorXHR,
-                   GetTutorAnnouncements)
+                   GetTutorAnnouncements,
+                   drop_tutor_announcements)
 from .add_course import AddCourse
 from .check_reports import CheckReports
 from .choose_course_to_check import ChooseCourseToCheck

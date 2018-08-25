@@ -1,10 +1,10 @@
 from flask import Blueprint, render_template, abort
 from flask_login import login_required, current_user
 
-from labs_web.extensions import report_checked
-from labs_web.views.student.ajax.student_event_collector import drop_checked_reports_cache
+from labs_web.extensions import report_checked, announcement_made, get_announcement_by_oid
+from labs_web.views.student.ajax import drop_checked_reports_cache, drop_announcements_of_group
 from labs_web.views.student.group_stats_in_course import ReportsProcessor
-from labs_web.views.tutor.ajax.check_reports_menu_ajax import drop_unchecked
+from .ajax import drop_unchecked, drop_tutor_announcements
 from . import (ChooseCourseToCheck,
                CheckReports,
                DownloadReport,
@@ -28,6 +28,14 @@ def report_checked_callback(*args, **kwargs):
         send_mail_report_checked.delay(report_id)
 
 
+def announcement_cache_callback(*args, **kwargs):
+    announcement = get_announcement_by_oid(kwargs.get('id'))
+    if announcement:
+        for i in announcement['groups']:
+            drop_announcements_of_group.delay(i)
+        drop_tutor_announcements.delay(announcement['tutor']['id'])
+
+
 tutor = Blueprint('tutor',
                   __name__,
                   url_prefix='/tutor')
@@ -44,6 +52,7 @@ tutor.add_url_rule('/make-announcement/', view_func=MakeAnnouncement.as_view('ma
 tutor.add_url_rule('/announcement/<announcement_id>/', view_func=TutorAnnouncement.as_view('announcement'))
 tutor.add_url_rule('/get-announcements/', view_func=GetTutorAnnouncements.as_view('get_announcements'))
 report_checked.connect(report_checked_callback)
+announcement_made.connect(announcement_cache_callback)
 
 
 @tutor.before_request

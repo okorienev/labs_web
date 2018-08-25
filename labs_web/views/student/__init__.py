@@ -1,6 +1,8 @@
-from .ajax.courses_of_user_ajax import CoursesOfUserXHR
-from .ajax.get_announcements_ajax import GetAnnouncementsAJAX
-from .ajax.student_event_collector import StudentEventCollector, drop_checked_reports_cache
+from .ajax import (CoursesOfUserXHR,
+                   GetAnnouncementsAJAX,
+                   StudentEventCollector,
+                   drop_announcements_of_group,
+                   drop_checked_reports_cache)
 from .announcement import Announcement
 from .choose_course import ChooseCourse
 from .download_report import DownloadReport

@@ -11,7 +11,8 @@ from .models import (User,
                      Report,
                      Role)  # SQLAlchemy models
 from .signals import (report_checked,
-                      report_sent)  # Blinker signals
+                      report_sent,
+                      announcement_made)  # Blinker signals
 from .forms import (ReportSearchingForm,
                     CourseChoosingForm,
                     CheckReportForm,
@@ -25,4 +26,5 @@ from .forms import (ReportSearchingForm,
 from .mongo import (mongo_db,
                     Announcements,
                     get_announcement_by_oid,
-                    Tickets)
+                    mongo_oid,
+                    Tickets)  # MongoDB
