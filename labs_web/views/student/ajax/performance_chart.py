@@ -1,31 +1,45 @@
 from flask.views import View
 from flask_login import login_required, current_user
-from labs_web.extensions import User, db, Report, cache, Course
+from labs_web.extensions import User, db, Report, cache, Course, Group
 from flask import jsonify, abort
+from statistics import mean, StatisticsError
 from random import randint, choice
 import datetime
 
 
-def performance_of_lab(lab_number: int, user_id: int, course_id: int):
-    user = User.query.get(user_id)
-    marks_of_group = [report.report_mark for report in Report.query.filter(Report.report_num == lab_number,
-                                                                           Report.report_student.in_(
-                                                                               [i.id for i in user.group[0].students]),
-                                                                           Report.report_course == course_id,
-                                                                           Report.report_mark.isnot(None)).all()]
+@cache.memoize(24*60*60)
+def performance_of_lab_group(lab_number: int, group_id: int, course_id: int) -> float:
+    marks_of_group = [report.report_mark for report in Report.query.filter(
+        Report.report_num == lab_number,
+        Report.report_student.in_([i.id for i in Group.query.get(group_id).students]),
+        Report.report_course == course_id,
+        Report.report_mark.isnot(None)).all()]
+    try:
+        return round(mean(marks_of_group), 2)
+    except StatisticsError:
+        return 0
 
+
+@cache.memoize(24*24*60)
+def performance_of_lab_course(lab_number: int, course_id: int) -> float:
     marks_of_course = [report.report_mark for report in Report.query.filter(Report.report_num == lab_number,
                                                                             Report.report_course == course_id,
                                                                             Report.report_mark.isnot(None)).all()]
+    try:
+        return round(mean(marks_of_course), 2)
+    except StatisticsError:
+        return 0
 
+
+def performance_of_lab(lab_number: int, user_id: int, course_id: int):
     lab_of_student = Report.query.filter(Report.report_num == lab_number,
                                          Report.report_student == user_id,
                                          Report.report_course == course_id,
                                          Report.report_mark.isnot(None)).first()
     return [lab_number,
             lab_of_student.report_mark if lab_of_student else 0,
-            round((sum(marks_of_group) / len(marks_of_group) if len(marks_of_group) != 0 else 0), 2),
-            round((sum(marks_of_course) / len(marks_of_course) if len(marks_of_course) != 0 else 0), 2)]
+            performance_of_lab_group(lab_number, current_user.group[0].group_id, course_id),
+            performance_of_lab_course(lab_number, course_id)]
 
 
 class PerformanceChartAjax(View):
