@@ -3,11 +3,25 @@
 {% block content %}
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">Some text on you homepage</h5>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque accumsan rutrum enim at vestibulum. Donec rutrum molestie molestie. Sed ultrices efficitur neque sit amet convallis. Cras aliquet nunc vitae massa imperdiet, et pulvinar ipsum lacinia. Duis fringilla eget magna et cursus. Sed elementum tortor eget lacinia congue. Ut non tincidunt tortor, eu hendrerit nibh. Ut dictum id lectus quis tempor. Sed sollicitudin augue non rutrum auctor. Sed posuere volutpat libero, quis lacinia lorem congue ut.</p>
-                <p>Pellentesque mattis nisl in ante facilisis molestie. Cras laoreet quam non risus vulputate, et imperdiet quam tempor. Ut rutrum at est ac vehicula. Sed mattis imperdiet scelerisque. Aenean ante sapien, vestibulum id molestie in, lobortis vitae metus. Phasellus ut purus sed risus interdum consequat. Aenean consectetur volutpat mi. Proin porttitor rhoncus diam id tempus. Donec sed risus libero. Etiam quis nibh diam. Nulla facilisi. Maecenas risus nunc, vehicula id lacus a, condimentum feugiat libero. Nulla efficitur lacinia massa. Sed arcu leo, efficitur nec velit a, dapibus porttitor libero.</p>
-                <p>Nam vitae eros auctor, laoreet lacus eu, mollis leo. In metus lectus, placerat at magna eu, posuere dictum arcu. Nam lacinia ligula ac interdum placerat. Phasellus sollicitudin tellus nibh, vel placerat ante tristique placerat. Quisque rhoncus vel tellus eu luctus. Proin euismod feugiat libero. Nam sagittis mi lacus, quis auctor sapien volutpat eu. Vestibulum semper interdum erat, at aliquet mauris ultricies sit amet.</p>
-                <p>Duis non aliquam eros. Pellentesque nulla velit, egestas sed ultricies vitae, accumsan in tellus. Curabitur vestibulum ex ut pellentesque placerat. Vestibulum quis laoreet ex, non eleifend augue. Nunc euismod interdum eros, eget finibus felis mattis ut. Ut maximus leo sed arcu tincidunt lacinia. Mauris a sem vestibulum, aliquam tortor id, imperdiet nisi. Nullam tincidunt leo non diam luctus aliquet.</p>
+            {% set courses = current_user.group[0].courses %}
+                {% for course in courses %}
+                    <button
+                            class="btn btn btn-outline-primary PerformanceChartControlButton"
+                            id="{{ course.course_id }}"
+                            style="width: {{ 100 / courses|length - 1}}%">
+                        {{ course.course_shortened }}
+                    </button>
+                {% endfor %}
+            <div id="PerformanceChart">
+
+            </div>
         </div>
     </div>
+{% endblock %}
+{% block additional_dependencied %}
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+{% endblock %}
+{% block  script %}
+    {{ super() }}
+    <script src="{{ url_for("static", filename="js/charts/draw_stu_performance_chart.js") }}"></script>
 {% endblock %}

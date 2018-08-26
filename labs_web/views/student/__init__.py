@@ -2,7 +2,8 @@ from .ajax import (CoursesOfUserXHR,
                    GetAnnouncementsAJAX,
                    StudentEventCollector,
                    drop_announcements_of_group,
-                   drop_checked_reports_cache)
+                   drop_checked_reports_cache,
+                   PerformanceChartAjax)
 from .announcement import Announcement
 from .choose_course import ChooseCourse
 from .download_report import DownloadReport

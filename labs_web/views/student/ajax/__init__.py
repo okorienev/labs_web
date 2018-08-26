@@ -1,3 +1,4 @@
 from .courses_of_user_ajax import CoursesOfUserXHR
 from .get_announcements_ajax import GetAnnouncementsAJAX, drop_announcements_of_group
 from .student_event_collector import drop_checked_reports_cache, StudentEventCollector
+from .performance_chart import PerformanceChartAjax
