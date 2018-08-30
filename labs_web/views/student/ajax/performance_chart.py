@@ -7,7 +7,7 @@ from random import randint, choice
 import datetime
 
 
-@cache.memoize(24*60*60)
+@cache.memoize(24 * 60 * 60)
 def performance_of_lab_group(lab_number: int, group_id: int, course_id: int) -> float:
     marks_of_group = [report.report_mark for report in Report.query.filter(
         Report.report_num == lab_number,
@@ -20,7 +20,7 @@ def performance_of_lab_group(lab_number: int, group_id: int, course_id: int) -> 
         return 0
 
 
-@cache.memoize(24*24*60)
+@cache.memoize(24 * 24 * 60)
 def performance_of_lab_course(lab_number: int, course_id: int) -> float:
     marks_of_course = [report.report_mark for report in Report.query.filter(Report.report_num == lab_number,
                                                                             Report.report_course == course_id,
@@ -46,18 +46,22 @@ class PerformanceChartAjax(View):
     decorators = [login_required]
 
     def dispatch_request(self, *args, **kwargs):
-        # for course in current_user.group[0].courses:  # fill db with random test data
+        # fill db with random test data (with no duplicated rows)
+        # for course in current_user.group[0].courses:
         #     for group in course.groups:
-        #         for i in range(20):
-        #             student = choice(group.students)
-        #             lab_num = randint(1, course.labs_amount)
-        #             report = Report(report_student=student.id,
-        #                             report_mark=randint(3, course.lab_max_score),
-        #                             report_num=randint(1, course.labs_amount),
-        #                             report_uploaded=datetime.datetime.utcnow(),
-        #                             report_course=course.course_id,
-        #                             report_hash="fake")
-        #             db.session.add(report)
+        #         for student in group.students:
+        #             lab_numbers = {randint(1, course.labs_amount) for i in range(course.labs_amount)}
+        #             for i in lab_numbers:
+        #                 if not Report.query.filter(Report.report_student == student.id,
+        #                                            Report.report_course == course.course_id,
+        #                                            Report.report_num == i).first():
+        #                     report = Report(report_student=student.id,
+        #                                     report_mark=randint(1, course.lab_max_score),
+        #                                     report_num=i,
+        #                                     report_uploaded=datetime.datetime.utcnow(),
+        #                                     report_course=course.course_id,
+        #                                     report_hash="fake")
+        #                     db.session.add(report)
         # db.session.commit()
         course = Course.query.get(kwargs.get('course_id'))
         if course.course_id not in [i.course_id for i in current_user.group[0].courses]:
