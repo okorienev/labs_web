@@ -22,7 +22,8 @@ from .forms import (ReportSearchingForm,
                     RestorePasswordForm,
                     AddCourseForm,
                     SearchArchiveForm,
-                    MakeAnnouncementForm)  # Flask WTForms
+                    MakeAnnouncementForm,
+                    SendTicketForm)  # Flask WTForms
 from .mongo import (mongo_db,
                     Announcements,
                     get_announcement_by_oid,

@@ -12,4 +12,6 @@ from .group_stats_in_course import GroupStats, ReportsProcessor
 from .student_courses import StudentCourses
 from .student_my_reports import MyReports
 from .student_send_report import SendReport
+from .send_ticket import SendTicket
+from .my_tickets import MyTickets
 from .student_main import student
