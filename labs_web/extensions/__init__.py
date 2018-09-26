@@ -23,9 +23,11 @@ from .forms import (ReportSearchingForm,
                     AddCourseForm,
                     SearchArchiveForm,
                     MakeAnnouncementForm,
-                    SendTicketForm)  # Flask WTForms
+                    SendTicketForm,
+                    AnswerTicketForm)  # Flask WTForms
 from .mongo import (mongo_db,
                     Announcements,
                     get_announcement_by_oid,
+                    get_ticket_by_oid,
                     mongo_oid,
                     Tickets)  # MongoDB

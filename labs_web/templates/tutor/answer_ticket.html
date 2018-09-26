@@ -1,0 +1,27 @@
+{% extends 'tutor/tutor_menu.html' %}
+{% block title %}Answer Ticket{% endblock %}
+{% block content %}
+    {% for i in tickets %}
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <span>{{  i['topic'] }} - {{ i['author']['name']  }} ({{ i['author']['group']}})</span>
+                    <span style="float: right" class="card-subtitle">{{ i['sent'].strftime("%d %b %Y: %H:%M") }}</span>
+                </h5>
+                <p class="card-text">{{ i['body'] }}</p>
+            </div>
+        </div>
+    {% endfor %}
+            <form class="form" method="post">
+            <div class="form-group">{{ form.hidden_tag() }}</div>
+            <div class="form-group">{{ form.selected_ticket }}</div>
+            <div class="form-group">{{ form.answ_body }}</div>
+            <div class="form-group">{{ form.make_public }}Make this answer public for course ?</div>
+            <button class="btn btn-primary" type="submit">Answer ticket</button>
+        </form>
+
+        <script>
+            $("#selected_ticket").select2();
+            $("#selected_ticket").css('width', '100%')
+        </script>
+{% endblock %}

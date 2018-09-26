@@ -143,4 +143,16 @@ class SendTicketForm(FlaskForm):
                                      Length(min=20, max=300,
                                             message='Ticket body should be between 20 and 300 characters')],
                          render_kw={'class': 'form-control'})
+
+
+class AnswerTicketForm(FlaskForm):
+    selected_ticket = SelectField(validators=[DataRequired(message='You should select ticket to answer')],
+                                  render_kw={'placeholder': '',
+                                             'class': 'form-control'})
+    answ_body = TextAreaField(validators=[DataRequired(message='answer can\'t be empty'),
+                                          Length(min=1, max=300, message='Only 300 symbols allowed')],
+                              render_kw={'placeholder': '',
+                                         'class': 'form-control'})
+    make_public = BooleanField()
+
 # TODO refactor all form fields to have error messages for each validator & descriptions

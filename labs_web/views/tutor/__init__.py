@@ -11,4 +11,5 @@ from .make_announcement import MakeAnnouncement
 from .reports_archive import ReportsArchive
 from .search_reports import ReportsSearcher
 from .edit_announcement import TutorAnnouncement
+from .answer_ticket import AnswerTicket
 from .tutor_main import tutor

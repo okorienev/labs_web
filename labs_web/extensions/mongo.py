@@ -16,6 +16,10 @@ def mongo_oid(oid: str) -> Optional[ObjectId]:
         return None
 
 
+def get_ticket_by_oid(oid: str):
+    return Tickets.find_one({'_id': mongo_oid(oid)})
+
+
 def get_announcement_by_oid(oid: str) -> Optional[dict]:
     """
     function to safely query objects from Announcements collection 
