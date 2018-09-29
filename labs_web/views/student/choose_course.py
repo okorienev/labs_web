@@ -1,3 +1,4 @@
+# Deprecated View
 from flask import redirect, request, render_template, url_for
 from flask.views import View
 from flask_login import current_user, login_required
