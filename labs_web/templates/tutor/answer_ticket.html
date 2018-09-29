@@ -2,13 +2,16 @@
 {% block title %}Answer Ticket{% endblock %}
 {% block content %}
     {% for i in tickets %}
-        <div class="card">
+        <div class="card" style="margin: 10px 0">
             <div class="card-body">
                 <h5 class="card-title">
                     <span>{{  i['topic'] }} - {{ i['author']['name']  }} ({{ i['author']['group']}})</span>
                     <span style="float: right" class="card-subtitle">{{ i['sent'].strftime("%d %b %Y: %H:%M") }}</span>
                 </h5>
                 <p class="card-text">{{ i['body'] }}</p>
+                <button class="btn btn-primary pickOption" id="{{ i['_id'] }}">
+                Answer this
+                </button>
             </div>
         </div>
     {% endfor %}
@@ -20,8 +23,18 @@
             <button class="btn btn-primary" type="submit">Answer ticket</button>
         </form>
 
+
+{% endblock %}
+{% block script %}
         <script>
-            $("#selected_ticket").select2();
-            $("#selected_ticket").css('width', '100%')
+            $(".pickOption").click(function (event) {
+                $("#selected_ticket")[0].value = $(event.target)[0].id;
+            })
         </script>
+
+{#        <script>#}
+{#            $("#selected_ticket").select2();#}
+{#            $("#selected_ticket").css('width', '100%')#}
+{#        </script>#}
+    {{ super() }}
 {% endblock %}
