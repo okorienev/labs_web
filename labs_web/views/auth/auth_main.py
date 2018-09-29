@@ -1,5 +1,5 @@
-from flask import Blueprint, g, redirect, url_for
-from flask_login import login_user, current_user, login_required, logout_user
+from flask import Blueprint, g, redirect, url_for, current_app, request
+from flask_login import current_user, login_required, logout_user
 from . import Login
 
 
@@ -18,6 +18,8 @@ def get_current_user():
 @auth.route('/logout/')
 @login_required
 def logout():
+    current_app.logger.info("{} logged out from addr {}".format(current_user.username,
+                                                                request.remote_addr))
     logout_user()
     return redirect(url_for('auth.login'))
 
