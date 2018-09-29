@@ -9,7 +9,12 @@ class MyTickets(View):
 
     def dispatch_request(self):
         my_tickets = [ticket for ticket in Tickets.find({'author.id': current_user.id}).sort('sent', -1)]
+        pending = filter(lambda ticket: not ticket.get('answ_body'), my_tickets)
+        answered = filter(lambda ticket: ticket.get('answ_body') is not None, my_tickets)
+        public = [ticket for ticket in Tickets.find(
+            {'public': True,
+             'course.id': {'$in': [i.course_id for i in current_user.group[0].courses]}}).sort('sent', -1)]
         return render_template('student/my_tickets.html',
-                               pending=my_tickets,
-                               answered=my_tickets,
-                               public=my_tickets)
+                               pending=pending,
+                               answered=answered,
+                               public=public)
