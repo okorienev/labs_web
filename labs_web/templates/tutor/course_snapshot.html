@@ -32,24 +32,32 @@
             {% endfor %}
         </div>
     </div>
-    <div class="ex" id="xml-example">
-        xml example
-    </div>
-    <div class="ex" id="json-example">
-        json example
-    </div>
-    <div class="ex" id="csv-example">
-        csv example
-    </div>
-    <script>
-    $(document).ready(function () {
-        $(".ex").hide();
-        let choice = $("#marks_format");
-        choice.change(function () {
-            $(".ex").hide();
-            $("#"+choice.val()+"-example").show();
-        })
-    });
-
-    </script>
+{#    <div class="card">#}
+{#        <div class="card-body">#}
+{#            <div class="examples" id="xml-example">#}
+{#                #}
+{#            </div>#}
+{#            <div class="examples" id="json-example">#}
+{#                json example#}
+{#            </div>#}
+{#            <div class="examples" id="csv-example">#}
+{#                <h5>CSV example:</h5>#}
+{#                Name,lab_1_mark,lab_2_mark,lab_3_mark,lab_4_mark,lab_5_mark,lab_6_mark<br>#}
+{#                Monty Python,8,9,6,8,N\A,N\C<br>#}
+{#                John Doe,10,5,N\A,N\C,8,7<br>#}
+{#                Frederick Barbarossa,10,10,10,10,10,10<br>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#    <script>#}
+{#    $(document).ready(function () {#}
+{#        $(".examples").hide();#}
+{#        let choice = $("#marks_format");#}
+{#        choice.change(function () {#}
+{#            $(".ex").hide();#}
+{#            $("#"+choice.val()+"-example").show();#}
+{#        })#}
+{#    });#}
+{##}
+{#    </script>#}
 {% endblock %}
