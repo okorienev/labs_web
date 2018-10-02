@@ -1,12 +1,12 @@
 {% extends 'tutor/tutor_menu.html' %}
 {% block title %}Course Snapshot{% endblock %}
 {% block content %}
-    {% if warning %}
+    {% if timeout %}
         <div class="alert alert-danger">
-            You've requested course snapshot less than a day ago, next snapshot will be available in {{ time }}
+            You've requested course snapshot less than a day ago
         </div>
     {% endif %}
-    {% if not warning %}
+    {% if not timeout %}
         <div class="card">
             <div class="card-body">
                 <form class="form" method="post">
@@ -16,7 +16,7 @@
                         {{ form.course }}
                     </div>
                     <div class="form-group">
-                        Output format<br>
+                        Marks table format<br>
                         {{ form.marks_format }}
                     </div>
                     <button type="submit" class="btn btn-primary">Request Snapshot</button>
@@ -24,4 +24,32 @@
             </div>
         </div>
     {% endif %}
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Previous snapshots:</h5>
+            {% for i in snapshots %}
+                <p class="card-text"><a href="{{ url_for("tutor.download_snapshot", snapshot_name=i) }}">{{ i }}</a></p>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="ex" id="xml-example">
+        xml example
+    </div>
+    <div class="ex" id="json-example">
+        json example
+    </div>
+    <div class="ex" id="csv-example">
+        csv example
+    </div>
+    <script>
+    $(document).ready(function () {
+        $(".ex").hide();
+        let choice = $("#marks_format");
+        choice.change(function () {
+            $(".ex").hide();
+            $("#"+choice.val()+"-example").show();
+        })
+    });
+
+    </script>
 {% endblock %}
