@@ -155,4 +155,17 @@ class AnswerTicketForm(FlaskForm):
                                          'class': 'form-control'})
     make_public = BooleanField()
 
+
+class CourseSnapshotForm(FlaskForm):
+    course = SelectField(choices=[],
+                         validators=[DataRequired(message='You should select course for snapshot')],
+                         render_kw={'placeholder': '',
+                                    'class': 'form-control'})
+    marks_format = SelectField(choices=[('xml', 'XML'),
+                                        ('json', 'JSON'),
+                                        ('csv', 'CSV')],
+                               validators=[DataRequired(message="choose format of marks")],
+                               render_kw={'placeholder': '',
+                                          'class': 'form-control'})
+
 # TODO refactor all form fields to have error messages for each validator & descriptions

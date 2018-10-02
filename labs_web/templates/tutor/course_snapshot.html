@@ -1,0 +1,26 @@
+{% extends 'tutor/tutor_menu.html' %}
+{% block title %}Course Snapshot{% endblock %}
+{% block content %}
+    {% if warning %}
+        <div class="alert alert-danger">
+            You've requested course snapshot less than a day ago, next snapshot will be available in {{ time }}
+        </div>
+    {% endif %}
+    {% if not warning %}
+        <div class="card">
+            <div class="card-body">
+                <form class="form">
+                    <div class="form-group">
+                        Course for snapshot<br>
+                        {{ form.course }}
+                    </div>
+                    <div class="form-group">
+                        Output format<br>
+                        {{ form.marks_format }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Request Snapshot</button>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

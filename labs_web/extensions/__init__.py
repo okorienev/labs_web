@@ -24,10 +24,12 @@ from .forms import (ReportSearchingForm,
                     SearchArchiveForm,
                     MakeAnnouncementForm,
                     SendTicketForm,
-                    AnswerTicketForm)  # Flask WTForms
+                    AnswerTicketForm,
+                    CourseSnapshotForm)  # Flask WTForms
 from .mongo import (mongo_db,
                     Announcements,
                     get_announcement_by_oid,
                     get_ticket_by_oid,
                     mongo_oid,
                     Tickets)  # MongoDB
+from .redis import (redis_conn,)  # Redis
