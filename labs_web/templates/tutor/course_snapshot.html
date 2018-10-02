@@ -9,7 +9,8 @@
     {% if not warning %}
         <div class="card">
             <div class="card-body">
-                <form class="form">
+                <form class="form" method="post">
+                    {{ form.hidden_tag() }}
                     <div class="form-group">
                         Course for snapshot<br>
                         {{ form.course }}

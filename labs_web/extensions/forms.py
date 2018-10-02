@@ -158,6 +158,7 @@ class AnswerTicketForm(FlaskForm):
 
 class CourseSnapshotForm(FlaskForm):
     course = SelectField(choices=[],
+                         coerce=int,
                          validators=[DataRequired(message='You should select course for snapshot')],
                          render_kw={'placeholder': '',
                                     'class': 'form-control'})

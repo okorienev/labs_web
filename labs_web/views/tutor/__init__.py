@@ -13,4 +13,6 @@ from .search_reports import ReportsSearcher
 from .edit_announcement import TutorAnnouncement
 from .answer_ticket import AnswerTicket
 from .course_snapshot import CourseSnapshot
+from .download_snapshot import DownloadSnapshot
+from .MarksWriter import MarksWriterFactoryMethod
 from .tutor_main import tutor
