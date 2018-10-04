@@ -35,7 +35,8 @@ Poor tested on uploaded & sending files"""
                       'labs_web.views.student.group_stats_in_course',
                       'labs_web.views.student.ajax.student_event_collector',
                       'labs_web.views.student.ajax.get_announcements_ajax',
-                      'labs_web.views.tutor.ajax.get_tutor_announcements',)
+                      'labs_web.views.tutor.ajax.get_tutor_announcements',
+                      'labs_web.views.tutor.course_snapshot')
     ADMIN_USERNAME = 'admin'
     ADMIN_PASSWORD = 'password'
     ADMIN_EMAIL = 'admin@domain.com'
