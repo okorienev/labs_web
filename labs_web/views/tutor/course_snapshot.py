@@ -27,7 +27,7 @@ def make_course_snapshot(course_id: int, marks_format: str):
                 try:
                     os.rename(p.join(path_to_snapshot, group.name, str(student.id)),  # rename folders with students'
                               p.join(path_to_snapshot, group.name, str(student.name)))  # reports for being
-                except FileNotFoundError:  # human-readable
+                except FileNotFoundError:                                               # human-readable
                     os.makedirs(p.join(path_to_snapshot, group.name, str(student.name)), exist_ok=True)
                     # print('{} has no uploaded reports in course {}'.format(student.name,
                     #                                                        course.course_shortened))

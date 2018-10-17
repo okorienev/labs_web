@@ -63,8 +63,8 @@ class MarksWriterXML(MarksWriter):
             for i in row['marks']:
                 mark = tree.SubElement(marks, 'mark')
                 mark.text = str(i)
-        with open(outfile_path, 'w') as file:
-            file.write(tree.tostring(marks_table, encoding='utf-8').decode())
+        with open(outfile_path, 'wb') as file:
+            file.write(tree.tostring(marks_table, encoding='utf-8'))
 
 
 class MarksWriterJSON(MarksWriter):
