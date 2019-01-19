@@ -1,11 +1,11 @@
 from smtplib import SMTP_SSL
 from redis import StrictRedis
 from sqlalchemy import create_engine
-from labs_web import Config
+from labs_web import NonDockerConfig
 
 
 def test_db():
-    engine = create_engine(Config.SQLALCHEMY_DATABASE_URI)
+    engine = create_engine(NonDockerConfig.SQLALCHEMY_DATABASE_URI)
     connection = engine.connect()
     connection.close()
 
@@ -17,8 +17,8 @@ def test_redis():
 
 
 def test_smtp():
-    connection = SMTP_SSL(host=Config.MAIL_SERVER, port=Config.MAIL_PORT)
-    connection.login(Config.MAIL_USERNAME, Config.MAIL_PASSWORD)
+    connection = SMTP_SSL(host=NonDockerConfig.MAIL_SERVER, port=NonDockerConfig.MAIL_PORT)
+    connection.login(NonDockerConfig.MAIL_USERNAME, NonDockerConfig.MAIL_PASSWORD)
     assert connection.noop()[0] == 250  # success response
 
 
