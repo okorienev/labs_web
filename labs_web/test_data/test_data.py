@@ -35,7 +35,7 @@ c_first_word = ['Computer', 'Math', 'Digital', 'Chemical', 'Physical', 'Algebrai
 c_second_word = ['Methods', 'Systems', 'Techniques', 'Ways']
 c_third_word = ['Analysis', 'Lin. Equations Solving', 'Integrating', 'Calculus']
 
-groups = [
+test_groups = [
     'UQ-19',
     'JV-20',
     'TO-85',

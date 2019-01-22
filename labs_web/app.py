@@ -1,14 +1,13 @@
 from flask import Flask, redirect, url_for, current_app, render_template
-from .config import Config, NonDockerConfig
+from .config import NonDockerConfig
 from flask_debugtoolbar import DebugToolbarExtension
-from .extensions import db, login_manager, cache, mail, celery, ckeditor, admin, Role, User, mongo, Course, Group
+from .extensions import db, login_manager, cache, mail, ckeditor, admin, Role, User, Course, Group, celery
 from flask_migrate import Migrate
 from flask_login import current_user
-from .test_data import tutors, c_first_word, c_second_word, c_third_word, groups
+from labs_web.test_data import tutors, c_first_word, c_second_word, c_third_word, test_groups
 from random import choice, randint
+import os.path as p
 import csv
-import string
-
 
 app = Flask(__name__)
 app.config.from_object(NonDockerConfig)
@@ -77,6 +76,12 @@ def random_course_name():
 
 
 def create_tutors_and_courses():
+    """
+    creating tutors & courses for testing purposes
+    30 tutors (data in test_data/test_data.tutors)
+    creating 2 courses for each tutor
+    see random_course_name() for details of random course name generating
+    """
     for i in tutors:
         tutor = User(name=i[0], username=i[1], email=i[2], role=2)
         tutor.set_password('password')
@@ -110,15 +115,34 @@ def create_tutors_and_courses():
 
 
 def create_groups_and_students():
-    with open('students.csv') as file:
+    """
+    creating groups & students for testing purposes
+    30 groups (test_data.test_data.groups)
+    30 students into each group (test_data/students.csv)
+    adding courses (from 4 to 7) to each group
+    """
+    with open(p.join(current_app.config.get('TEST_DATA'), 'students.csv')) as file:
         reader = csv.reader(file)
         iterator = iter(reader)
-        for i in groups:
+        for i in test_groups:
             group = Group(name=i)
+            db.session.add(group)
             for i in range(30):
                 row = next(iterator)
-
-    pass
+                student = User(name=row[0],
+                               email=row[1],
+                               username=row[2],
+                               role=1)
+                student.set_password('password')
+                db.session.add(student)
+                group.students.append(student)
+    db.session.commit()
+    groups = Group.query.all()
+    courses = Course.query.all()
+    for group in groups:
+        for i in range(randint(4, 7)):
+            group.courses.append(choice(courses))
+    db.session.commit()
 
 
 def create_reports():
@@ -127,15 +151,16 @@ def create_reports():
 
 def fill_db():
     """function to fill database with test data"""
-    create_tutors_and_courses()
+    if not Course.query.first():
+        create_tutors_and_courses()
+    if not Group.query.first():
+        create_groups_and_students()
 
 
 @app.before_first_request
 def heavy_lifting():
-    if not Role.query.first():
-        create_db_and_roles()
-    if not Course.query.first():
-        fill_db()
+    create_db_and_roles()
+    fill_db()
 
 
 @app.errorhandler(404)

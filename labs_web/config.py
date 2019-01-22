@@ -12,6 +12,7 @@ Poor tested on uploaded & sending files"""
     SECRET_KEY = 'e9fc4fca2c9fb29090742ad630e417bb5db210c9951f2420478ababd'
     UPLOAD_PATH = os.environ.get('UPLOADS_PATH')
     DOCS_FOLDER = os.environ.get('UPLOADS_PATH')
+    TEST_DATA = os.environ.get('TEST_DATA')
     ALLOWED_EXTENSIONS = {'pdf'}
     MAX_CONTENT_LENGTH = 5 * 1024 * 1024
     CACHE_TYPE = 'redis'
@@ -22,6 +23,7 @@ Poor tested on uploaded & sending files"""
     CACHE_REDIS_URL = 'redis://redis:6379'
     DEBUG_TB_ENABLED = True
     DEBUG_TB_PROFILER_ENABLED = True
+    DEBUG_TB_INTERCEPT_REDIRECTS = True
     CELERY_BROKER_URL = 'redis://redis:6379/0'
     CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
     MAIL_SERVER = 'smtp.gmail.com'
@@ -48,6 +50,7 @@ class NonDockerConfig(Config):
     labs_web/app.py (config importing) 
     and labs_web/extensions.extensions.py (celery instance creation)"""
     UPLOAD_PATH = '/home/alex/Dropbox/labs_web/labs_web/uploads/'
+    TEST_DATA = '/home/alex/Dropbox/labs_web/labs_web/test_data/'
     DOCS_FOLDER = 'course_docs'
     CACHE_REDIS_URL = 'redis://localhost:6379'
     CELERY_BROKER_URL = 'redis://localhost:6379/0'
