@@ -1,3 +1,4 @@
+# Deprecated AJAX handler
 from flask import url_for, jsonify
 from flask.views import View
 from flask_login import login_required, current_user

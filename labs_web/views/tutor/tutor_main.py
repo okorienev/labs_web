@@ -15,7 +15,10 @@ from . import (ChooseCourseToCheck,
                ReportsArchive,
                MakeAnnouncement,
                TutorAnnouncement,
-               GetTutorAnnouncements)
+               GetTutorAnnouncements,
+               AnswerTicket,
+               CourseSnapshot,
+               DownloadSnapshot)
 from .check_reports import send_mail_report_checked
 
 
@@ -51,6 +54,9 @@ tutor.add_url_rule('/reports-archive/', view_func=ReportsArchive.as_view('archiv
 tutor.add_url_rule('/make-announcement/', view_func=MakeAnnouncement.as_view('make_announcement'))
 tutor.add_url_rule('/announcement/<announcement_id>/', view_func=TutorAnnouncement.as_view('announcement'))
 tutor.add_url_rule('/get-announcements/', view_func=GetTutorAnnouncements.as_view('get_announcements'))
+# tutor.add_url_rule('/answer-ticket/', view_func=AnswerTicket.as_view('answer_ticket'))
+tutor.add_url_rule('/course-snapshot/', view_func=CourseSnapshot.as_view('course_snapshot'))
+tutor.add_url_rule('/download-snapshot/<snapshot_name>/', view_func=DownloadSnapshot.as_view('download_snapshot'))
 report_checked.connect(report_checked_callback)
 announcement_made.connect(announcement_cache_callback)
 

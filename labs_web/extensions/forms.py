@@ -126,4 +126,47 @@ class MakeAnnouncementForm(FlaskForm):
                                  coerce=int,
                                  validators=[DataRequired(message='Choose at least one group to notify')],
                                  render_kw={'class': 'form-control'})
-# TODO refactor all form fields to have error messages for each validator
+
+
+class SendTicketForm(FlaskForm):
+    topic = StringField(validators=[DataRequired(message='topic can\'t be empty'),
+                                    Length(min=5, max=40,
+                                           message='Topic length should be between 5 and 40 characters')],
+                        render_kw={'placeholder': 'Ticket Topic',
+                                   'class': 'form-control'})
+    course = SelectField('Ticket Course',
+                         choices=[], validators=[DataRequired(message='Select a course')],
+                         coerce=int,
+                         render_kw={'class': 'form-control'})
+    body = TextAreaField('Ticket body',
+                         validators=[DataRequired(message='Ticket body can\'t be empty'),
+                                     Length(min=20, max=300,
+                                            message='Ticket body should be between 20 and 300 characters')],
+                         render_kw={'class': 'form-control'})
+
+
+class AnswerTicketForm(FlaskForm):
+    selected_ticket = SelectField(validators=[DataRequired(message='You should select ticket to answer')],
+                                  render_kw={'placeholder': '',
+                                             'class': 'form-control'})
+    answ_body = TextAreaField(validators=[DataRequired(message='answer can\'t be empty'),
+                                          Length(min=1, max=300, message='Only 300 symbols allowed')],
+                              render_kw={'placeholder': '',
+                                         'class': 'form-control'})
+    make_public = BooleanField()
+
+
+class CourseSnapshotForm(FlaskForm):
+    course = SelectField(choices=[],
+                         coerce=int,
+                         validators=[DataRequired(message='You should select course for snapshot')],
+                         render_kw={'placeholder': '',
+                                    'class': 'form-control'})
+    marks_format = SelectField(choices=[('xml', 'XML'),
+                                        ('json', 'JSON'),
+                                        ('csv', 'CSV')],
+                               validators=[DataRequired(message="choose format of marks")],
+                               render_kw={'placeholder': '',
+                                          'class': 'form-control'})
+
+# TODO refactor all form fields to have error messages for each validator & descriptions

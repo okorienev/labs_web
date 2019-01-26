@@ -8,10 +8,9 @@ class MyReports(View):
     decorators = [login_required]
 
     def dispatch_request(self):
-        reports = Report.query.filter(
-            Report.report_student == current_user.id).order_by(Report.report_uploaded.desc()).all()
+        reports = sorted(current_user.reports, key=lambda report: report.report_uploaded, reverse=True)
         course_dict = {course.course_id: course.course_shortened for course in
-                       Course.query.filter(Course.course_id.in_({report.report_course for report in reports})).all()}
+                       current_user.group[0].courses}
         for report in reports:
             report.report_course = course_dict.get(report.report_course)
         return render_template('student/my_reports.html',

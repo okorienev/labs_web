@@ -1,4 +1,4 @@
-/**
+/** Deprecated script
  * Created by Alex Korienev on 5/28/18.
  */
 

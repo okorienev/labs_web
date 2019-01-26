@@ -1,0 +1,15 @@
+{% extends 'student/student_menu.html' %}
+{% block title %}Send Ticket{% endblock %}
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+            <form class="form" method="post">
+                {{ form.hidden_tag() }}
+                <div class="form-group">{{ form.course }}</div>
+                <div class="form-group">{{ form.topic }}</div>
+                <div class="form-group">{{ form.body}}</div>
+                <button type="submit" class="btn btn-primary">Send Ticket</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

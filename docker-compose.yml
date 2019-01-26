@@ -6,8 +6,8 @@ services:
     command: redis-server
     volumes:
       - 'redis:/data'
-    ports:
-      - '6379:6379'
+#    ports:
+#      - '6379:6379'
 
   website:
     build: .
@@ -41,8 +41,8 @@ services:
     image: postgres:latest
     volumes_from:
       - data
-    ports:
-      - "5432:5432"
+#    ports:
+#      - "5432:5432"
     environment:
       POSTGRES_PASSWORD: alex
       POSTGRES_USER: alex
@@ -53,13 +53,12 @@ services:
         container_name: "mongodb"
         environment:
           - MONGO_DATA_DIR=/data/db
-          - MONGO_LOG_DIR=/dev/null
-          - MONGODB_USER="user"
-          - MONGODB_PASS="pass"
+          - MONGO_INITDB_ROOT_USERNAME=admin
+          - MONGO_INITDB_ROOT_PASSWORD=password
         volumes:
-          - ./data/db:/data/db
-        ports:
-            - 27017:27017
+          - /home/$USER/mongo_docker/data/db:/data/db
+#        ports:
+#            - 27017:27017
         command: mongod --smallfiles --logpath=/dev/null # --quiet
 
 

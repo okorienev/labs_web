@@ -12,6 +12,7 @@ Poor tested on uploaded & sending files"""
     SECRET_KEY = 'e9fc4fca2c9fb29090742ad630e417bb5db210c9951f2420478ababd'
     UPLOAD_PATH = os.environ.get('UPLOADS_PATH')
     DOCS_FOLDER = os.environ.get('UPLOADS_PATH')
+    TEST_DATA = os.environ.get('TEST_DATA')
     ALLOWED_EXTENSIONS = {'pdf'}
     MAX_CONTENT_LENGTH = 5 * 1024 * 1024
     CACHE_TYPE = 'redis'
@@ -20,7 +21,11 @@ Poor tested on uploaded & sending files"""
     CACHE_REDIS_HOST = 'redis'
     CACHE_REDIS_PORT = '6379'
     CACHE_REDIS_URL = 'redis://redis:6379'
-    DEBUG_TB_ENABLED = False
+    REDIS_STRICT_CONNS_DB = 2
+    DEBUG_TB_ENABLED = True
+    DEBUG_TB_PROFILER_ENABLED = True
+    DEBUG_TB_INTERCEPT_REDIRECTS = True
+    SQLALCHEMY_RECORD_QUERIES = True
     CELERY_BROKER_URL = 'redis://redis:6379/0'
     CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
     MAIL_SERVER = 'smtp.gmail.com'
@@ -34,10 +39,15 @@ Poor tested on uploaded & sending files"""
                       'labs_web.views.student.group_stats_in_course',
                       'labs_web.views.student.ajax.student_event_collector',
                       'labs_web.views.student.ajax.get_announcements_ajax',
-                      'labs_web.views.tutor.ajax.get_tutor_announcements',)
+                      'labs_web.views.tutor.ajax.get_tutor_announcements',
+                      'labs_web.views.tutor.course_snapshot')
     ADMIN_USERNAME = 'admin'
     ADMIN_PASSWORD = 'password'
     ADMIN_EMAIL = 'admin@domain.com'
+    MONGO_URL = 'mongodb'
+    MONGO_PORT = 27017
+    MONGO_USERNAME = 'admin'
+    MONGO_PASSWORD = 'password'
 
 
 class NonDockerConfig(Config):
@@ -46,6 +56,7 @@ class NonDockerConfig(Config):
     labs_web/app.py (config importing) 
     and labs_web/extensions.extensions.py (celery instance creation)"""
     UPLOAD_PATH = '/home/alex/Dropbox/labs_web/labs_web/uploads/'
+    TEST_DATA = '/home/alex/Dropbox/labs_web/labs_web/test_data/'
     DOCS_FOLDER = 'course_docs'
     CACHE_REDIS_URL = 'redis://localhost:6379'
     CELERY_BROKER_URL = 'redis://localhost:6379/0'

@@ -1,0 +1,63 @@
+{% extends 'tutor/tutor_menu.html' %}
+{% block title %}Course Snapshot{% endblock %}
+{% block content %}
+    {% if timeout %}
+        <div class="alert alert-danger">
+            You've requested course snapshot less than a day ago
+        </div>
+    {% endif %}
+    {% if not timeout %}
+        <div class="card">
+            <div class="card-body">
+                <form class="form" method="post">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        Course for snapshot<br>
+                        {{ form.course }}
+                    </div>
+                    <div class="form-group">
+                        Marks table format<br>
+                        {{ form.marks_format }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Request Snapshot</button>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Previous snapshots:</h5>
+            {% for i in snapshots %}
+                <p class="card-text"><a href="{{ url_for("tutor.download_snapshot", snapshot_name=i) }}">{{ i }}</a></p>
+            {% endfor %}
+        </div>
+    </div>
+{#    <div class="card">#}
+{#        <div class="card-body">#}
+{#            <div class="examples" id="xml-example">#}
+{#                #}
+{#            </div>#}
+{#            <div class="examples" id="json-example">#}
+{#                json example#}
+{#            </div>#}
+{#            <div class="examples" id="csv-example">#}
+{#                <h5>CSV example:</h5>#}
+{#                Name,lab_1_mark,lab_2_mark,lab_3_mark,lab_4_mark,lab_5_mark,lab_6_mark<br>#}
+{#                Monty Python,8,9,6,8,N\A,N\C<br>#}
+{#                John Doe,10,5,N\A,N\C,8,7<br>#}
+{#                Frederick Barbarossa,10,10,10,10,10,10<br>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#    <script>#}
+{#    $(document).ready(function () {#}
+{#        $(".examples").hide();#}
+{#        let choice = $("#marks_format");#}
+{#        choice.change(function () {#}
+{#            $(".ex").hide();#}
+{#            $("#"+choice.val()+"-example").show();#}
+{#        })#}
+{#    });#}
+{##}
+{#    </script>#}
+{% endblock %}

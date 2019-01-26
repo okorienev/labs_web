@@ -13,7 +13,10 @@ login_manager = LoginManager()
 cache = Cache()
 mail = Mail()
 admin = Admin()
-celery = Celery(broker=NonDockerConfig.CELERY_BROKER_URL)
+celery = Celery(broker=Config.CELERY_BROKER_URL)
 celery.config_from_object(Config)
 ckeditor = CKEditor()
-mongo = MongoClient('localhost', 27017)
+mongo = MongoClient("mongodb://{}:{}@{}".format(Config.MONGO_USERNAME,
+                                                Config.MONGO_PASSWORD,
+                                                Config.MONGO_URL,
+                                                Config.MONGO_PORT))

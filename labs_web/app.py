@@ -1,13 +1,16 @@
 from flask import Flask, redirect, url_for, current_app, render_template
-from .config import Config, NonDockerConfig
-from .extensions import login_manager, cache, mail, celery, ckeditor, admin, Role, User, mongo
+from .config import NonDockerConfig, Config
 from flask_debugtoolbar import DebugToolbarExtension
-from .extensions import db, User
+from .extensions import db, login_manager, cache, mail, ckeditor, admin, Role, User, Course, Group, celery
 from flask_migrate import Migrate
 from flask_login import current_user
+from labs_web.test_data import tutors, c_first_word, c_second_word, c_third_word, test_groups, students
+from random import choice, randint
+import os.path as p
+import csv
 
 app = Flask(__name__)
-app.config.from_object(NonDockerConfig)
+app.config.from_object(Config)
 login_manager.init_app(app)
 login_manager.login_view = 'auth.login'
 db.init_app(app)
@@ -24,7 +27,6 @@ def load_user(id):
     return User.query.get(int(id))
 
 
-@app.before_first_request
 def create_db_and_roles():
     """
     create db -> create user roles -> create admin user
@@ -57,6 +59,106 @@ def create_db_and_roles():
     if not admin_usr.check_password(current_app.config.get("ADMIN_PASSWORD")):
         admin_usr.set_password(current_app.config.get("ADMIN_PASSWORD"))
         db.session.commit()
+
+
+def random_course_name():
+    """
+    Generating random name and shortened for course. Check test_data.py to see variants of words to generate name from
+    :return: tuple (course_name, course_shortened)
+    e.g. course name is "Computer Methods of Integrating" and shortened will be "CMoI"
+    """
+    name = " ".join([choice(c_first_word),
+                     choice(c_second_word),
+                     "of",
+                     choice(c_third_word)])
+    shortened = "".join(map(lambda s: s[0], name.split()))
+    return name, shortened
+
+
+def create_tutors_and_courses():
+    """
+    creating tutors & courses for testing purposes
+    30 tutors (data in test_data/test_data.tutors)
+    creating 2 courses for each tutor
+    see random_course_name() for details of random course name generating
+    """
+    for i in tutors:
+        tutor = User(name=i[0], username=i[1], email=i[2], role=2)
+        tutor.set_password('password')
+        course_1_name = random_course_name()
+        course_2_name = random_course_name()
+        #
+        course_1 = Course(course_name=course_1_name[0],
+                          course_shortened=course_1_name[1],
+                          course_tutor=tutor,
+                          labs_amount=randint(3, 7),
+                          lab_max_score=choice([5, 10, 20]))
+        course_2 = Course(course_name=course_2_name[0],
+                          course_shortened=course_2_name[1],
+                          course_tutor=tutor,
+                          labs_amount=randint(3, 7),
+                          lab_max_score=choice([5, 10, 20]))
+        tutor.courses.append(course_1)
+        tutor.courses.append(course_2)
+        #
+        db.session.add(tutor)
+        db.session.add(course_1)
+        db.session.add(course_2)
+        db.session.commit()
+        #
+        course_1 = Course.query.filter(Course.course_shortened == course_1_name[1]).first()
+        course_1.course_shortened = "{}#{}".format(course_1.course_shortened,
+                                                   course_1.course_id)
+        course_2 = Course.query.filter(Course.course_shortened == course_2_name[1]).first()
+        course_2.course_shortened = "{}#{}".format(course_2.course_shortened,
+                                                   course_2.course_id)
+
+
+def create_groups_and_students():
+    """
+    creating groups & students for testing purposes
+    30 groups (test_data.test_data.groups)
+    30 students into each group (test_data/students.csv)
+    adding courses (from 4 to 7) to each group
+    """
+    iterator = iter(students)
+    for i in test_groups:
+        group = Group(name=i)
+        db.session.add(group)
+        for i in range(30):
+            row = next(iterator)
+            student = User(name=row[0],
+                           email=row[1],
+                           username=row[2],
+                           role=1)
+            student.set_password('password')
+            db.session.add(student)
+            group.students.append(student)
+    db.session.commit()
+    groups = Group.query.all()
+    courses = Course.query.all()
+    for group in groups:
+        for i in range(randint(4, 7)):
+            group.courses.append(choice(courses))
+    db.session.commit()
+
+
+def create_reports():
+    pass
+
+
+def fill_db():
+    """function to fill database with test data"""
+    if not Course.query.first():
+        create_tutors_and_courses()
+    if not Group.query.first():
+        create_groups_and_students()
+
+
+@app.before_first_request
+def heavy_lifting():
+    create_db_and_roles()
+    fill_db()
 
 
 @app.errorhandler(404)
