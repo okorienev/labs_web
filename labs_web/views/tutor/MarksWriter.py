@@ -98,7 +98,7 @@ class MarksWriterCSV(MarksWriter):
                 w.writerow(tmp_lst)
 
 if __name__ == '__main__':  # for testing purposes
-    writer = MarksWriterFactoryMethod.writer('csv')
+    writer = MarksWriterFactoryMethod.writer('xml')
     writer.write(marks_lst=example_input_lst,
-                 outfile_path='tmp.csv')
+                 outfile_path='tmp.xml')
     pass

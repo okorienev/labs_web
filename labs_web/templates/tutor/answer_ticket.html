@@ -1,8 +1,9 @@
 {% extends 'tutor/tutor_menu.html' %}
 {% block title %}Answer Ticket{% endblock %}
 {% block content %}
+<div class="card">
     {% for i in tickets %}
-        <div class="card" style="margin: 10px 0">
+        <div class="card" style="margin: 5px 0">
             <div class="card-body">
                 <h5 class="card-title">
                     <span>{{  i['topic'] }} - {{ i['author']['name']  }} ({{ i['author']['group']}})</span>
@@ -15,6 +16,17 @@
             </div>
         </div>
     {% endfor %}
+    <nav aria-label="Tickets navigation">
+
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        </ul>
+    </nav>
+</div>
             <form class="form" method="post">
             <div class="form-group">{{ form.hidden_tag() }}</div>
             <div class="form-group">{{ form.selected_ticket }}</div>

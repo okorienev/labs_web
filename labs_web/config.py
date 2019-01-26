@@ -21,9 +21,11 @@ Poor tested on uploaded & sending files"""
     CACHE_REDIS_HOST = 'redis'
     CACHE_REDIS_PORT = '6379'
     CACHE_REDIS_URL = 'redis://redis:6379'
-    DEBUG_TB_ENABLED = False
-    DEBUG_TB_PROFILER_ENABLED = False
-    DEBUG_TB_INTERCEPT_REDIRECTS = False
+    REDIS_STRICT_CONNS_DB = 2
+    DEBUG_TB_ENABLED = True
+    DEBUG_TB_PROFILER_ENABLED = True
+    DEBUG_TB_INTERCEPT_REDIRECTS = True
+    SQLALCHEMY_RECORD_QUERIES = True
     CELERY_BROKER_URL = 'redis://redis:6379/0'
     CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
     MAIL_SERVER = 'smtp.gmail.com'
