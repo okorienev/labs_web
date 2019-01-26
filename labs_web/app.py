@@ -1,16 +1,16 @@
 from flask import Flask, redirect, url_for, current_app, render_template
-from .config import NonDockerConfig
+from .config import NonDockerConfig, Config
 from flask_debugtoolbar import DebugToolbarExtension
 from .extensions import db, login_manager, cache, mail, ckeditor, admin, Role, User, Course, Group, celery
 from flask_migrate import Migrate
 from flask_login import current_user
-from labs_web.test_data import tutors, c_first_word, c_second_word, c_third_word, test_groups
+from labs_web.test_data import tutors, c_first_word, c_second_word, c_third_word, test_groups, students
 from random import choice, randint
 import os.path as p
 import csv
 
 app = Flask(__name__)
-app.config.from_object(NonDockerConfig)
+app.config.from_object(Config)
 login_manager.init_app(app)
 login_manager.login_view = 'auth.login'
 db.init_app(app)
@@ -121,21 +121,19 @@ def create_groups_and_students():
     30 students into each group (test_data/students.csv)
     adding courses (from 4 to 7) to each group
     """
-    with open(p.join(current_app.config.get('TEST_DATA'), 'students.csv')) as file:
-        reader = csv.reader(file)
-        iterator = iter(reader)
-        for i in test_groups:
-            group = Group(name=i)
-            db.session.add(group)
-            for i in range(30):
-                row = next(iterator)
-                student = User(name=row[0],
-                               email=row[1],
-                               username=row[2],
-                               role=1)
-                student.set_password('password')
-                db.session.add(student)
-                group.students.append(student)
+    iterator = iter(students)
+    for i in test_groups:
+        group = Group(name=i)
+        db.session.add(group)
+        for i in range(30):
+            row = next(iterator)
+            student = User(name=row[0],
+                           email=row[1],
+                           username=row[2],
+                           role=1)
+            student.set_password('password')
+            db.session.add(student)
+            group.students.append(student)
     db.session.commit()
     groups = Group.query.all()
     courses = Course.query.all()
