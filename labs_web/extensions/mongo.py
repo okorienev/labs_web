@@ -2,7 +2,7 @@ from .extensions import mongo
 from bson.objectid import ObjectId, InvalidId
 from typing import Optional
 
-mongo_db = mongo.labs_web
+mongo_db = mongo['labs_web']
 Announcements = mongo_db.Announcements
 Tickets = mongo_db.Tickets
 

@@ -21,9 +21,9 @@ Poor tested on uploaded & sending files"""
     CACHE_REDIS_HOST = 'redis'
     CACHE_REDIS_PORT = '6379'
     CACHE_REDIS_URL = 'redis://redis:6379'
-    DEBUG_TB_ENABLED = True
-    DEBUG_TB_PROFILER_ENABLED = True
-    DEBUG_TB_INTERCEPT_REDIRECTS = True
+    DEBUG_TB_ENABLED = False
+    DEBUG_TB_PROFILER_ENABLED = False
+    DEBUG_TB_INTERCEPT_REDIRECTS = False
     CELERY_BROKER_URL = 'redis://redis:6379/0'
     CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
     MAIL_SERVER = 'smtp.gmail.com'
@@ -42,6 +42,10 @@ Poor tested on uploaded & sending files"""
     ADMIN_USERNAME = 'admin'
     ADMIN_PASSWORD = 'password'
     ADMIN_EMAIL = 'admin@domain.com'
+    MONGO_URL = 'mongodb'
+    MONGO_PORT = 27017
+    MONGO_USERNAME = 'admin'
+    MONGO_PASSWORD = 'password'
 
 
 class NonDockerConfig(Config):
