@@ -10,6 +10,7 @@ from labs_web.views.student.group_stats_in_course import ReportsProcessor
 import shutil
 import os
 import os.path as p
+import logging
 
 
 @celery.task(ignore_result=True)
@@ -20,6 +21,10 @@ def make_course_snapshot(course_id: int, marks_format: str):
         path_to_snapshot = p.join(app.config['UPLOAD_PATH'], 'snapshots',
                                   'Snapshot_{}_{}'.format(course.course_shortened,
                                                           time.strftime('%d-%m-%Y %H:%M')))
+        # logging.warning(f"Working in {os.getcwd()}")
+        # logging.warning(app.config['UPLOAD_PATH'])
+        # logging.info(f"Started snapshot {path_to_snapshot}")
+        # logging.info("Directory stucture: \n {}".format('\n'.join(os.listdir(app.config['UPLOAD_PATH']))))
         shutil.copytree(p.join(app.config['UPLOAD_PATH'], course.course_shortened),
                         path_to_snapshot)  # copy uploads to temp directory
         for group in course.groups:

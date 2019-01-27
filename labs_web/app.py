@@ -7,6 +7,7 @@ from flask_login import current_user
 from labs_web.test_data import tutors, c_first_word, c_second_word, c_third_word, test_groups, students
 from random import choice, randint
 import os.path as p
+import os
 import csv
 
 app = Flask(__name__)
@@ -25,6 +26,17 @@ ckeditor.init_app(app)
 @login_manager.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
+
+def create_uploads_folder():
+    try:
+        os.makedirs(app.config['UPLOAD_PATH'], exist_ok=True)
+        os.mkdir(p.join(app.config['UPLOAD_PATH'],
+                        app.config['DOCS_FOLDER']))
+        os.mkdir(p.join(app.config['UPLOAD_PATH'],
+                        'snapshots'))
+    except FileExistsError:
+        pass
 
 
 def create_db_and_roles():
@@ -157,6 +169,7 @@ def fill_db():
 
 @app.before_first_request
 def heavy_lifting():
+    create_uploads_folder()
     create_db_and_roles()
     fill_db()
 

@@ -7,8 +7,7 @@
                 {% for course in courses %}
                     <button
                             class="btn btn btn-outline-primary PerformanceChartControlButton"
-                            id="{{ course.course_id }}"
-                            style="width: {{ 100 / courses|length - 1}}%">
+                            id="{{ course.course_id }}">
                         {{ course.course_shortened }}
                     </button>
                 {% endfor %}

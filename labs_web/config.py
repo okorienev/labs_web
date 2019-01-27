@@ -11,7 +11,7 @@ Poor tested on uploaded & sending files"""
     CSRF_ENABLED = True
     SECRET_KEY = 'e9fc4fca2c9fb29090742ad630e417bb5db210c9951f2420478ababd'
     UPLOAD_PATH = os.environ.get('UPLOADS_PATH')
-    DOCS_FOLDER = os.environ.get('UPLOADS_PATH')
+    DOCS_FOLDER = os.environ.get('DOCS_FOLDER')
     TEST_DATA = os.environ.get('TEST_DATA')
     ALLOWED_EXTENSIONS = {'pdf'}
     MAX_CONTENT_LENGTH = 5 * 1024 * 1024
