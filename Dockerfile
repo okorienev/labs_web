@@ -1,19 +1,17 @@
 FROM python:3.6-alpine
 
 
-ENV UPLOADS_PATH=/uploads
-ENV DOCS_FOLDER=course_docs
-ENV SNAPSHOT_FOLDER=snapshots
-RUN mkdir -p  $UPLOADS_PATH
-WORKDIR $UPLOADS_PATH
-RUN mkdir -p $DOCS_FOLDER
-RUN mkdir -p $SNAPSHOT_FOLDER
-
-
 ENV INSTALL_PATH=/labs_web
 RUN mkdir -p $INSTALL_PATH
 WORKDIR $INSTALL_PATH
 COPY requirements.txt requirements.txt
+
+ENV UPLOADS_PATH=$INSTALL_PATH/labs_web/uploads
+ENV DOCS_FOLDER=course_docs
+ENV SNAPSHOT_FOLDER=snapshots
+RUN mkdir -p  $UPLOADS_PATH
+RUN mkdir -p $UPLOADS_PATH/$DOCS_FOLDER
+RUN mkdir -p $UPLOADS_PATH/$SNAPSHOT_FOLDER
 
 
 RUN apk update && \

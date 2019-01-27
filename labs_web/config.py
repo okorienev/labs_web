@@ -4,7 +4,7 @@ import os
 class Config(object):
     """Main config of application user to launch a dev server with docker-compose
 Poor tested on uploaded & sending files"""
-    debug = True
+    DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://alex:alex@postgres/labs_by_web_db'
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     SQLALCHEMY_POOL_TIMEOUT = 5
