@@ -4,14 +4,14 @@ import os
 class Config(object):
     """Main config of application user to launch a dev server with docker-compose
 Poor tested on uploaded & sending files"""
-    debug = True
+    DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://alex:alex@postgres/labs_by_web_db'
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     SQLALCHEMY_POOL_TIMEOUT = 5
     CSRF_ENABLED = True
     SECRET_KEY = 'e9fc4fca2c9fb29090742ad630e417bb5db210c9951f2420478ababd'
     UPLOAD_PATH = os.environ.get('UPLOADS_PATH')
-    DOCS_FOLDER = os.environ.get('UPLOADS_PATH')
+    DOCS_FOLDER = os.environ.get('DOCS_FOLDER')
     TEST_DATA = os.environ.get('TEST_DATA')
     ALLOWED_EXTENSIONS = {'pdf'}
     MAX_CONTENT_LENGTH = 5 * 1024 * 1024

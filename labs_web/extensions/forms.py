@@ -99,7 +99,7 @@ class AddCourseForm(FlaskForm):
                                  render_kw={'placeholder': 'Groups', 'class': 'form-control form-control-lg'})
     attachment = FileField('course docs', validators=[
         FileRequired(),
-        FileAllowed(['zip', 'rar', 'tar'], 'zip/rar/tar files only!')
+        FileAllowed(['zip'], 'zip files only!')
     ],
                            render_kw={'class': 'form-control-file'})
 

@@ -7,12 +7,14 @@
         <tr>
             <th>Course name</th>
             <th>Course shortened</th>
+            <th>Labs in course</th>
         </tr>
     </thead>
     {% for course in courses %}
         <tr>
             <th>{{ course.course_name }}</th>
             <th>{{ course.course_shortened }}</th>
+            <th>{{ course.labs_amount }}</th>
         </tr>
     {% endfor %}
     </table>
