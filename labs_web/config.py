@@ -2,8 +2,7 @@ import os
 
 
 class Config(object):
-    """Main config of application user to launch a dev server with docker-compose
-Poor tested on uploaded & sending files"""
+    """Main config of application user to launch a dev server with docker-compose"""
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://alex:alex@postgres/labs_by_web_db'
     SQLALCHEMY_TRACK_MODIFICATIONS = True
@@ -51,7 +50,9 @@ Poor tested on uploaded & sending files"""
 
 
 class NonDockerConfig(Config):
-    """created to test on local machine with all infrastructure already installed
+    """
+    DEPRECATED, UNMAINTAINED
+    created to test on local machine with all infrastructure already installed
     to change check:
     labs_web/app.py (config importing) 
     and labs_web/extensions.extensions.py (celery instance creation)"""

@@ -24,7 +24,7 @@ class SendTicket(View):
                 'sent': datetime.utcnow()
             })
             flash('ticket {} registered'.format(ticket.inserted_id))
-            return redirect(url_for('student.student_home'))
+            return redirect(url_for('student.my_tickets'))
         for field, errors in form.errors.items():
             for error in errors:
                 flash(error)

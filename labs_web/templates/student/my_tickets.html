@@ -2,12 +2,20 @@
 {% block title %}My Tickets{% endblock %}
 {% block content %}
     <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Pending Tickets</h5>
+        <button class="btn btn-primary"
+                      type="button"
+                      data-toggle="collapse"
+                      data-target="#pending-tickets"
+                      aria-expanded="true"
+                      aria-controls="collapseExample">
+                 Pending Tickets
+        </button>
+        <div class="card-body collapse" id="pending-tickets">
             {% for ticket in pending %}
                 <div class="card">
                     <div class="card-body">
                         Ticket id: {{ ticket._id }}<br>
+                        Course: {{ ticket.course.name }}<br>
                         Sent: {{ ticket.sent.strftime('%d-%m-%Y') }}<br>
                         Ticket topic: {{ ticket.topic }}<br>
                         <br>Ticket body:
@@ -17,9 +25,17 @@
             {% endfor %}
         </div>
     </div>
+
     <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Answered tickets</h5>
+        <button class="btn btn-primary"
+                      type="button"
+                      data-toggle="collapse"
+                      data-target="#answered-tickets"
+                      aria-expanded="true"
+                      aria-controls="collapseExample">
+                 Answered Tickets
+        </button>
+        <div class="card-body collapse" id="answered-tickets">
             {% for ticket in answered %}
                 <div class="card">
                     <div class="card-body">
@@ -36,9 +52,17 @@
             {% endfor %}
         </div>
     </div>
+
     <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Public tickets</h5>
+        <button class="btn btn-primary"
+                      type="button"
+                      data-toggle="collapse"
+                      data-target="#public-tickets"
+                      aria-expanded="true"
+                      aria-controls="collapseExample">
+                 Public Tickets
+        </button>
+        <div class="card-body collapse" id="public-tickets">
             {% for ticket in public %}
                 <div class="card">
                     <div class="card-body">

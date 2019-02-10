@@ -41,8 +41,8 @@ student.add_url_rule('/download-report/<int:report_id>/', view_func=DownloadRepo
 student.add_url_rule('/announcement/<announcement_id>/', view_func=Announcement.as_view('announcement'))
 student.add_url_rule('/get-announcements-ajax/', view_func=GetAnnouncementsAJAX.as_view('get_announcements'))
 student.add_url_rule('/performance-chart/<int:course_id>/', view_func=PerformanceChartAjax.as_view('performance_chart'))
-# student.add_url_rule('/send-ticket/', view_func=SendTicket.as_view('send_ticket'))
-# student.add_url_rule('/my-tickets/', view_func=MyTickets.as_view('my_tickets'))
+student.add_url_rule('/send-ticket/', view_func=SendTicket.as_view('send_ticket'))
+student.add_url_rule('/my-tickets/', view_func=MyTickets.as_view('my_tickets'))
 report_sent.connect(report_sent_callback)
 
 
