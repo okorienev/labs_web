@@ -9,6 +9,8 @@ COPY requirements.txt requirements.txt
 ENV UPLOADS_PATH=$INSTALL_PATH/labs_web/uploads
 ENV DOCS_FOLDER=course_docs
 ENV SNAPSHOT_FOLDER=snapshots
+ENV TEST_DATA=$INSTALL_PATH/labs_web/test_data
+
 RUN mkdir -p  $UPLOADS_PATH
 RUN mkdir -p $UPLOADS_PATH/$DOCS_FOLDER
 RUN mkdir -p $UPLOADS_PATH/$SNAPSHOT_FOLDER

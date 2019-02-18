@@ -1,13 +1,17 @@
 from flask import Flask, redirect, url_for, current_app, render_template
 from .config import NonDockerConfig, Config
 from flask_debugtoolbar import DebugToolbarExtension
-from .extensions import db, login_manager, cache, mail, ckeditor, admin, Role, User, Course, Group, celery
+from .extensions import db, login_manager, cache, mail, ckeditor, admin, Role, User, Course, Group, celery, Report
 from flask_migrate import Migrate
 from flask_login import current_user
 from labs_web.test_data import tutors, c_first_word, c_second_word, c_third_word, test_groups, students
 from random import choice, randint
 import os.path as p
 import os
+import datetime
+import shutil
+import hashlib
+import logging
 import csv
 
 app = Flask(__name__)
@@ -156,7 +160,32 @@ def create_groups_and_students():
 
 
 def create_reports():
-    pass
+    with open(p.join(app.config['TEST_DATA'], 'example_report.pdf'), 'rb') as file:
+        file_hash = hashlib.md5(file.read()).hexdigest()
+    courses = Course.query.all()
+    for course in courses:
+        for group in course.groups:
+            for student in group.students:
+                dirname = p.join(app.config['UPLOAD_PATH'],  # directory with reports of given student in a given course
+                                 course.course_shortened,
+                                 group.name,
+                                 str(student.id))
+                os.makedirs(dirname)
+                for i in range(1, course.labs_amount, 2):
+                    checked = choice((True, False))
+                    report = Report(
+                        report_course=course.course_id,
+                        report_student=student.id,
+                        report_num=i,
+                        report_hash=file_hash,
+                        report_uploaded=datetime.datetime.utcnow())
+                    if checked:
+                        report.report_checked = datetime.datetime.utcnow()
+                        report.report_mark = randint(round(course.lab_max_score / 2), course.lab_max_score)
+                    db.session.add(report)
+                    shutil.copy(p.join(app.config['TEST_DATA'], 'example_report.pdf'), p.join(dirname,
+                                                                                              str(report.report_num)))
+    db.session.commit()
 
 
 def fill_db():
@@ -165,6 +194,8 @@ def fill_db():
         create_tutors_and_courses()
     if not Group.query.first():
         create_groups_and_students()
+    if not Report.query.first():
+        create_reports()
 
 
 @app.before_first_request

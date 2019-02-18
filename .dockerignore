@@ -1,3 +1,3 @@
 .git
 .dockerignore
-labs_web/uploads
+labs_web/uploads/**/*
