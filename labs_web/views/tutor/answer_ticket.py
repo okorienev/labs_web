@@ -3,9 +3,11 @@ from flask_login import current_user, login_required
 from labs_web.extensions import AnswerTicketForm, Tickets, mongo_oid
 from flask import request, flash, render_template, abort
 from datetime import datetime
+import math
 
 
 class AnswerTicket(View):
+    PER_PAGE = 5
     methods = ["GET", "POST"]
     decorators = [login_required]
 
@@ -15,13 +17,18 @@ class AnswerTicket(View):
         except (ValueError, TypeError):
             flash("invalid integer literal for page/no page provided")
             return abort(404)
-        pages = Tickets.count({'course.id': {'$in': [course.course_id for course in
-                                                     current_user.courses]},
-                               'checked': {'$exists': False}})
+        pages = int(math.ceil(Tickets.count({'course.id': {'$in': [course.course_id for course in
+                                                                   current_user.courses]},
+                                             'checked': {'$exists': False}}) / AnswerTicket.PER_PAGE))
+        if page > pages and page != 1:  # page number should exist but first page is always available
+            abort(404)
+        # pagination
+        tickets = Tickets.find({'course.id': {'$in': [course.course_id for course in
+                                                      current_user.courses]},
+                                'checked': {'$exists': False}}). \
+            skip((page - 1) * AnswerTicket.PER_PAGE).limit(AnswerTicket.PER_PAGE)
+
         form = AnswerTicketForm()
-        tickets = [i for i in Tickets.find({'course.id': {'$in': [course.course_id for course in
-                                                                  current_user.courses]},
-                                            'checked': {'$exists': False}})]
         form.selected_ticket.choices = [(str(ticket['_id']),
                                          "{} - {} ({}) {}".format(ticket['topic'],
                                                                   ticket['author']['name'],

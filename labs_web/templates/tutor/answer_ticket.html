@@ -1,8 +1,10 @@
 {% extends 'tutor/tutor_menu.html' %}
 {% block title %}Answer Ticket{% endblock %}
 {% block content %}
+    {% if pages %}
 <div class="card">
     {% for i in tickets %}
+        {{ i }}
         <div class="card" style="margin: 5px 0">
             <div class="card-body">
                 <h5 class="card-title">
@@ -16,33 +18,52 @@
             </div>
         </div>
     {% endfor %}
+
     <nav aria-label="Tickets navigation">
 
         <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+
+            {% if page != 1 %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for(".answer_ticket") }}?page={{ page - 1 }}">Previous</a>
+                </li>
+            {% endif %}
+
+            {% for i in range(1, pages + 1) %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for(".answer_ticket") }}?page={{ i }}">{{ i }}</a>
+                </li>
+            {% endfor %}
+
+            {% if page < pages %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for(".answer_ticket") }}?page={{ page + 1 }}">Next</a>
+                </li>
+            {% endif %}
+
         </ul>
     </nav>
 </div>
             <form class="form" method="post">
-            <div class="form-group">{{ form.hidden_tag() }}</div>
-            <div class="form-group">{{ form.selected_ticket }}</div>
-            <div class="form-group">{{ form.answ_body }}</div>
-            <div class="form-group">{{ form.make_public }}Make this answer public for course ?</div>
-            <button class="btn btn-primary" type="submit">Answer ticket</button>
-        </form>
+                <div class="form-group">{{ form.hidden_tag() }}</div>
+                <div class="form-group">{{ form.selected_ticket }}</div>
+                <div class="form-group">{{ form.answ_body }}</div>
+                <div class="form-group">{{ form.make_public }}Make this answer public for course ?</div>
+                <button class="btn btn-primary" type="submit">Answer ticket</button>
+            </form>
 
+
+    {% else %}
+    <div class="alert alert-primary" role="alert"><h5>You have no tickets unanswered!</h5></div>
+    {% endif %}
 
 {% endblock %}
 {% block script %}
-        <script>
+    <script>
             $(".pickOption").click(function (event) {
                 $("#selected_ticket")[0].value = $(event.target)[0].id;
             })
-        </script>
+    </script>
 
 {#        <script>#}
 {#            $("#selected_ticket").select2();#}
