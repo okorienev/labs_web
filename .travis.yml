@@ -15,6 +15,7 @@ before_script:
 
 script:
   - docker-compose up &
+  - sleep 20
   - curl localhost:8000
 
 
