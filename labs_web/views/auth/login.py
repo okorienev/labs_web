@@ -40,7 +40,7 @@ class Login(View):
             else:
                 flash('Login/password incorrect')
                 current_app.logger.info("{} failed to log in from address: {}".format(
-                    user.username if user else "uknown user",
+                    user.username if user else "unknown user",
                     request.remote_addr))
                 return redirect(request.url)
         return render_template('auth/login.html', form=form)
