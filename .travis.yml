@@ -1,12 +1,13 @@
 dist: trusty
-
+sudo: required
 language: python
 
 python:
-  - "3.6"
+- "3.6"
 
 services:
-  - docker
+- docker
+- xvfb
 
 addons:
   chrome: stable
@@ -15,23 +16,33 @@ env:
   - DOCKER_COMPOSE_VERSION=1.17.1
 
 before_install:
+#  docker-compose
   - sudo rm /usr/local/bin/docker-compose
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
-  - export DISPLAY=99:0
-  - sh -e /etc/init.d/xvfb start
-  - sleep 3
-  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost:8000 &
-  - sleep 10
+
 
 before_script:
   - docker-compose build
+# xvfb
+  - export DISPLAY=99:0
+  - sh -e /etc/init.d/xvfb start
+  - sleep 3
+# chrome in headless mode
+  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost:8000 &
+  - sleep 10
+# chromedriver for selenium
+  - wget -N http://chromedriver.storage.googleapis.com/2.30/chromedriver_linux64.zip -P ~/
+  - unzip ~/chromedriver_linux64.zip -d ~/
+  - rm ~/chromedriver_linux64.zip
+  - sudo mv -f ~/chromedriver /usr/local/share/
+  - sudo chmod +x /usr/local/share/chromedriver
+  - sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
 
 script:
   - docker-compose up &
   - sleep 200
-
   - python3 -m labs_web.run_tests
 
 

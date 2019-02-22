@@ -5,13 +5,17 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from random import choice
 from labs_web.test_data import tutors, students
-from . import TestConfig
+from . import TestConfig, AbstractTest
 
 
-class TestLogin(unittest.TestCase):
+class TestLogin(AbstractTest):
     def setUp(self):
-        self.driver = selenium.webdriver.Chrome()
+        super(TestLogin, self).setUp()
+        # self.driver = selenium.webdriver.Chrome()
         self.driver.get(f"{TestConfig.SERVER_URL}:{TestConfig.SERVER_PORT}/auth/login/")
+        # WebDriverWait(self.driver, 10).until(EC.element_to_be_selected(By.ID, ))
+        # wait = WebDriverWait(self.driver, 10).until(EC.element_to_be_selected((By.ID, "username")))
+        # self.driver.implicitly_wait(4)
         self.username = self.driver.find_element_by_id("username")
         self.password = self.driver.find_element_by_id("password")
         self.form = self.driver.find_element_by_tag_name("form")
@@ -53,5 +57,5 @@ class TestLogin(unittest.TestCase):
         self.assertTrue(navbar_present)
         self.assertIn("/student/home/", self.driver.current_url)
 
-    def tearDown(self):
-        self.driver.close()
+    # def tearDown(self):
+    #     self.driver.close()
