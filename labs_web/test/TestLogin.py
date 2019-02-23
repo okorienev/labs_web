@@ -43,7 +43,7 @@ class TestLogin(AbstractTest):
         self.username.send_keys(login)
         self.password.send_keys(TestConfig.DEFAULT_PASSWORD)
         self.submit.click()
-        navbar_present = WebDriverWait(self.driver, 20).until(EC.presence_of_element_located((By.CLASS_NAME, "navbar")))
+        navbar_present = WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((By.CLASS_NAME, "navbar")))
         self.assertTrue(navbar_present)
         self.assertIn("/tutor/home/", self.driver.current_url)
 

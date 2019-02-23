@@ -1,7 +1,7 @@
 from flask import Flask, redirect, url_for, render_template
 from .config import NonDockerConfig, Config
 from flask_debugtoolbar import DebugToolbarExtension
-from .extensions import db, login_manager, cache, mail, ckeditor, admin
+from .extensions import db, login_manager, cache, mail, ckeditor, admin, celery
 from flask_migrate import Migrate
 from flask_login import current_user
 from .heavy_lifting import *
