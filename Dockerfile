@@ -6,7 +6,7 @@ RUN mkdir -p $INSTALL_PATH
 WORKDIR $INSTALL_PATH
 COPY requirements.txt requirements.txt
 
-ENV UPLOADS_PATH=$INSTALL_PATH/labs_web/uploads
+ENV UPLOADS_PATH=/storage/uploads
 ENV DOCS_FOLDER=course_docs
 ENV SNAPSHOT_FOLDER=snapshots
 ENV TEST_DATA=$INSTALL_PATH/labs_web/test_data
