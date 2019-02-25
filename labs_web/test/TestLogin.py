@@ -15,7 +15,7 @@ class TestLogin(AbstractTest):
         self.driver.get(f"{TestConfig.SERVER_URL}:{TestConfig.SERVER_PORT}/auth/login/")
         # WebDriverWait(self.driver, 10).until(EC.element_to_be_selected(By.ID, ))
         # self.driver.implicitly_wait(4)
-        wait = WebDriverWait(self.driver, 10).until(EC.element_to_be_selected((By.ID, "username")))
+        wait = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.ID, "username")))
         self.username = self.driver.find_element_by_id("username")
         self.password = self.driver.find_element_by_id("password")
         self.form = self.driver.find_element_by_tag_name("form")
