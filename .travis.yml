@@ -7,12 +7,12 @@ python:
 
 services:
 - docker
-- xvfb
 
 addons:
   apt:
     packages:
     - google-chrome-stable
+    - xvfb
 
 env:
   - DOCKER_COMPOSE_VERSION=1.17.1

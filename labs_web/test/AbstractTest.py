@@ -6,8 +6,8 @@ from selenium import webdriver
 class AbstractTest(unittest.TestCase):
     def setUp(self):
         chrome_opts = Options()
-        # chrome_opts.add_argument("--headless")
-        # chrome_opts.add_argument("--disable-gpu")
+        chrome_opts.add_argument("--headless")
+        chrome_opts.add_argument("--no-sandbox")
         self.driver = webdriver.Chrome(options=chrome_opts)
 
     def tearDown(self):
