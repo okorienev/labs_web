@@ -16,19 +16,20 @@ services:
         --access-logfile -
         --log-level info
         --reload
+        --timeout 120
         "labs_web.runserver:app"
     environment:
       PYTHONUNBUFFERED: 'true'
     volumes:
-      - '.:/labs_web'
-    ports:
-      - '8000:8000'
+      - '/home/$USER/website_vol:/storage'
+#    ports:
+#      - '8000:8000'
 
   celery:
-    build: .
+    image: 'labsweb_website:latest'
     command: celery worker -l info -A labs_web.celery
     volumes:
-      - '.:/labs_web'
+      - '/home/$USER/website_vol:/storage'
 
   data:
     restart: always
@@ -60,8 +61,15 @@ services:
           - /home/$USER/mongo_docker/data/db:/data/db
 #        ports:
 #            - 27017:27017
-        command: mongod --smallfiles --logpath=/dev/null # --quiet
+        command: mongod --smallfiles # --quiet
 
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
 
 volumes:
   redis:
