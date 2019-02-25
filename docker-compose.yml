@@ -16,13 +16,14 @@ services:
         --access-logfile -
         --log-level info
         --reload
+        --timeout 120
         "labs_web.runserver:app"
     environment:
       PYTHONUNBUFFERED: 'true'
     volumes:
       - '/home/$USER/website_vol:/storage'
-    ports:
-      - '8000:8000'
+#    ports:
+#      - '8000:8000'
 
   celery:
     image: 'labsweb_website:latest'

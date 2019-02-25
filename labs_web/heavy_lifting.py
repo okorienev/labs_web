@@ -7,6 +7,7 @@ import os
 import datetime
 import shutil
 import hashlib
+import warnings
 
 
 def create_uploads_folder():
@@ -166,8 +167,8 @@ def create_reports():
                         report.report_checked = datetime.datetime.utcnow()
                         report.report_mark = randint(round(course.lab_max_score / 2), course.lab_max_score)
                     db.session.add(report)
-                    shutil.copy(p.join(current_app.config['TEST_DATA'], 'example_report.pdf'), p.join(dirname,
-                                                                                              str(report.report_num)))
+                    shutil.copy(p.join(current_app.config['TEST_DATA'], 'example_report.pdf'),
+                                p.join(dirname, str(report.report_num) + '.pdf'))
     db.session.commit()
 
 
