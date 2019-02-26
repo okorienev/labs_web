@@ -19,6 +19,13 @@ courses = db.Table('group_courses',
 
 # user roles
 class Role(db.Model):
+    """
+    Role model
+    default:
+    1: student
+    2: tutor
+    3: admin
+    """
     role_id = db.Column(db.Integer(), primary_key=True)
     role_name = db.Column(db.String(10))
 
@@ -28,6 +35,10 @@ class Role(db.Model):
 
 # student groups
 class Group(db.Model):
+    """
+    Model representing academic group
+    Group student-relation is made as many-to-many, take care of it
+    """
     group_id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(10), unique=True, nullable=False)
     students = db.relationship('User',
@@ -45,6 +56,12 @@ class Group(db.Model):
 
 
 class User(db.Model):
+    """
+    Model representing service users
+    Group-student relation is made as many-to-many so group should be referenced as student.group[0]
+    todo add group property to avoid ugly student.group[0] syntax
+    todo add checks that each student has maximum of 1 group and groups are linked only with students not with others
+    """
     id = db.Column(db.Integer(), primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(40), unique=True, nullable=False)
@@ -101,6 +118,11 @@ class Course(db.Model):  # course model
 
 
 class Report(db.Model):
+    """
+    Report model
+    report_stu_comment and report_tut_comment are deprecated
+    todo consider removing unused fields
+    """
     report_id = db.Column(db.Integer(), primary_key=True)  # identifier
     report_course = db.Column(db.Integer(), db.ForeignKey('course.course_id'))  # course
     report_student = db.Column(db.Integer(), db.ForeignKey('user.id'))  # report owner

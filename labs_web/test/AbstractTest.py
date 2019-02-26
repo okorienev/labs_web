@@ -5,6 +5,11 @@ from selenium import webdriver
 
 
 class AbstractTest(unittest.TestCase):
+    """
+    Abstract class for all tests
+    Creates proper driver for each test
+    Closes  driver after each test
+    """
     def setUp(self):
         chrome_opts = Options()
         # chrome_opts.add_argument("--headless")

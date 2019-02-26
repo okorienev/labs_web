@@ -8,6 +8,11 @@ Tickets = mongo_db.Tickets
 
 
 def mongo_oid(oid: str) -> Optional[ObjectId]:
+    """
+    func to avoid boilerplate str to oid transformations
+    :param oid: Mongo oid as str
+    :return: ObjectId or None
+    """
     try:
         return ObjectId(oid)
     except InvalidId:
@@ -17,6 +22,11 @@ def mongo_oid(oid: str) -> Optional[ObjectId]:
 
 
 def get_ticket_by_oid(oid: str):
+    """
+    shortcut to find document by it's identifier
+    :param oid: str with Mongo oid
+    :return: Ticket document
+    """
     return Tickets.find_one({'_id': mongo_oid(oid)})
 
 

@@ -9,7 +9,16 @@ from . import TestConfig, AbstractTest
 
 
 class TestLogin(AbstractTest):
+    """
+    Test login scenarios
+    """
+
     def setUp(self):
+        """
+        1. Call super setUp()
+        2. Get login page
+        3. Find form elements
+        """
         super(TestLogin, self).setUp()
         # self.driver = selenium.webdriver.Chrome()
         self.driver.get(f"{TestConfig.SERVER_URL}:{TestConfig.SERVER_PORT}/auth/login/")
@@ -22,6 +31,9 @@ class TestLogin(AbstractTest):
         self.submit = self.form.find_element_by_tag_name("button")
 
     def test_login_login_not_exist(self):
+        """
+        send un-existing credentials, alert should be shown
+        """
         self.username.send_keys("NON-EXISTING")
         self.password.send_keys("DEFINITELY_WRONG")
         self.submit.click()
@@ -29,6 +41,9 @@ class TestLogin(AbstractTest):
         self.assertTrue(alert_present)
 
     def test_wrong_password(self):
+        """
+        send correct username with wrong password
+        """
         row = choice(tutors)
         login = row[1]
         self.username.send_keys(login)
@@ -38,6 +53,9 @@ class TestLogin(AbstractTest):
         self.assertTrue(alert)
 
     def test_correct_login_tutor(self):
+        """
+        sending correct tutor's credentials, should redirect to tutor home page
+        """
         row = choice(tutors)
         login = row[1]
         self.username.send_keys(login)
@@ -48,6 +66,9 @@ class TestLogin(AbstractTest):
         self.assertIn("/tutor/home/", self.driver.current_url)
 
     def test_correct_login_student(self):
+        """
+        sending correct student's credentials, should redirect to student home page
+        """
         row = choice(students)
         login = row[2]
         self.username.send_keys(login)

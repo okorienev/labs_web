@@ -21,11 +21,13 @@ ckeditor.init_app(app)
 
 @login_manager.user_loader
 def load_user(id):
+    """return user with given id"""
     return User.query.get(int(id))
 
 
 @app.before_first_request
 def heavy_lifting():
+    """some stuff that should be done before service can normally accept connections"""
     create_uploads_folder()
     create_db_and_roles()
     fill_db()
@@ -33,6 +35,9 @@ def heavy_lifting():
 
 @app.errorhandler(404)
 def handle_404(*args, **kwargs):
+    """
+    redirect users to custom 404 instead of blank white page
+    """
     if current_user.is_authenticated:
         if current_user.role == 1:
             return render_template('student/student_404.html'), 404
@@ -43,4 +48,5 @@ def handle_404(*args, **kwargs):
 
 @app.route('/')
 def hello_world():
+    """stub view redirecting to auth.login"""
     return redirect(url_for('auth.login'))
