@@ -68,7 +68,7 @@ class Login(View):
         else:
             redis_conn.incr(ip)
         if ((username_attempts and username_attempts >= current_app.config['LOGIN_ATTEMPT_USERNAME']) or
-                (ip_attempt and username_attempts >= current_app.config['LOGIN_ATTEMPT_IP'])):
+                (ip_attempt and ip_attempt >= current_app.config['LOGIN_ATTEMPT_IP'])):
             if user:
                 notify_user_on_failed_attempt.delay(user.id, request.remote_addr)
 
