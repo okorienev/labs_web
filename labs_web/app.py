@@ -1,7 +1,7 @@
 from flask import Flask, redirect, url_for, render_template
-from .config import NonDockerConfig, Config
+from .config import Config
 from flask_debugtoolbar import DebugToolbarExtension
-from .extensions import db, login_manager, cache, mail, ckeditor, admin, celery
+from .extensions import db, login_manager, cache, mail, ckeditor, admin, celery, User
 from flask_migrate import Migrate
 from flask_login import current_user
 from .heavy_lifting import *
@@ -25,10 +25,10 @@ def load_user(id):
 
 
 @app.before_first_request
-def heavy_lifting():
-    create_uploads_folder()
-    create_db_and_roles()
-    fill_db()
+def before_fitst_request():
+    create_db()
+    create_tickets()
+    create_announcements()
 
 
 @app.errorhandler(404)

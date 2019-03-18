@@ -60,7 +60,8 @@ class NonDockerConfig(Config):
     created to test on local machine with all infrastructure already installed
     to change check:
     labs_web/app.py (config importing) 
-    and labs_web/extensions.extensions.py (celery instance creation)"""
+    and labs_web/extensions.extensions.py (celery instance creation)
+    """
     UPLOAD_PATH = '/home/alex/Dropbox/labs_web/labs_web/uploads/'
     TEST_DATA = '/home/alex/Dropbox/labs_web/labs_web/test_data/'
     DOCS_FOLDER = 'course_docs'
