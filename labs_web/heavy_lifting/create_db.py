@@ -1,5 +1,5 @@
 from flask import current_app
-from .extensions import db, Role, User, Course, Group, Report
+from labs_web.extensions import db, Role, User, Course, Group, Report
 from labs_web.test_data import tutors, c_first_word, c_second_word, c_third_word, test_groups, students
 from random import choice, randint
 import os.path as p
@@ -7,7 +7,6 @@ import os
 import datetime
 import shutil
 import hashlib
-import warnings
 
 
 def create_uploads_folder():
@@ -180,3 +179,12 @@ def fill_db():
         create_groups_and_students()
     if not Report.query.first():
         create_reports()
+
+
+def create_db():
+    """
+    create uploads folder -> create tables and roles -> populate tables
+    """
+    create_uploads_folder()
+    create_db_and_roles()
+    fill_db()

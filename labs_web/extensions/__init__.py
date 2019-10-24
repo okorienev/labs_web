@@ -32,4 +32,5 @@ from .mongo import (mongo_db,
                     get_ticket_by_oid,
                     mongo_oid,
                     Tickets)  # MongoDB
-from .redis import (redis_conn,)  # Redis
+from .redis import (redis_conn,
+                    redis_get_int_or_none)  # Redis

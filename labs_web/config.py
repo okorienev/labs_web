@@ -32,6 +32,7 @@ class Config(object):
     MAIL_USE_SSL = True
     MAIL_USERNAME = ""
     MAIL_PASSWORD = ""
+    MAIL_SENDER = "labs.web.notifications"
     MAIL_SUPPRESS_SEND = True
     CELERY_IMPORTS = ('labs_web.views.tutor.check_reports',
                       'labs_web.views.tutor.ajax.check_reports_menu_ajax',
@@ -39,7 +40,8 @@ class Config(object):
                       'labs_web.views.student.ajax.student_event_collector',
                       'labs_web.views.student.ajax.get_announcements_ajax',
                       'labs_web.views.tutor.ajax.get_tutor_announcements',
-                      'labs_web.views.tutor.course_snapshot')
+                      'labs_web.views.tutor.course_snapshot',
+                      'labs_web.views.auth.login')
     ADMIN_USERNAME = 'admin'
     ADMIN_PASSWORD = 'password'
     ADMIN_EMAIL = 'admin@domain.com'
@@ -47,6 +49,9 @@ class Config(object):
     MONGO_PORT = 27017
     MONGO_USERNAME = 'admin'
     MONGO_PASSWORD = 'password'
+    LOGIN_ATTEMPT_USERNAME = 5
+    LOGIN_ATTEMPT_IP = 5
+    LOGIN_TIMEOUT = 60 * 60
 
 
 class NonDockerConfig(Config):
@@ -55,7 +60,8 @@ class NonDockerConfig(Config):
     created to test on local machine with all infrastructure already installed
     to change check:
     labs_web/app.py (config importing) 
-    and labs_web/extensions.extensions.py (celery instance creation)"""
+    and labs_web/extensions.extensions.py (celery instance creation)
+    """
     UPLOAD_PATH = '/home/alex/Dropbox/labs_web/labs_web/uploads/'
     TEST_DATA = '/home/alex/Dropbox/labs_web/labs_web/test_data/'
     DOCS_FOLDER = 'course_docs'

@@ -1,8 +1,9 @@
 import unittest
 from pyvirtualdisplay import Display
 # noinspection PyUnresolvedReferences
-from labs_web.test import (TestLogin,
-                           TestServiceIsUp)
+from labs_web.test import (TestServiceIsUp,
+                           TestLogin,
+                           TestTutorMenu)
 
 
 if __name__ == "__main__":
