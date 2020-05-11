@@ -3,5 +3,6 @@ __pycache__/
 \.idea/
 labs_web/uploads/
 venv/
+.volumes/
 
 docs/_build/
