@@ -1,10 +1,11 @@
-from flask import Flask, redirect, url_for, render_template
+from flask import Flask, redirect, url_for, render_template, abort
 from .config import Config
 from flask_debugtoolbar import DebugToolbarExtension
 from .extensions import db, login_manager, cache, mail, ckeditor, admin, celery, User
 from flask_migrate import Migrate
 from flask_login import current_user
 from .heavy_lifting import *
+from logging import getLogger
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -19,16 +20,12 @@ admin.init_app(app)
 ckeditor.init_app(app)
 
 
+logger = getLogger(__name__)
+
+
 @login_manager.user_loader
 def load_user(id):
     return User.query.get(int(id))
-
-
-@app.before_first_request
-def before_fitst_request():
-    create_db()
-    create_tickets()
-    create_announcements()
 
 
 @app.errorhandler(404)
@@ -44,3 +41,15 @@ def handle_404(*args, **kwargs):
 @app.route('/')
 def hello_world():
     return redirect(url_for('auth.login'))
+
+
+@app.route('/_fill-db')
+def fill_db():
+    if app.config["DEBUG"]:
+        create_db()
+        create_tickets()
+        create_announcements()
+        return "Dummy init completed"
+    else:
+        logger.critical('Attempt to access view in non-debug mode')
+        raise abort(404)

@@ -74,3 +74,9 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf
     ports:
       - 80:80
+
+  alembic:
+    image: 'labs_web_website:latest'
+    volumes:
+    - ".:/labs_web"
+    entrypoint: alembic -n alembic:docker

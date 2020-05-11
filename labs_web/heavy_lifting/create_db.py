@@ -22,9 +22,8 @@ def create_uploads_folder():
 
 def create_db_and_roles():
     """
-    create db -> create user roles -> create admin user
+    create user roles -> create admin user
     """
-    db.create_all()
     roles = Role.query.all()
     if not roles:  # app has 3 roles for now
         student_role = Role(role_name='student')  # 3 db commits to be sure the roles got the correct identifiers
