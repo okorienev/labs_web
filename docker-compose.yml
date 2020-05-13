@@ -1,13 +1,13 @@
-version: '2'
+version: '3.3'
 
 services:
   redis:
     image: 'redis:3.0-alpine'
     command: redis-server
     volumes:
-      - 'redis:/data'
-#    ports:
-#      - '6379:6379'
+      - "./.volumes/redis/:/data/"
+    ports:
+      - '6379:6379'
 
   website:
     build: .
@@ -25,7 +25,7 @@ services:
       - postgres
       - mongodb
     volumes:
-      - '/home/$USER/website_vol:/storage'
+      - './.volumes/site:/storage'
       - '.:/labs_web'
     ports:
       - '8000:8000'
@@ -38,22 +38,14 @@ services:
       - mongodb
     command: celery worker -l info -A labs_web.celery
     volumes:
-      - '/home/$USER/website_vol:/storage'
-
-  data:
-    restart: always
-    image: postgres:latest
-    volumes:
-      - /var/lib/postgresql
-    command: "true"
+      - './.volumes/site:/storage'
 
   postgres:
-    restart: always
     image: postgres:latest
-    volumes_from:
-      - data
-#    ports:
-#      - "5432:5432"
+    volumes:
+      - "./.volumes/pg/:/var/lib/postgresql/data/"
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_PASSWORD: alex
       POSTGRES_USER: alex
@@ -67,9 +59,9 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=password
     volumes:
-      - /home/$USER/mongo_docker/data/db:/data/db
-#      ports:
-#          - 27017:27017
+      - "./.volumes/mongo/data/db:/data/db"
+    ports:
+      - 27017:27017
     command: mongod # --quiet
 
   nginx:
@@ -83,7 +75,8 @@ services:
     ports:
       - 80:80
 
-volumes:
-  redis:
-  postgres:
-
+  alembic:
+    image: 'labs_web_website:latest'
+    volumes:
+    - ".:/labs_web"
+    entrypoint: alembic -n alembic:docker

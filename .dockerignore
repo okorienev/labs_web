@@ -1,3 +1,4 @@
 .git
 .dockerignore
+.volumes
 labs_web/uploads/**/*
