@@ -91,7 +91,7 @@ class Course(db.Model):  # course model
     course_id = db.Column(db.Integer(), primary_key=True)  # identifier
     course_name = db.Column(db.String(50), nullable=False)  # full name
     course_shortened = db.Column(db.String(10), nullable=False)  # shortened name (will be used in file paths)
-    course_tutor = db.Column(db.Integer(), db.ForeignKey('user.id'))  # connecting to tutor
+    course_tutor = db.Column(db.Integer(), db.ForeignKey('user.id'), index=True)  # connecting to tutor
     labs_amount = db.Column(db.Integer(), nullable=False)   # amount of reports
     lab_max_score = db.Column(db.Integer(), nullable=False)  # max score for one lab
     course_tutor_obj = db.relationship("User")
@@ -102,8 +102,8 @@ class Course(db.Model):  # course model
 
 class Report(db.Model):
     report_id = db.Column(db.Integer(), primary_key=True)  # identifier
-    report_course = db.Column(db.Integer(), db.ForeignKey('course.course_id'))  # course
-    report_student = db.Column(db.Integer(), db.ForeignKey('user.id'))  # report owner
+    report_course = db.Column(db.Integer(), db.ForeignKey('course.course_id'), index=True)  # course
+    report_student = db.Column(db.Integer(), db.ForeignKey('user.id'), index=True)  # report owner
     report_num = db.Column(db.Integer(), nullable=False)
     report_mark = db.Column(db.Integer())   # mark for report
     report_uploaded = db.Column(db.DateTime(), nullable=False)   # upload time
