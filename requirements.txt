@@ -5,7 +5,9 @@ billiard==3.5.0.3
 blinker==1.4
 bson==0.5.7
 celery==4.2.0
+certifi==2020.4.5.2
 click==6.7
+configparser==5.0.0
 EasyProcess==0.2.5
 Flask==1.0.2
 Flask-Admin==1.5.3
@@ -25,6 +27,7 @@ Jinja2==2.10
 kombu==4.2.1
 Mako==1.0.7
 MarkupSafe==1.0
+minio==5.0.10
 psycopg2==2.7.5
 PyJWT==1.6.4
 pymongo==3.7.1

@@ -52,6 +52,16 @@ class Config(object):
     LOGIN_ATTEMPT_USERNAME = 5
     LOGIN_ATTEMPT_IP = 5
     LOGIN_TIMEOUT = 60 * 60
+    MINIO = {
+        'nodes': ['minio1', 'minio2', 'minio3', 'minio4'],
+        'access_key': 'minio',
+        'secret_key': 'minio123',
+        'buckets': {
+            'uploads': 'uploads',
+            'docs': 'docs',
+            'snapshots': 'snapshots',
+        }
+    }
 
 
 class NonDockerConfig(Config):

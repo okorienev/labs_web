@@ -4,7 +4,8 @@ from .extensions import (celery,
                          mail,
                          admin,
                          login_manager,
-                         ckeditor)  # extension which need to be initialized in app
+                         ckeditor,
+                         minio)  # extension which need to be initialized in app
 from .models import (User,
                      Group,
                      Course,

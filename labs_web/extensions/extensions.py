@@ -11,6 +11,7 @@ from flask_admin import Admin
 from flask_ckeditor import CKEditor
 from pymongo import MongoClient
 
+from labs_web.extensions.minio import MinioManager
 
 naming_convention = immutabledict({
     'uq': '%(table_name)s_%(column_0_N_name)s_key',    # unique constraint
@@ -33,3 +34,5 @@ mongo = MongoClient("mongodb://{}:{}@{}".format(Config.MONGO_USERNAME,
                                                 Config.MONGO_PASSWORD,
                                                 Config.MONGO_URL,
                                                 Config.MONGO_PORT))
+
+minio = MinioManager(Config.MINIO)
