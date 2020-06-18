@@ -8,6 +8,7 @@ from datetime import datetime
 from labs_web.extensions.models import File
 from .MarksWriter import MarksWriterFactoryMethod
 from labs_web.views.student.group_stats_in_course import ReportsProcessor
+from secrets import token_hex
 import shutil
 import os
 import os.path as p
@@ -50,31 +51,24 @@ def make_course_snapshot(course_id: int, marks_format: str):
         shutil.make_archive(name, format='zip', root_dir=path_to_snapshot)
         bucket = app.config['MINIO']['buckets']['snapshots']
         # adding file record to db
-        file = File(owner_id=course.course_tutor, file_name=name, bucket=bucket, file_type=File.Type.snapshot)
-        db.session.add(file)
-        db.session.flush()
-        db.session.refresh(file)
-        # saving file to minio
+        key = token_hex(32)
         archive_path = f'{name}.zip'
+        file = File(
+            owner_id=course.course_tutor,
+            file_name=archive_path,
+            bucket=bucket,
+            file_type=File.Type.snapshot,
+            key=key
+        )
+        db.session.add(file)
+        db.session.commit()
         stat = os.stat(archive_path)
         with open(archive_path, 'rb') as f:
-            minio.client.put_object(bucket, file.key, f, stat.st_size)
+            minio.client.put_object(bucket, key, f, stat.st_size)
         os.remove(archive_path)
         os.chdir(prev_path)
         shutil.rmtree(path_to_snapshot)
         redis_conn.set('snapshot-timeout-{}'.format(course.course_tutor), value='some', ex=1 * 60)
-
-
-def snapshot_is_mine(snapshot_name: str):
-    for course in current_user.courses:
-        if snapshot_name.startswith('Snapshot-{}'.format(course.course_shortened)):
-            return True
-    return False
-
-
-def snapshots_lst():
-    path_to_snapshots = p.join(app.config['UPLOAD_PATH'], 'snapshots')
-    return [i for i in filter(snapshot_is_mine, os.listdir(path_to_snapshots))]
 
 
 class CourseSnapshot(View):
@@ -85,6 +79,15 @@ class CourseSnapshot(View):
         timeout = redis_conn.exists('snapshot-timeout-{}'.format(current_user.id))
         form = CourseSnapshotForm()
         form.course.choices = [(course.course_id, course.course_name) for course in current_user.courses]
+        snapshots = (
+            db.session.query(File)
+            .filter(
+                File.owner_id == current_user.id,
+                File.file_type == File.Type.snapshot,
+            )
+            .order_by(File.file_id.desc())
+            .all()
+        )
         if request.method == "POST" and form.validate_on_submit():
             make_course_snapshot.delay(form.data.get('course'), form.data.get('marks_format'))
         for field, errors in form.errors.items():
@@ -93,4 +96,4 @@ class CourseSnapshot(View):
         return render_template('tutor/course_snapshot.html',
                                form=form,
                                timeout=timeout,
-                               snapshots=snapshots_lst())
+                               snapshots=snapshots)
