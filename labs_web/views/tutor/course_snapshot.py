@@ -1,16 +1,20 @@
 from flask.views import View
 from flask_login import current_user, login_required
-from labs_web.extensions import CourseSnapshotForm, redis_conn, celery, Course, redis_conn
+from labs_web.extensions import CourseSnapshotForm, celery, Course, redis_conn, db, minio
 from labs_web import app
 from flask import render_template, request, flash
-from datetime import timedelta
 from datetime import datetime
+
+from labs_web.extensions.models import File
 from .MarksWriter import MarksWriterFactoryMethod
 from labs_web.views.student.group_stats_in_course import ReportsProcessor
 import shutil
 import os
 import os.path as p
 import logging
+
+
+log = logging.getLogger(__name__)
 
 
 @celery.task(ignore_result=True)
@@ -21,10 +25,6 @@ def make_course_snapshot(course_id: int, marks_format: str):
         path_to_snapshot = p.join(app.config['UPLOAD_PATH'], 'snapshots',
                                   'Snapshot_{}_{}'.format(course.course_shortened,
                                                           time.strftime('%d-%m-%Y %H:%M')))
-        # logging.warning(f"Working in {os.getcwd()}")
-        # logging.warning(app.config['UPLOAD_PATH'])
-        # logging.info(f"Started snapshot {path_to_snapshot}")
-        # logging.info("Directory stucture: \n {}".format('\n'.join(os.listdir(app.config['UPLOAD_PATH']))))
         shutil.copytree(p.join(app.config['UPLOAD_PATH'], course.course_shortened),
                         path_to_snapshot)  # copy uploads to temp directory
         for group in course.groups:
@@ -32,7 +32,7 @@ def make_course_snapshot(course_id: int, marks_format: str):
                 try:
                     os.rename(p.join(path_to_snapshot, group.name, str(student.id)),  # rename folders with students'
                               p.join(path_to_snapshot, group.name, str(student.name)))  # reports for being
-                except FileNotFoundError:                                               # human-readable
+                except FileNotFoundError:  # human-readable
                     os.makedirs(p.join(path_to_snapshot, group.name, str(student.name)), exist_ok=True)
                     # print('{} has no uploaded reports in course {}'.format(student.name,
                     #                                                        course.course_shortened))
@@ -45,13 +45,24 @@ def make_course_snapshot(course_id: int, marks_format: str):
                                                                                             marks_format)))
         prev_path = os.getcwd()
         os.chdir(p.join(app.config['UPLOAD_PATH'], 'snapshots'))
-        shutil.make_archive('Snapshot-{}-{}'.format(course.course_shortened, time.strftime('%d-%m-%Y %H:%M')),
-                            format='zip',
-                            root_dir=path_to_snapshot)
+
+        name = 'Snapshot-{}-{}'.format(course.course_shortened, time.strftime('%d-%m-%Y %H:%M'))
+        shutil.make_archive(name, format='zip', root_dir=path_to_snapshot)
+        bucket = app.config['MINIO']['buckets']['snapshots']
+        # adding file record to db
+        file = File(owner_id=course.course_tutor, file_name=name, bucket=bucket, file_type=File.Type.snapshot)
+        db.session.add(file)
+        db.session.flush()
+        db.session.refresh(file)
+        # saving file to minio
+        archive_path = f'{name}.zip'
+        stat = os.stat(archive_path)
+        with open(archive_path, 'rb') as f:
+            minio.client.put_object(bucket, file.key, f, stat.st_size)
+        os.remove(archive_path)
         os.chdir(prev_path)
         shutil.rmtree(path_to_snapshot)
-        redis_conn.set('snapshot-timeout-{}'.format(course.course_tutor), value='some', ex=24*60*60)
-    pass
+        redis_conn.set('snapshot-timeout-{}'.format(course.course_tutor), value='some', ex=1 * 60)
 
 
 def snapshot_is_mine(snapshot_name: str):

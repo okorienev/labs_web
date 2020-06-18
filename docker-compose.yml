@@ -39,6 +39,7 @@ services:
     command: celery worker -l info -A labs_web.celery
     volumes:
       - './.volumes/site:/storage'
+      - '.:/labs_web'
 
   postgres:
     image: postgres:latest

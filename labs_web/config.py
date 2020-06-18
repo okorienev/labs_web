@@ -53,7 +53,7 @@ class Config(object):
     LOGIN_ATTEMPT_IP = 5
     LOGIN_TIMEOUT = 60 * 60
     MINIO = {
-        'nodes': ['minio1', 'minio2', 'minio3', 'minio4'],
+        'nodes': ['minio1:9000', 'minio2:9000', 'minio3:9000', 'minio4:9000'],
         'access_key': 'minio',
         'secret_key': 'minio123',
         'buckets': {
