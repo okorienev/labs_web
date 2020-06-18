@@ -1,5 +1,6 @@
 from labs_web.extensions import db
 from hashlib import sha256
+from secrets import token_hex
 
 # table to link users to their roles, unused
 roles = db.Table('user_roles',
@@ -117,3 +118,11 @@ class Report(db.Model):
         return "Report id:{} course {} №{}".format(self.report_id,
                                          self.report_course,
                                          self.report_num,)
+
+
+class File(db.Model):
+    file_id = db.Column(db.Integer(), primary_key=True)
+    owner_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
+    bucket = db.Column(db.String(32), nullable=False)
+    key = db.Column(db.String(64), nullable=False, default=lambda: token_hex(32))
+    file_name = db.Column(db.String(64), nullable=False)
