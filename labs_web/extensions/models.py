@@ -121,8 +121,13 @@ class Report(db.Model):
 
 
 class File(db.Model):
+
+    class Type(object):
+        snapshot = 1
+
     file_id = db.Column(db.Integer(), primary_key=True)
     owner_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
     bucket = db.Column(db.String(32), nullable=False)
     key = db.Column(db.String(64), nullable=False, default=lambda: token_hex(32))
     file_name = db.Column(db.String(64), nullable=False)
+    file_type = db.Column(db.SmallInteger(), nullable=False)

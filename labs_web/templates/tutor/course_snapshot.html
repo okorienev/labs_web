@@ -3,7 +3,7 @@
 {% block content %}
     {% if timeout %}
         <div class="alert alert-danger">
-            You've requested course snapshot less than a day ago
+            You've requested course snapshot less than a minute ago
         </div>
     {% endif %}
     {% if not timeout %}
@@ -27,8 +27,12 @@
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">Previous snapshots:</h5>
-            {% for i in snapshots %}
-                <p class="card-text"><a href="{{ url_for("tutor.download_snapshot", snapshot_name=i) }}">{{ i }}</a></p>
+            {% for file in snapshots %}
+                <p class="card-text">
+                    <a href="{{ url_for("tutor.download_snapshot", file_id=file.file_id) }}" target="_blank">
+                        {{ file.file_name }}
+                    </a>
+                </p>
             {% endfor %}
         </div>
     </div>
